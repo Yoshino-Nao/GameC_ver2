@@ -43,7 +43,7 @@ void UI::Draw() {
 		m_img.SetPos(90 - 16 * i, 6);
 		m_img.Draw();
 	}
-	
+	/*
 	//“G‚ª‚¢‚È‚¯‚ê‚Î
 	Base* g = Base::FindObject(eType_Goal);
 	if (g == nullptr) {
@@ -53,4 +53,5 @@ void UI::Draw() {
 		m_img.SetPos(100, 200);
 		m_img.Draw();
 	}
+	*/
 }

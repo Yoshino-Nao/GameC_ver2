@@ -17,6 +17,7 @@ enum {
 	eType_E_Dragon1,
 	eType_Bullet,
 	eType_Goal,
+	eType_Door,
 	eType_Player_Attack,
 	eType_Enemy_Attack,
 	eType_Effect,
@@ -26,10 +27,11 @@ enum {
 	eType_Item_LifeUp,
 	eType_start,
 	eType_Goal2,
-	
+
 	eType_GaugeBack,
 	eType_GaugeRed,
 	eType_GaugeGreen,
+	eType_Menu,
 	eType_UI,
 	
 };

@@ -25,6 +25,7 @@
     <ClCompile Include="Game\GameData.cpp" />
     <ClCompile Include="Game\Map.cpp" />
     <ClCompile Include="Game\Slash.cpp" />
+    <ClCompile Include="Gimmick\Door.cpp" />
     <ClCompile Include="Item\Goal.cpp" />
     <ClCompile Include="Item\Goal2.cpp" />
     <ClCompile Include="Item\Item.cpp" />
@@ -32,6 +33,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Title\Title.cpp" />
     <ClCompile Include="UI\Gauge.cpp" />
+    <ClCompile Include="UI\Menu.cpp" />
     <ClCompile Include="UI\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -49,12 +51,14 @@
     <ClInclude Include="Game\GameData.h" />
     <ClInclude Include="Game\Map.h" />
     <ClInclude Include="Game\Slash.h" />
+    <ClInclude Include="Gimmick\Door.h" />
     <ClInclude Include="Item\Goal.h" />
     <ClInclude Include="Item\Goal2.h" />
     <ClInclude Include="Item\Item.h" />
     <ClInclude Include="Item\start.h" />
     <ClInclude Include="Title\Title.h" />
     <ClInclude Include="UI\Gauge.h" />
+    <ClInclude Include="UI\Menu.h" />
     <ClInclude Include="UI\UI.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

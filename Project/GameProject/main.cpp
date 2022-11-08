@@ -13,7 +13,7 @@
 #include "Title/Title.h"
 #include "Item/start.h"
 #include "Item/Goal2.h"
-
+#include "UI/Menu.h"
 
 //--------------------------------------------
 //グローバル変数領域
@@ -90,11 +90,11 @@ void Init(void)
 	//ADD_RESOURCE("Effect_Kira", CImage::CreateImage("Image/Effect_kirakira.png", effect_ring_anim_data, 360, 360));
 	ADD_RESOURCE("Goal", CImage::CreateImage("Image/Door.png"));
 	ADD_RESOURCE("Title", CImage::CreateImage("Image/Title.png"));
+	ADD_RESOURCE("Door", CImage::CreateImage("Image/Door.png"));
 	ADD_RESOURCE("License", CImage::CreateImage("Image/Light_Frame.png"));
 	ADD_RESOURCE("start", CImage::CreateImage("Image/start.png"));
 	ADD_RESOURCE("Goal2", CImage::CreateImage("Image/Goal2.png"));
 	ADD_RESOURCE("ball", CImage::CreateImage("Image/ball.png"));
-	//ADD_RESOURCE("GaugeGreen", CImage::CreateImage("Image/-4.png"));
 	ADD_RESOURCE("GaugeW", CImage::CreateImage("Image/-5.png"));
 //ADD_RESOURCE("Item", CImage::CreateImage("Image/Item.png"));
 	/*//プレイヤーの生成

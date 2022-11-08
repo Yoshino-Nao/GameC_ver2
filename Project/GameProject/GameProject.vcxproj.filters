@@ -65,6 +65,12 @@
     <ClCompile Include="Item\start.cpp">
       <Filter>Item</Filter>
     </ClCompile>
+    <ClCompile Include="Gimmick\Door.cpp">
+      <Filter>Gimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Menu.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Game">
@@ -87,6 +93,9 @@
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{fef933ef-32d7-4922-bff6-4921aff00c25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gimmick">
+      <UniqueIdentifier>{ff7d5400-e739-41d8-a5cf-602ce2de3390}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +161,12 @@
     </ClInclude>
     <ClInclude Include="Item\start.h">
       <Filter>Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Gimmick\Door.h">
+      <Filter>Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Menu.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

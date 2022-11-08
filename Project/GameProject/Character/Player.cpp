@@ -12,6 +12,7 @@
 #include "../Item/Item.h"
 #include "../Title/Title.h"
 #include "../Item/Item.h"
+#include "../UI/Menu.h"
 #include "Player.h"
 #include "Enemy.h"
 #include <iostream>
@@ -331,9 +332,6 @@ void Player::Update() {
 	m_img.SetColor(1, 1, 1, 1);
 	//std::cout << "Player" << std::endl;
 	m_pos_old = m_pos;
-	
-	
-	
 	stpdtime--;
 	if (stpdtime <= 0) {
 		//スクロール設定
@@ -418,6 +416,9 @@ void Player::Update() {
 		m_img.UpdateAnimation();
 		m_pos += m_vec;
 		stpdtime = 0;
+		if (PUSH(CInput::eButton5)) {
+			Base::Add(new Menu());
+		}
 	}
 }
 
@@ -523,8 +524,9 @@ void Player::Collision(Base* b)
 	case eType_Field:
 		if (Map* m = dynamic_cast<Map*>(b)) {
 			int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect);
-			if (t != 0)
+			if (t != 0){
 				m_pos.x = m_pos_old.x;
+			}
 			t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect);
 			if (t != 0) {
 				m_pos.y = m_pos_old.y;
@@ -534,6 +536,7 @@ void Player::Collision(Base* b)
 				//基準値+補正値
 				//m_scroll.x = m_pos.x - 1280 / 2 + sc_ver.x;
 				//m_scroll.y = m_pos.y - 500 + sc_ver.y;
+				
 			}
 		}
 		break;
