@@ -11,6 +11,7 @@
 class Map :public Base {
 private:
 	CImage m_img;
+
 public:
 	Map();
 	void Draw();
@@ -23,4 +24,13 @@ public:
 	//int CollisionMap(const CVector2D& pos);
 	int CollisionMap(const CVector2D& pos);
 	int CollisionMap(const CVector2D& pos, const CRect& rect);
+};
+class MiniMap :public Base {
+private:
+	CImage m_img;
+	int sx, sy, ex, ey, sxmin, symin, exold, eyold;
+public:
+	
+	MiniMap();
+	void Draw();
 };

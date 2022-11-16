@@ -178,11 +178,13 @@ Base(eType_Enemy) {
 
 Enemy::~Enemy()
 {
+    /*
     Base* e = Base::FindObject(eType_Player);
     Player* t = dynamic_cast<Player*>(e);
     if (t) {
         t->stpdtime = 5;
     }
+    */
 }
 
 void Enemy::Update()

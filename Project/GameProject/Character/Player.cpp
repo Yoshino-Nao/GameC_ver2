@@ -269,6 +269,7 @@ Player::Player(const CVector2D& p, bool flip) :
 	m_img = COPY_RESOURCE("Player", CImage);
 	m_img.SetSize(224, 224);
 
+	
 	//再生アニメーション設定
 	m_img.ChangeAnimation(0);
 	//座標設定

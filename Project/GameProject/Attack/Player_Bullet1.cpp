@@ -77,6 +77,7 @@ void Player_Bullet1::Collision(Base* b)
 			int t = m->CollisionMap(m_pos, m_rect);
 			if (t != 0)
 				m_vec = CVector2D(sin(m_ang) * -1, cos(m_ang));
+			
 		}
 		break;
 		//case eType_Enemy:

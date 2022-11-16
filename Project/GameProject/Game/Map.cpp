@@ -34,7 +34,7 @@ static int stage1data[MAP_HEIGHT][MAP_WIDTH] = {
 	{ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 	//                                                                                                                                                                                                    g(, )
 };
-
+static int stage1_Mini_data[MAP_HEIGHT][MAP_WIDTH] = { NULL };
 
 Map::Map():Base(eType_Field)
 {
@@ -51,11 +51,11 @@ void Map::Draw()
 			if (stage1data[i][j] == 0)continue;
 			int t = stage1data[i][j];
 			//画像切り抜き
-			m_img.SetRect(32*t, 0, 32*t + 32, 32);
+			m_img.SetRect(32 * t, 0, 32 * t + 32, 32);
 			//表示サイズ設定
 			m_img.SetSize(MAP_TIP_SIZE, MAP_TIP_SIZE);
 			//表示位置設定
-			m_img.SetPos(MAP_TIP_SIZE * j-m_scroll.x, MAP_TIP_SIZE * i-m_scroll.y);
+			m_img.SetPos(MAP_TIP_SIZE * j - m_scroll.x, MAP_TIP_SIZE * i - m_scroll.y);
 			//描画
 			m_img.Draw();
 		}
@@ -128,5 +128,62 @@ int Map::CollisionMap(const CVector2D& pos, const CRect& rect)
 	if (t != 0) return t;
 
 	return 0;
+}
+
+MiniMap::MiniMap():Base(eType_UI_Front)
+{
+	m_img = COPY_RESOURCE("MiniMap", CImage);
+	sxmin = MAP_WIDTH + 10;
+	symin = MAP_HEIGHT + 10;
+}
+
+void MiniMap::Draw()
+{
+	
+	int col = CCamera::GetCurrent()->GetWhidth() / MAP_TIP_SIZE + 2;
+	int row = CCamera::GetCurrent()->GetHeight() / MAP_TIP_SIZE + 2;
+	//画面の拡大縮小プログラムを実装している場合（Scroll.cpp）
+	//②拡大縮小：画面中心が原点
+	sx = m_scroll.x / MAP_TIP_SIZE;
+	if (sx < 0) sx = 0;
+	ex = sx + col;
+	if (ex > MAP_WIDTH)ex = MAP_WIDTH;
+
+	sy = m_scroll.y / MAP_TIP_SIZE;
+	if (sy < 0) sy = 0;
+	ey = sy + row;
+	if (ey > MAP_HEIGHT)ey = MAP_HEIGHT;
+	
+
+	//ミニマップ描画範囲
+	for (int i = sy; i < ey; i++) {
+		for (int j = sx; j < ex; j++) {
+			/**/
+			//表示しない制御
+			if (stage1data[i][j] == 0)continue;
+			int t = stage1data[i][j];
+			stage1_Mini_data[i][j] = t;
+			//描画
+			//m_img.Draw();
+		}
+	}
+
+	//マップチップによる表示の繰り返し
+	for (int i = 0; i < MAP_WIDTH; i++) {
+		for (int j = 0; j < MAP_HEIGHT; j++) {
+			//表示しない制御
+			if (stage1_Mini_data[i][j] == 0)continue;
+			int t = stage1_Mini_data[i][j];
+			//画像切り抜き
+			m_img.SetRect(3 * t, 0, 3 * t + 3, 3);
+			//表示サイズ設定
+			m_img.SetSize(3, 3);
+			//表示位置設定
+			m_img.SetPos((1280 - MAP_HEIGHT * 3 + j * 3), (1 + i * 3));
+			//描画
+			m_img.Draw();
+		}
+	}
+	
 }
 

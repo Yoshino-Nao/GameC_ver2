@@ -1,7 +1,7 @@
 #include "Gauge.h"
 #include "../Character/Player.h"
 
-GaugeBack::GaugeBack() :Base(eType_GaugeBack)
+GaugeBack::GaugeBack() :Base(eType_UI_Back)
 {
 	m_img.Load("Image/-5.png");
 	m_img.SetColor(0.3, 0.3, 0.3, 1);
@@ -14,7 +14,7 @@ void GaugeBack::Draw()
 	m_img.Draw();
 }
 
-GaugeGreen::GaugeGreen() :Base(eType_GaugeGreen)
+GaugeGreen::GaugeGreen() :Base(eType_UI_Front)
 {
 	m_img.Load("Image/-5.png");
 	m_img.SetColor(0, 1, 0, 1);
@@ -41,7 +41,7 @@ void GaugeGreen::Draw()
 	m_img.Draw();
 }
 
-GaugeRed::GaugeRed() :Base(eType_GaugeRed)
+GaugeRed::GaugeRed() :Base(eType_UI_Mid)
 {
 	m_img.Load("Image/-5.png");
 	m_img.SetColor(1, 0, 0, 1);

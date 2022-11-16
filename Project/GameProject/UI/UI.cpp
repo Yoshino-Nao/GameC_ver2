@@ -3,7 +3,7 @@
 #include "../Item/start.h"
 #include "../Item/Goal.h"
 #include "../Character/Player.h"
-UI::UI() :Base(eType_UI) {
+UI::UI() :Base(eType_UI_Front) {
 	m_img.Load("Image/UI.png");
 	p_hp = 0;
 	

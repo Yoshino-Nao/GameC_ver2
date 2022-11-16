@@ -28,12 +28,11 @@ enum {
 	eType_start,
 	eType_Goal2,
 
-	eType_GaugeBack,
-	eType_GaugeRed,
-	eType_GaugeGreen,
-	eType_Menu,
-	eType_UI,
 	
+	eType_Menu,
+	eType_UI_Back,
+	eType_UI_Mid,
+	eType_UI_Front,
 };
 
 class Base {
