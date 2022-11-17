@@ -19,7 +19,7 @@ Game::Game() :Base(eType_Scene)
 {
 	//Base::Add(new Field());
 	Base::Add(new Map());
-	Base::Add(new Player(CVector2D(MAP_TIP_SIZE * 98 + MAP_TIP_SIZE / 2, MAP_TIP_SIZE * 23 - 1), false));
+	Base::Add(new Player(CVector2D(MAP_TIP_SIZE * 3 + MAP_TIP_SIZE / 2, MAP_TIP_SIZE * 7 - 1), false));
 	//Base::Add(new Attack(CVector2D(1280, 560), false));
 	//Base::Add(new Enemy(CVector2D(1280 + 256 * 2, 540), true));
 	//Base::Add(new Enemy(CVector2D(1280 + 256 * 3, 540), true));
