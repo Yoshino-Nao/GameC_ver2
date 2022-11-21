@@ -132,9 +132,6 @@
     <ClInclude Include="Character\Enemy.h">
       <Filter>Character</Filter>
     </ClInclude>
-    <ClInclude Include="Character\Player.h">
-      <Filter>Character</Filter>
-    </ClInclude>
     <ClInclude Include="Item\Item.h">
       <Filter>Item</Filter>
     </ClInclude>
@@ -167,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="UI\Menu.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\Player.h">
+      <Filter>Character</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

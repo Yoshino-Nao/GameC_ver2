@@ -68,7 +68,7 @@ void Init(void)
 	//-----------------------------------------------------
 	
 	//âÊëúÇÃì«Ç›çûÇ›Ç∆ìoò^
-	ADD_RESOURCE("Player", CImage::CreateImage("Image/Player.png", player_anim_data,64, 64));
+	ADD_RESOURCE("Player", CImage::CreateImage("Image/Player2.png", uni_anim_data,194, 194));
 	ADD_RESOURCE("Slime1", CImage::CreateImage("Image/Slime.png", enemy_anim_data, 48, 48));
 	ADD_RESOURCE("Slime2", CImage::CreateImage("Image/Slime2.png", enemy_anim_data, 48, 48));
 	ADD_RESOURCE("Slime3", CImage::CreateImage("Image/Slime3.png", enemy_anim_data, 48, 48));

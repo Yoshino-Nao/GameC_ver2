@@ -20,102 +20,13 @@
 void Player::StateIdle()
 {
 	Ccnt = 120;
-	/*
-	//最大速度
-	const float move_speed_max = 10;
-	//加速度
-	const float move_speed_add = 0.5f;
-	//ジャンプ力
-	const float jump_pow = 18;
-	*/
-	//移動フラグ
-	bool move_flag = false;
-	//左移動
-	if (HOLD(CInput::eLeft)) {
-		vec.x -= move_speed_add;
-		/*
-		//移動量を設定
-		m_pos.x += -move_speed;*/
-		//反転フラグ
-		m_flip = true;
-		move_flag = true;
-	}
-	//右移動
-	if (HOLD(CInput::eRight)) {
-		vec.x += move_speed_add;
-		/*
-		//移動量を設定
-		m_pos.x += move_speed;*/
-		//反転フラグ
-		m_flip = false;
-		move_flag = true;
-	}
-	//ジャンプ
-	if (m_is_ground && PUSH(CInput::eButton2)) {
-		m_vec.y = -jump_pow;
-		m_is_ground = false;
-		m_airjump = true;
-	}
 	
+	Move();
+
 	if (HOLD(CInput::eButton1)) {
 		m_state = eState_Shooting;
 		m_attack_no++;
 	}
-	
-	if (vec.x < -move_speed_max) {
-		vec.x = -move_speed_max;
-	}
-	if (vec.x > move_speed_max) {
-		vec.x = move_speed_max;
-	}
-	m_pos.x += vec.x;
-	/*
-	//攻撃
-	if (HOLD(CInput::eButton1)) {
-		Base* b = Base::FindObject(eType_Ball);
-		if (!b) {
-			Base::Add(new Attack(CVector2D(1280, 560), m_flip, eType_Ball, m_attack_no));
-			m_img.ChangeAnimation(eAnimAtkIdle);
-		}
-		
-		else if (!b && !m_flip) {
-
-			Base::Add(new Attack(CVector2D(1280, 560), true, eType_Ball,m_attack_no));
-		}
-		//攻撃状態へ移行
-		//m_state = eState_Attack;
-		//m_attack_no++;
-	}*/
-	
-	//ジャンプ中なら
-	if (!m_is_ground) {
-		if (m_vec.y < 0)
-			//上昇アニメーション
-			m_img.ChangeAnimation(eAnimJumpUp, false);
-		else
-			//下降アニメーション
-			m_img.ChangeAnimation(eAnimJumpDown, false);
-		//２段ジャンプ
-		if (m_airjump && m_img.GetIndex() >= 3 && PUSH(CInput::eButton2)) {
-			m_vec.y = (jump_pow * -0.5f);
-			m_is_ground = false;
-			m_airjump = false;
-		}
-		//構え
-	}
-	//移動中なら
-	else {
-		if (move_flag) {
-			//走るアニメーション
-			m_img.ChangeAnimation(eAnimRun);
-		}
-		else {
-			vec.x = 0;
-			//待機アニメーション
-			m_img.ChangeAnimation(eAnimIdle);
-		}
-	}	
-	
 }
 
 void Player::StateAttack()
@@ -156,6 +67,45 @@ void Player::StateShooting()
 		m_is_ground = false;
 		m_airjump = true;
 	}
+	//攻撃状態へ移行
+	//m_state = eState_Attack;
+	//m_attack_no++;
+	//ジャンプ中なら
+	if (!m_is_ground)
+	{
+		if (m_vec.y < 0)
+		{
+			//上昇アニメーション
+			m_img.ChangeAnimation(eAnimAtkJumpUp, false);
+		}
+		else
+		{
+			//下降アニメーション
+			m_img.ChangeAnimation(eAnimAtkJumpDown, false);
+			//２段ジャンプ
+			if (m_airjump && m_img.GetIndex() >= 3 && PUSH(CInput::eButton2)) {
+				m_vec.y = (jump_pow * -0.5f);
+				m_is_ground = false;
+				m_airjump = false;
+			}
+		}
+	}
+	//移動中なら
+	else {
+		if (move_flag)
+		{
+			//走るアニメーション
+			m_img.ChangeAnimation(eAnimAtkRun);
+		}
+		else
+		{
+			vec.x = 0;
+			//待機アニメーション
+			m_img.ChangeAnimation(eAnimAtkIdle);
+		}
+	}
+#pragma region Bullet
+
 	//弾flip補正
 	if (m_flip) {
 		Bulletpos = -60;
@@ -170,9 +120,6 @@ void Player::StateShooting()
 		vec.x = move_speed_max;
 	}
 	m_pos.x += vec.x;
-	
-	
-	
 	Base* b = Base::FindObject(eType_Player_Bullet);
 	if (!b) {
 		if (Ccnt == 120)
@@ -192,45 +139,9 @@ void Player::StateShooting()
 			m_state = eState_Idle;
 		}
 	}
+#pragma endregion
 	
 	
-	//攻撃状態へ移行
-	//m_state = eState_Attack;
-	//m_attack_no++;
-	//ジャンプ中なら
-	if (!m_is_ground) 
-	{
-		if (m_vec.y < 0) 
-		{
-			//上昇アニメーション
-			m_img.ChangeAnimation(eAnimAtkJumpUp, false);
-		}
-		else 
-		{
-			//下降アニメーション
-			m_img.ChangeAnimation(eAnimAtkJumpDown, false);
-			//２段ジャンプ
-			if (m_airjump && m_img.GetIndex() >= 3 && PUSH(CInput::eButton2)) {
-				m_vec.y = (jump_pow * -0.5f);
-				m_is_ground = false;
-				m_airjump = false;
-			}
-		}
-	}
-	//移動中なら
-	else {
-		if (move_flag) 
-		{
-			//走るアニメーション
-			m_img.ChangeAnimation(eAnimAtkRun);
-		}
-		else 
-		{
-			vec.x = 0;
-			//待機アニメーション
-			m_img.ChangeAnimation(eAnimAtkIdle);
-		}
-	}
 	Ccnt--;
 	if (Ccnt <= 0) {
 		Ccnt = 0;
@@ -327,6 +238,66 @@ Player::Player(const CVector2D& p, bool flip) :
 	m_img.SetSize(224 / 2, 224 / 2);
 	m_img.SetCenter(112 / 2, 192 / 2);
 	m_rect = CRect(-28 / 2, -124 / 2, 28 / 2, 0);*/
+}
+
+void Player::Move()
+{
+	//移動フラグ
+	bool move_flag = false;
+	//左移動
+	if (HOLD(CInput::eLeft)) {
+		vec.x -= move_speed_add;
+		//反転フラグ
+		m_flip = true;
+		move_flag = true;
+	}
+	//右移動
+	if (HOLD(CInput::eRight)) {
+		vec.x += move_speed_add;
+		//反転フラグ
+		m_flip = false;
+		move_flag = true;
+	}
+	//ジャンプ
+	if (m_is_ground && PUSH(CInput::eButton2)) {
+		m_vec.y = -jump_pow;
+		m_is_ground = false;
+		m_airjump = true;
+	}
+	if (vec.x < -move_speed_max) {
+		vec.x = -move_speed_max;
+	}
+	if (vec.x > move_speed_max) {
+		vec.x = move_speed_max;
+	}
+	m_pos.x += vec.x;
+	//ジャンプ中なら
+	if (!m_is_ground) {
+		if (m_vec.y < 0)
+			//上昇アニメーション
+			m_img.ChangeAnimation(5, false);
+		else
+			//下降アニメーション
+			m_img.ChangeAnimation(6, false);
+		//２段ジャンプ
+		if (m_airjump && m_img.GetIndex() >= 3 && PUSH(CInput::eButton2)) {
+			m_vec.y = (jump_pow * -0.5f);
+			m_is_ground = false;
+			m_airjump = false;
+		}
+	}
+	//移動中なら
+	else {
+		if (move_flag) {
+			//走るアニメーション
+			m_img.ChangeAnimation(2);
+		}
+		else {
+			vec.x = 0;
+			//待機アニメーション
+			m_img.ChangeAnimation(0);
+		}
+	}
 }
 
 void Player::Update() {

@@ -68,6 +68,7 @@ public:
 	//’âŽ~ŽžŠÔ
 	int stpdtime;
 	Player(const CVector2D& p, bool flip);
+	void Move();
 	void Update();
 	void Draw();
 	void Collision(Base* b);
