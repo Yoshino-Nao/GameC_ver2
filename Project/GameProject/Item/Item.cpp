@@ -1,6 +1,6 @@
 #include "Item.h"
 #include "../Game/GameData.h"
-#include "../Game/Map.h"
+#include "../Map/Map.h"
 Item_Score::Item_Score(const CVector2D& pos)
 	:Base(eType_Item_Score)
 {

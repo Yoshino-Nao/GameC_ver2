@@ -1,6 +1,6 @@
 #include "Door.h"
 #include "../Character/Player.h"
-#include "../Game/Map.h"
+#include "../Map/Map.h"
 Door::Door(const CVector2D& pos)
 	:Base(eType_Door)
 {

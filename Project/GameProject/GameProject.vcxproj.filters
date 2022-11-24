@@ -8,19 +8,10 @@
     <ClCompile Include="Base\Base.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Field.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Slash.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Effect.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Game\Game.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Map.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Game\Effect_Ring.cpp">
@@ -71,6 +62,12 @@
     <ClCompile Include="UI\Menu.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="Map\Map.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Attack\Slash.cpp">
+      <Filter>Attack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Game">
@@ -97,6 +94,9 @@
     <Filter Include="Gimmick">
       <UniqueIdentifier>{ff7d5400-e739-41d8-a5cf-602ce2de3390}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{342dec2d-0881-4b2c-a9b6-5f01d3d12d4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\AnimData.h">
@@ -105,19 +105,10 @@
     <ClInclude Include="Base\Base.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Field.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Slash.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Effect.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Game\Game.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Map.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Game\Effect_Ring.h">
@@ -167,6 +158,12 @@
     </ClInclude>
     <ClInclude Include="Character\Player.h">
       <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\Map.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Attack\Slash.h">
+      <Filter>Attack</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

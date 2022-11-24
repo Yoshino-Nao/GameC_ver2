@@ -1,7 +1,7 @@
 #include "../Game/AnimData.h"
 #include "../Game/Effect.h"
 #include "../Game/GameData.h"
-#include "../Game/Map.h"
+#include "../Map/Map.h"
 #include "../Attack/EnemyBullet.h"
 #include "../Attack/Player_Bullet1.h"
 #include "../Item/Item.h"

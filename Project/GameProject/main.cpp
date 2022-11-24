@@ -6,7 +6,6 @@
 #include "Game/AnimData.h"
 #include "Character/Enemy.h"
 #include "Character/Player.h"
-#include "Game/Field.h"
 #include "UI/UI.h"
 #include "UI/Gauge.h"
 #include "Game/GameData.h"
