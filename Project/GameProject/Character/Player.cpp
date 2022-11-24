@@ -23,7 +23,7 @@ void Player::StateIdle()
 	
 	Move();
 
-	if (HOLD(CInput::eButton1)) {
+	if (PUSH(CInput::eButton1)) {
 		m_state = eState_Shooting;
 		m_attack_no++;
 	}
@@ -36,74 +36,7 @@ void Player::StateAttack()
 
 void Player::StateShooting()
 {
-	//移動フラグ
-	bool move_flag = false;
-	
-	//左移動
-	if (HOLD(CInput::eLeft)) {
-		vec.x -= move_speed_add;
-		/*
-		//移動量を設定
-		m_pos.x += -move_speed;*/
-		//反転フラグ
-		
-		m_flip = true;
-		move_flag = true;
-	}
-	//右移動
-	if (HOLD(CInput::eRight)) {
-		vec.x += move_speed_add;
-		/*
-		//移動量を設定
-		m_pos.x += move_speed;*/
-		//反転フラグ
-		
-		m_flip = false;
-		move_flag = true;
-	}
-	//ジャンプ
-	if (m_is_ground && PUSH(CInput::eButton2)) {
-		m_vec.y = -jump_pow;
-		m_is_ground = false;
-		m_airjump = true;
-	}
-	//攻撃状態へ移行
-	//m_state = eState_Attack;
-	//m_attack_no++;
-	//ジャンプ中なら
-	if (!m_is_ground)
-	{
-		if (m_vec.y < 0)
-		{
-			//上昇アニメーション
-			m_img.ChangeAnimation(eAnimAtkJumpUp, false);
-		}
-		else
-		{
-			//下降アニメーション
-			m_img.ChangeAnimation(eAnimAtkJumpDown, false);
-			//２段ジャンプ
-			if (m_airjump && m_img.GetIndex() >= 3 && PUSH(CInput::eButton2)) {
-				m_vec.y = (jump_pow * -0.5f);
-				m_is_ground = false;
-				m_airjump = false;
-			}
-		}
-	}
-	//移動中なら
-	else {
-		if (move_flag)
-		{
-			//走るアニメーション
-			m_img.ChangeAnimation(eAnimAtkRun);
-		}
-		else
-		{
-			vec.x = 0;
-			//待機アニメーション
-			m_img.ChangeAnimation(eAnimAtkIdle);
-		}
-	}
+	/*
 #pragma region Bullet
 
 	//弾flip補正
@@ -124,11 +57,11 @@ void Player::StateShooting()
 	if (!b) {
 		if (Ccnt == 120)
 		{	
-			Base::Add(new Effect_Ring("Effect_Ring", m_pos, m_flip, m_ang, 32, 144));
+			//Base::Add(new Effect_Ring("Effect_Ring", m_pos, m_flip, m_ang, 32, 144));
 		}
 		if (Ccnt == 60)
 		{
-			Base::Add(new Effect_Ring("Effect_Ring2", m_pos, m_flip, m_ang, 32, 144));
+			//Base::Add(new Effect_Ring("Effect_Ring2", m_pos, m_flip, m_ang, 32, 144));
 		}
 		if (FREE(CInput::eButton1)) 
 		{
@@ -140,8 +73,11 @@ void Player::StateShooting()
 		}
 	}
 #pragma endregion
-	
-	
+	*/
+	m_img.ChangeAnimation(15,false);
+	if (m_img.CheckAnimationEnd() && PUSH(CInput::eButton1)) {
+		m_state = eState_Idle;
+	}
 	Ccnt--;
 	if (Ccnt <= 0) {
 		Ccnt = 0;
@@ -150,7 +86,7 @@ void Player::StateShooting()
 
 void Player::StateDamage()
 {
-	m_img.ChangeAnimation(eAnimDamage, false);
+	m_img.ChangeAnimation(8, false);
 	m_is_inv = true;
 	invtime = 120;
 	if (m_flip) {
@@ -167,7 +103,7 @@ void Player::StateDamage()
 
 void Player::StateDown()
 {
-	m_img.ChangeAnimation(eAnimDamage, false);
+	m_img.ChangeAnimation(11, false);
 	if (m_img.CheckAnimationEnd()) 
 	{
 		m_kill = true;
@@ -178,19 +114,19 @@ Player::Player(const CVector2D& p, bool flip) :
 	Base(eType_Player) {
 	//画像複製
 	m_img = COPY_RESOURCE("Player", CImage);
-	m_img.SetSize(224, 224);
-
+	m_img.SetSize(448, 448);
+	//中心位置設定
+	m_img.SetCenter(214, 412);
 	
 	//再生アニメーション設定
 	m_img.ChangeAnimation(0);
 	//座標設定
 	m_pos_old = m_pos = p;
-	//中心位置設定
-	m_img.SetCenter(112, 192);
+	
 	//反転フラグ
 	m_flip = flip;
 	//当たり判定
-	m_rect = CRect(-28, -124, 28, 0);
+	m_rect = CRect(-28, -104, 28, 0);
 	//通常状態へ
 	m_state = eState_Idle;
 	//最大速度
@@ -201,6 +137,8 @@ Player::Player(const CVector2D& p, bool flip) :
 	jump_pow = 18;
 	//着地フラグ
 	m_is_ground = true;
+
+	m_is_land = false;
 	//２段ジャンプフラグ
 	m_airjump = false;
 	//ジャンプindex取得
@@ -273,12 +211,16 @@ void Player::Move()
 	m_pos.x += vec.x;
 	//ジャンプ中なら
 	if (!m_is_ground) {
-		if (m_vec.y < 0)
+		if (m_vec.y < 0) {
 			//上昇アニメーション
 			m_img.ChangeAnimation(5, false);
+		}
 		else
+		{
 			//下降アニメーション
 			m_img.ChangeAnimation(6, false);
+			m_is_land = true;
+		}
 		//２段ジャンプ
 		if (m_airjump && m_img.GetIndex() >= 3 && PUSH(CInput::eButton2)) {
 			m_vec.y = (jump_pow * -0.5f);
@@ -289,6 +231,10 @@ void Player::Move()
 	//移動中なら
 	else {
 		if (move_flag) {
+			if (m_is_land) {
+				m_img.ChangeAnimation(7, false);
+				m_is_land = false;
+			}
 			//走るアニメーション
 			m_img.ChangeAnimation(2);
 		}
@@ -401,7 +347,7 @@ void Player::Draw() {
 	m_img.SetFlipH(m_flip);
 	//描画
 	m_img.Draw();
-	//DrawRect();
+	DrawRect();
 	
 }
 
@@ -504,6 +450,7 @@ void Player::Collision(Base* b)
 				m_pos.y = m_pos_old.y;
 				m_vec.y = 0;
 				m_is_ground = true;
+				//m_is_land = false;
 				m_airjump = false;
 				//基準値+補正値
 				//m_scroll.x = m_pos.x - 1280 / 2 + sc_ver.x;

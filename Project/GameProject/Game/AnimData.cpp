@@ -315,6 +315,8 @@ static TexAnim uniJumpUp[] = {
 static TexAnim uniJumpFall[] = {
 	{ 45,4 },
 	{ 46,4 },
+};
+static TexAnim uniLanding[] = {
 	{ 47,4 },
 };
 static TexAnim uniDamage1[] = {
@@ -498,32 +500,33 @@ static TexAnim uniWarming_up[] = {
 	{135,4 },
 };
 TexAnimData uni_anim_data[] = {
-	ANIMDATA(uniIdle),
-	ANIMDATA(uniWalk),
-	ANIMDATA(uniRun),
-	ANIMDATA(uniBrake),
-	ANIMDATA(uniCrouch),
-	ANIMDATA(uniJumpUp),
-	ANIMDATA(uniJumpFall),
-	ANIMDATA(uniDamage1),
-	ANIMDATA(uniDamage2),
-	ANIMDATA(uniDamage3),
-	ANIMDATA(uniDead),
-	ANIMDATA(uniSoard_Combo1),
-	ANIMDATA(uniSoard_Combo2),
-	ANIMDATA(uniSoard_Combo3),
-	ANIMDATA(uniHundgunDraw),
-	ANIMDATA(uniHundgunLow),
-	ANIMDATA(uniHundgunMid),
-	ANIMDATA(uniHundgunHigh),
-	ANIMDATA(uniHundgunUp),
-	ANIMDATA(uniHundgunSP),
-	ANIMDATA(uniPoint_at),
-	ANIMDATA(uniPositive),
-	ANIMDATA(uniNegative),
-	ANIMDATA(uniLook_around),
-	ANIMDATA(uniWave_hand),
-	ANIMDATA(uniWarming_up),
+	ANIMDATA(uniIdle),		  //0
+	ANIMDATA(uniWalk),        //1
+	ANIMDATA(uniRun),         //2
+	ANIMDATA(uniBrake),       //3
+	ANIMDATA(uniCrouch),      //4
+	ANIMDATA(uniJumpUp),      //5
+	ANIMDATA(uniJumpFall),    //6
+	ANIMDATA(uniLanding),     //7
+	ANIMDATA(uniDamage1),     //8
+	ANIMDATA(uniDamage2),     //9
+	ANIMDATA(uniDamage3),     //10
+	ANIMDATA(uniDead),		  //11
+	ANIMDATA(uniSoard_Combo1),//12
+	ANIMDATA(uniSoard_Combo2),//13
+	ANIMDATA(uniSoard_Combo3),//14
+	ANIMDATA(uniHundgunDraw), //15
+	ANIMDATA(uniHundgunLow),  //16
+	ANIMDATA(uniHundgunMid),  //17
+	ANIMDATA(uniHundgunHigh), //18
+	ANIMDATA(uniHundgunUp),   //19
+	ANIMDATA(uniHundgunSP),	  //20
+	ANIMDATA(uniPoint_at),    //21
+	ANIMDATA(uniPositive),    //22
+	ANIMDATA(uniNegative),    //23
+	ANIMDATA(uniLook_around), //24
+	ANIMDATA(uniWave_hand),   //25
+	ANIMDATA(uniWarming_up),  //26
 };
 
 static TexAnim enemy_Slime_move[] = {

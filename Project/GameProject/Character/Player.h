@@ -26,6 +26,8 @@ private:
 	bool m_flip;
 	//着地フラグ
 	bool m_is_ground;
+	//着地モーションフラグ
+	bool m_is_land;
 	//２段ジャンプフラグ
 	bool m_airjump;
 	//ジャンプindex取得
