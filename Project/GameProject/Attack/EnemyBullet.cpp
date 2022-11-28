@@ -1,5 +1,5 @@
 #include "EnemyBullet.h"
-#include "../Game/Map.h"
+#include "../Map/Map.h"
 #include "../Game/Effect_Ring.h"
 #include "../Character/Player.h"
 EnemyBullet::EnemyBullet(

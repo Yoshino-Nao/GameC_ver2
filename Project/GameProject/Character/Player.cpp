@@ -1,6 +1,6 @@
 #include "../Base/Base.h"
 #include "../Game/AnimData.h"
-#include "../Game/Slash.h"
+#include "../Attack/Slash.h"
 #include "../Game/Effect.h"
 #include "../Game/Game.h"
 #include "../Game/Effect_Ring.h" 

@@ -88,7 +88,7 @@ void Init(void)
 	ADD_RESOURCE("Sky", CImage::CreateImage("Image/Sky.png"));
 	ADD_RESOURCE("Town", CImage::CreateImage("Image/Town.png"));
 	ADD_RESOURCE("ForeGround", CImage::CreateImage("Image/ForeGround.png"));
-	ADD_RESOURCE("MapTip", CImage::CreateImage("Image/MapTip.png"));
+	ADD_RESOURCE("MapTip", CImage::CreateImage("Image/MapTip.bmp"));
 	ADD_RESOURCE("MiniMap", CImage::CreateImage("Image/MiniMap.png"));
 	ADD_RESOURCE("MiniMap_Back", CImage::CreateImage("Image/MiniMap_BackGround.png"));
 	ADD_RESOURCE("Title", CImage::CreateImage("Image/Title.png"));

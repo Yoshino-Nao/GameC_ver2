@@ -1,5 +1,5 @@
 #include "Player_Bullet1.h"
-#include "../Game/Map.h"
+#include "../Map/Map.h"
 #include "../Game/GameData.h"
 #include "../Character/Player.h"
 Player_Bullet1::Player_Bullet1(const CVector2D& p, bool flip, int type, int attack_no) 
