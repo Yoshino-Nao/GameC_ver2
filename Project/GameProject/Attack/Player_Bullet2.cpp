@@ -74,8 +74,8 @@ void Player_Bullet2::Collision(Base* b)
 	switch (b->m_type) {
 	case eType_Field:
 		if (Map* m = dynamic_cast<Map*>(b)) {
-			int t = m->CollisionMap(m_pos, m_rect);
-			if (t != 0)
+			int t = m->CollisionMap(m_pos, m_rect,&m_pos);
+			if (t != NULL_TIP)
 				m_vec = CVector2D(sin(m_ang) * -1, cos(m_ang));
 		}
 		break;

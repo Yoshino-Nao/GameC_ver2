@@ -50,6 +50,15 @@ void Base::KillAll()
 		b->SetKill();
 	}
 }
+void Base::KillByType(int type)
+{
+	//w’è‚Ìí—Ş‚ğ‘S‚Äíœ
+	std::list<Base*> ret;
+	for (auto& b : m_list) {
+		if (b->m_type == type)
+			b->SetKill();
+	}
+}
 void Base::Collision(Base* b) {
 
 }

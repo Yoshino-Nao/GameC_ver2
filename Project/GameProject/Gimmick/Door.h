@@ -1,11 +1,12 @@
 #pragma once
 #include "../Base/Base.h"
-
-class Door :public Base {
+#include "../Map/fmfmap.h"
+#include "../Map/Map.h"
+class Door :public Base{
 private:
 	CImage m_img;
 public:
-	Door(const CVector2D& pos);
+	Door(const CVector2D& pos, int w, int h);
 	void Draw();
 	void Collision(Base* b);
 	void Update();

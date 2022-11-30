@@ -15,10 +15,14 @@ private:
 	};
 	//状態変数
 	int m_state;
-	//最大速度
-	float move_speed_max;
-	//加速度
-	float move_speed_add;
+	//X最大速度
+	float move_xspeed_max;
+	//X加速度
+	float move_xspeed_add;
+	//Y最高速度
+	float move_yspeed_max;
+	//Y加速度
+	float move_yspeed_add;
 	//ジャンプ力
 	float jump_pow;
 	CImage m_img;

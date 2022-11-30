@@ -43,10 +43,11 @@ void EnemyBullet::Collision(Base* b){
 	switch (b->m_type) {
 		
 	case eType_Field:
+		//CVector2D pos;
 		if (Map* m = dynamic_cast<Map*>(b)) {
 			//const CVector2D& pos, const CRect& rect
-			int t = m->CollisionMap(m_pos,m_rect);
-			if (t != 0)
+			int t = m->CollisionMap(m_pos, m_rect, &m_pos);
+			if (t != NULL_TIP)
 				SetKill();
 		}
 		break;

@@ -33,6 +33,7 @@ enum {
 	eType_UI_Back,
 	eType_UI_Mid,
 	eType_UI_Front,
+	eType_AreaChange,
 };
 
 class Base {
@@ -67,6 +68,13 @@ public:
 	virtual void Collision(Base* b);
 	//削除フラグON
 	void SetKill() { m_kill = true; }
+	/// <summary>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="pos">座標</param>
+	void ResetPos(const CVector2D& pos) {
+		m_pos = m_pos_old = pos;
+	}
 	//全てのオブジェクトの更新
 	static void UpdateAll();
 	//全てのオブジェクトの描画
@@ -77,6 +85,12 @@ public:
 	static void Add(Base*b);
 	//全オブジェクトの削除
 	static void KillAll();
+	static void KillByType(int type);
+
+	/// <summary>
+	/// オブジェクトの追加
+	/// </summary>
+	/// <param name="b">追加するオブジェクト</param>
 	//円同士の衝突
 	static bool CollisionCircle(Base* b1, Base* b2);
 	//削除チェック

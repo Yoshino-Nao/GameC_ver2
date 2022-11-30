@@ -129,11 +129,15 @@ Player::Player(const CVector2D& p, bool flip) :
 	//通常状態へ
 	m_state = eState_Idle;
 	//最大速度
-	move_speed_max = 10;
+	move_xspeed_max = 10;
 	//加速度
-	move_speed_add = 0.5f;
+	move_xspeed_add = 0.5f;
+	//最大速度
+	move_yspeed_max = 18;
+	//加速度
+	move_yspeed_add = 0.5f;
 	//ジャンプ力
-	jump_pow = 18;
+	jump_pow = 9;
 	//着地フラグ
 	m_is_ground = true;
 
@@ -183,31 +187,36 @@ void Player::Move()
 	bool move_flag = false;
 	//左移動
 	if (HOLD(CInput::eLeft)) {
-		vec.x -= move_speed_add;
+		vec.x -= move_xspeed_add;
 		//反転フラグ
 		m_flip = true;
 		move_flag = true;
 	}
 	//右移動
 	if (HOLD(CInput::eRight)) {
-		vec.x += move_speed_add;
+		vec.x += move_xspeed_add;
 		//反転フラグ
 		m_flip = false;
 		move_flag = true;
 	}
 	//ジャンプ
 	if (m_is_ground && PUSH(CInput::eButton2)) {
-		m_vec.y = -jump_pow;
+		vec.y = jump_pow;
+		m_vec.y = -move_yspeed_max;
 		m_is_ground = false;
 		m_airjump = true;
 	}
-	if (vec.x < -move_speed_max) {
-		vec.x = -move_speed_max;
+	if (vec.x < -move_xspeed_max) {
+		vec.x = -move_xspeed_max;
 	}
-	if (vec.x > move_speed_max) {
-		vec.x = move_speed_max;
+	if (vec.x > move_xspeed_max) {
+		vec.x = move_xspeed_max;
+	}
+	if (vec.y < -move_yspeed_max) {
+		vec.y = -move_yspeed_max;
 	}
 	m_pos.x += vec.x;
+	//m_pos.y += vec.y;
 	//ジャンプ中なら
 	if (!m_is_ground) {
 		if (m_vec.y < 0) {
@@ -233,14 +242,29 @@ void Player::Move()
 			if (m_is_land) {
 				m_img.ChangeAnimation(7, false);
 				m_is_land = false;
+				if (m_img.CheckAnimationEnd()) {
+					m_img.ChangeAnimation(2);
+				}
 			}
-			//走るアニメーション
-			m_img.ChangeAnimation(2);
+			else {
+				//走るアニメーション
+				m_img.ChangeAnimation(2);
+			}
 		}
 		else {
-			vec.x = 0;
-			//待機アニメーション
-			m_img.ChangeAnimation(0);
+			if (m_is_land) {
+				m_img.ChangeAnimation(7, false);
+				m_is_land = false; 
+				if (m_img.CheckAnimationEnd()) {
+					m_img.ChangeAnimation(0);
+				}
+
+			}
+			else {
+				vec.x = 0;
+				//待機アニメーション
+				m_img.ChangeAnimation(0);
+			}
 		}
 	}
 }
@@ -440,13 +464,14 @@ void Player::Collision(Base* b)
 		break;
 	case eType_Field:
 		if (Map* m = dynamic_cast<Map*>(b)) {
-			int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect);
-			if (t != 0){
-				m_pos.x = m_pos_old.x;
+			CVector2D pos;
+			int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect,&pos);
+			if (t != NULL_TIP){
+				m_pos.x = pos.x;
 			}
-			t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect);
-			if (t != 0) {
-				m_pos.y = m_pos_old.y;
+			t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect,&pos);
+			if (t != NULL_TIP) {
+				m_pos.y = pos.y;
 				m_vec.y = 0;
 				m_is_ground = true;
 				//m_is_land = false;

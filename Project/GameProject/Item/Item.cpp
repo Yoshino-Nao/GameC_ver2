@@ -26,14 +26,15 @@ void Item_Score::Collision(Base* b)
 	switch (b->m_type) {
 	case eType_Field:
 		if (Map* m = dynamic_cast<Map*>(b)) {
-			int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect);
-			if (t != 0) {
-				m_pos.x = m_pos_old.x;
+			CVector2D pos;
+			int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect, &pos);
+			if (t != NULL_TIP) {
+				m_pos.x = pos.x;
 				m_vec.x *= -1;
 			}
-			t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect);
-			if (t != 0) {
-				m_pos.y = m_pos_old.y;
+			t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect, &pos);
+			if (t != NULL_TIP) {
+				m_pos.y = pos.y;
 				m_vec.y = 0;
 				m_is_ground = true;
 			}
@@ -79,14 +80,15 @@ void Item_LifeUp::Collision(Base* b)
 	switch (b->m_type) {
 	case eType_Field:
 		if (Map* m = dynamic_cast<Map*>(b)) {
-			int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect);
+			CVector2D pos;
+			int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect, &pos);
 			if (t != 0) {
-				m_pos.x = m_pos_old.x;
+				m_pos.x = pos.x;
 				m_vec.x *= -1;
 			}
-			t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect);
+			t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect, &pos);
 			if (t != 0) {
-				m_pos.y = m_pos_old.y;
+				m_pos.y = pos.y;
 				m_vec.y = 0;
 				m_is_ground = true;
 			}

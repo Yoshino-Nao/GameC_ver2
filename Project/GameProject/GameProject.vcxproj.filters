@@ -56,9 +56,6 @@
     <ClCompile Include="Item\start.cpp">
       <Filter>Item</Filter>
     </ClCompile>
-    <ClCompile Include="Gimmick\Door.cpp">
-      <Filter>Gimmick</Filter>
-    </ClCompile>
     <ClCompile Include="UI\Menu.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -67,6 +64,12 @@
     </ClCompile>
     <ClCompile Include="Attack\Slash.cpp">
       <Filter>Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\AreaChange.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\fmfmap.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -150,9 +153,6 @@
     <ClInclude Include="Item\start.h">
       <Filter>Item</Filter>
     </ClInclude>
-    <ClInclude Include="Gimmick\Door.h">
-      <Filter>Gimmick</Filter>
-    </ClInclude>
     <ClInclude Include="UI\Menu.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -164,6 +164,12 @@
     </ClInclude>
     <ClInclude Include="Attack\Slash.h">
       <Filter>Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\AreaChange.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\fmfmap.h">
+      <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

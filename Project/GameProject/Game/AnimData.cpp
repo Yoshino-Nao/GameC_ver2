@@ -274,10 +274,10 @@ static TexAnim uniRun[] = {
 	{ 31,4 },
 	{ 32,4 },
 	{ 33,4 },
-	{ 34,4 },
-	{ 35,4 },
-	{ 36,4 },
-	{ 37,4 },
+	{ 34,2 },
+	{ 35,2 },
+	{ 36,2 },
+	{ 37,2 },
 };
 static TexAnim uniBrake[] = {
 	{140,4 },
@@ -308,16 +308,22 @@ static TexAnim uniCrouch[] = {
 static TexAnim uniJumpUp[] = {
 	{ 40,4 },
 	{ 41,4 },
+	
+};
+static TexAnim uniJumpFall[] = {
 	{ 42,4 },
 	{ 43,4 },
 	{ 44,4 },
-};
-static TexAnim uniJumpFall[] = {
+	{ 45,4 },
+	{ 46,4 },
+	{ 45,4 },
+	{ 46,4 },
 	{ 45,4 },
 	{ 46,4 },
 };
 static TexAnim uniLanding[] = {
-	{ 47,4 },
+	{ 47,8 },
+	{ 47,8 },
 };
 static TexAnim uniDamage1[] = {
 	{ 60,4 },
