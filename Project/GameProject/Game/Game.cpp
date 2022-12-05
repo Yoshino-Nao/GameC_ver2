@@ -18,8 +18,8 @@
 Game::Game() :Base(eType_Scene)
 {
 	//Base::Add(new Field());
-	Base::Add(new Map(1,CVector2D(32 * 100, 32 * 500)));
-	Base::Add(new Player(CVector2D(), false));
+	Base::Add(new Map(1,CVector2D(32 * 90, 32 * 100)));
+	Base::Add(new Player(CVector2D(64 * 1, 64 * 95), false));
 	//Base::Add(new Attack(CVector2D(1280, 560), false));
 	//Base::Add(new Enemy(CVector2D(1280 + 256 * 2, 540), true));
 	//Base::Add(new Enemy(CVector2D(1280 + 256 * 3, 540), true));
@@ -39,11 +39,11 @@ Game::Game() :Base(eType_Scene)
 	//Base::Add(new Item(CVector2D(2048, 940)));
 	//Base::Add(new start(CVector2D(1200, 600)));
 	//Base::Add(new Goal2(CVector2D(1300, 600)));
+	Base::Add(new MiniMap(1));
 	Base::Add(new UI());
 	Base::Add(new GaugeBack());
 	Base::Add(new GaugeRed());
 	Base::Add(new GaugeGreen());
-	//Base::Add(new MiniMap());
 	GameData::s_score = 0;
 	GameData::s_time = 60 * 60 * 10;
 	

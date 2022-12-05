@@ -115,7 +115,7 @@ Player::Player(const CVector2D& p, bool flip) :
 	m_img = COPY_RESOURCE("Player", CImage);
 	m_img.SetSize(448, 448);
 	//中心位置設定
-	m_img.SetCenter(214, 412);
+	m_img.SetCenter(224, 412);
 	
 	//再生アニメーション設定
 	m_img.ChangeAnimation(0);
@@ -125,7 +125,7 @@ Player::Player(const CVector2D& p, bool flip) :
 	//反転フラグ
 	m_flip = flip;
 	//当たり判定
-	m_rect = CRect(-28, -104, 28, 0);
+	m_rect = CRect(-20, -104, 20, 0);
 	//通常状態へ
 	m_state = eState_Idle;
 	//最大速度
@@ -206,15 +206,19 @@ void Player::Move()
 		m_is_ground = false;
 		m_airjump = true;
 	}
+	vec.x = min(max(vec.x, -move_xspeed_max), move_xspeed_max);
+	/*
 	if (vec.x < -move_xspeed_max) {
 		vec.x = -move_xspeed_max;
 	}
 	if (vec.x > move_xspeed_max) {
 		vec.x = move_xspeed_max;
-	}
+	}*/
+
 	if (vec.y < -move_yspeed_max) {
 		vec.y = -move_yspeed_max;
 	}
+	
 	m_pos.x += vec.x;
 	//m_pos.y += vec.y;
 	//ジャンプ中なら

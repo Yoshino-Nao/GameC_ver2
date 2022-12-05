@@ -4,7 +4,7 @@
 #include "fmfmap.h"
 
 //透明チップ番号
-#define NULL_TIP 3
+#define NULL_TIP 0
 
 /// <summary>
 /// マップチップによるマップクラス
@@ -55,4 +55,12 @@ public:
 	/// <param name="rev_pos">衝突後、修正した位置</param>
 	/// <returns>衝突したチップ番号</returns>
 	int CollisionMap(const CVector2D& pos, const CRect& rect, CVector2D* rev_pos);
+};
+class MiniMap :public Base, CFmfMap {
+private:
+	CImage m_img;
+public:
+
+	MiniMap(int nextArea);
+	void Draw();
 };

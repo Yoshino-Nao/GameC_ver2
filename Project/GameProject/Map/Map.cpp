@@ -11,6 +11,8 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 	case 1:
 		//fmfからマップデータを読み込む
 		Open("Map/test64.fmf");
+
+		
 		/*
 		//廊下　右へ
 		Base::Add(new AreaChange(2,					//次のマップの番号
@@ -59,8 +61,8 @@ void Map::Draw() {
 	int s = pow(16, (GetLayerBitCount() / 8));
 
 	//表示範囲を限定　画面に移る範囲だけ描画
-	int col = CCamera::GetCurrent()->GetWhidth() / GetChipWidth()+1;
-	int row = CCamera::GetCurrent()->GetHeight() / GetChipHeight()+1;
+	int col = CCamera::GetCurrent()->GetWhidth() / GetChipWidth()+2;
+	int row = CCamera::GetCurrent()->GetHeight() / GetChipHeight()+2;
 	
 	int sx = m_scroll.x / GetChipWidth();
 	if (sx < 0) sx = 0;
@@ -74,7 +76,7 @@ void Map::Draw() {
 	
 
 	//レイヤー数だけ繰り返す k=1から始めると判定用の壁だけ表示される
-	for (int k = 1; k < GetLayerCount();k++) {
+	for (int k = 0; k < GetLayerCount();k++) {
 		//行と列の繰り返し
 		for (int j = sy; j < ey; j++) {
 			for (int i = sx; i < ex; i++) {
@@ -202,22 +204,112 @@ int Map::CollisionMap(const CVector2D& pos, const CRect& rect, CVector2D* rev_po
 	}
 	return NULL_TIP;
 }
+static int MiniMapData[100][100] = { NULL };
+MiniMap::MiniMap(int nextArea) :Base(eType_UI_Front)
+{
+	m_img = COPY_RESOURCE("MiniMap", CImage);
+	switch (nextArea)
+	{
+	case 1:
 
-/*
-int Map::CollisionMap(const CVector2D& pos, const CRect& rect)
-{	//左上
-	int t = GetTip(CVector2D(pos.x + rect.m_left, pos.y + rect.m_top));
-	if (t != 0) return t;
-	//右上
-	t = GetTip(CVector2D(pos.x + rect.m_right, pos.y + rect.m_top));
-	if (t != 0) return t;
-	//左下
-	t = GetTip(CVector2D(pos.x + rect.m_left, pos.y + rect.m_bottom));
-	if (t != 0) return t;
-	//右下
-	t = GetTip(CVector2D(pos.x + rect.m_right, pos.y + rect.m_bottom));
-	if (t != 0) return t;
+		Open("Map/test64.fmf");
+		break;
+	}
 
-	return 0;
 }
-*/
+
+void MiniMap::Draw()
+{
+	/*
+	int col = CCamera::GetCurrent()->GetWhidth() / GetChipWidth()+2;
+	int row = CCamera::GetCurrent()->GetHeight() / GetChipHeight()+2;
+	
+	int sx = m_scroll.x / GetChipWidth();
+	if (sx < 0) sx = 0;
+	int ex = sx + col;
+	if (ex > GetMapWidth())ex = GetMapWidth();
+
+	int sy = m_scroll.y / GetChipHeight();
+	if (sy < 0) sy = 0;
+	int ey = sy + row;
+	if (ey > GetMapHeight())ey = GetMapHeight();
+	*/
+
+	int col = CCamera::GetCurrent()->GetWhidth() / GetChipWidth() + 2;
+	int row = CCamera::GetCurrent()->GetHeight() / GetChipHeight() + 2;
+
+	int sx = m_scroll.x / GetChipWidth();
+	if (sx < 0) sx = 0;
+	int ex = sx + col;
+	if (ex > GetMapWidth())ex = GetMapWidth();
+
+	int sy = m_scroll.y / GetChipHeight();
+	if (sy < 0) sy = 0;
+	int ey = sy + row;
+	if (ey > GetMapHeight())ey = GetMapHeight();
+
+	//ミニマップ描画範囲
+	for (int j = sy; j < ey; j++) {
+		for (int i = sx; i < ex; i++) {
+			/*if (stage1data[i][j] == 0)continue;
+			int t = stage1data[i][j];
+
+			int t = GetValue(1, i, j);
+			//表示しない制御
+			if (t == NULL_TIP) continue;
+			*/
+			if (GetValue(1, i, j) == NULL_TIP)continue;
+			int t = GetValue(1, i, j);
+
+			//m_fmfHeader.byChipWidth*i, m_fmfHeader.byChipHeight*j
+			//MiniMapData[GetChipWidth() * i][GetChipHeight() * j] = t;
+			MiniMapData[i][j] = t;
+			//描画
+			//m_img.Draw();
+		}
+	}
+	/*
+	//レイヤー数だけ繰り返す k=1から始めると判定用の壁だけ表示される
+	for (int k = 0; k < GetLayerCount();k++) {
+		//行と列の繰り返し
+		for (int j = sy; j < ey; j++) {
+			for (int i = sx; i < ex; i++) {
+				//チップの番号を取得する
+				int t = GetValue(k, i, j);
+				//透過番号なら表示しない
+				if (t == NULL_TIP) continue;
+				//チップ番号から使用する画像の場所を計算
+				int x = t % s;
+				int y = t / s;
+				//表示位置設定
+				m_map_tip[k].SetPos(CVector2D(m_fmfHeader.byChipWidth*i, m_fmfHeader.byChipHeight*j)-m_scroll);
+				//表示矩形設定
+				m_map_tip[k].SetRect(x * m_fmfHeader.byChipWidth, y * m_fmfHeader.byChipHeight, (x + 1) * m_fmfHeader.byChipWidth, (y + 1) * m_fmfHeader.byChipHeight);
+				//サイズ設定
+				m_map_tip[k].SetSize(m_fmfHeader.byChipWidth, m_fmfHeader.byChipHeight);
+				//表示
+				m_map_tip[k].Draw();
+	*/
+
+	//マップチップによる表示の繰り返し
+	for (int j = 0; j < GetMapWidth(); j++) {
+		for (int i = 0; i < GetMapHeight(); i++) {
+			//表示しない制御
+
+			if (MiniMapData[i][j] == NULL_TIP)continue;
+			//int t = MiniMapData[i][j];
+
+			int t = GetValue(1, i, j);
+
+
+			//画像切り抜き
+			m_img.SetRect(3 * t, 0, 3 * t + 3, 3);
+			//表示サイズ設定
+			m_img.SetSize(3, 3);
+			//表示位置設定
+			m_img.SetPos((1280 - GetMapHeight() * 3 + i * 3), (1 + j * 3));
+			//描画
+			m_img.Draw();
+		}
+	}
+}
