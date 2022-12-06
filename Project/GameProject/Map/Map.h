@@ -32,6 +32,8 @@ public:
 	/// <returns></returns>
 	int GetTip(const CVector2D& pos, int* tx = nullptr, int* ty = nullptr);
 
+	void SetTip(const CVector2D& pos, int t);
+
 	/// <summary>
 	/// 指定した行と列のチップ番号を取得
 	/// </summary>
@@ -60,7 +62,7 @@ class MiniMap :public Base, CFmfMap {
 private:
 	CImage m_img;
 public:
-
 	MiniMap(int nextArea);
+	~MiniMap();
 	void Draw();
 };

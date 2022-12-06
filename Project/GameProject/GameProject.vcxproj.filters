@@ -71,6 +71,9 @@
     <ClCompile Include="Map\fmfmap.cpp">
       <Filter>Map</Filter>
     </ClCompile>
+    <ClCompile Include="Gimmick\Door.cpp">
+      <Filter>Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Game">
@@ -170,6 +173,9 @@
     </ClInclude>
     <ClInclude Include="Map\fmfmap.h">
       <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Gimmick\Door.h">
+      <Filter>Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

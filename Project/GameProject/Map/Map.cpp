@@ -1,7 +1,7 @@
 
 #include"Map.h"
 #include"AreaChange.h"
-
+#include "../Gimmick/Door.h"
 Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 	//レイヤー0
 	m_map_tip[0] = COPY_RESOURCE("MapTip_64", CImage);
@@ -11,8 +11,11 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 	case 1:
 		//fmfからマップデータを読み込む
 		Open("Map/test64.fmf");
-
+		Base::Add(new MiniMap(nextArea));
 		
+		Base::Add(new Door(CVector2D(
+			m_fmfHeader.byChipWidth * 36,
+			m_fmfHeader.byChipHeight * 98)));
 		/*
 		//廊下　右へ
 		Base::Add(new AreaChange(2,					//次のマップの番号
@@ -125,21 +128,23 @@ int Map::GetTip(int x, int y)
 {
 	return GetValue(1, x, y);
 }
-/*
+
 void Map::SetTip(const CVector2D& pos, int t)
 {
 	//列を計算
-	int col = pos.x / GetChipWidth();
+	int x = pos.x / GetChipWidth();
 	//列の制限(0～MAP_WIDTH-1)
-	if (col < 0)col = 0;
-	if (col > GetMapWidth() - 1)col = GetMapWidth() - 1;
+	if (x < 0)x = 0;
+	if (x > GetMapWidth() - 1)x = GetMapWidth() - 1;
 	//行を計算
-	int raw = pos.y / GetChipHeight();
+	int y = pos.y / GetChipHeight();
 	//行の制限(0～MAP_HEIGHT-1)
-	if (raw < 0)raw = 0;
-	if (raw > GetMapHeight() - 1)raw = GetMapHeight() - 1;
-	(1, raw, col) = t;
-}*/
+	if (y < 0)y = 0;
+	if (y > GetMapHeight() - 1)y = GetMapHeight() - 1;
+	//if (ty) *ty = y;
+	//if (tx) *tx = x;
+	SetValue(1, x, y, t);
+}
 
 int Map::CollisionMap(const CVector2D& pos)
 {
@@ -216,6 +221,12 @@ MiniMap::MiniMap(int nextArea) :Base(eType_UI_Front)
 		break;
 	}
 
+}
+
+MiniMap::~MiniMap()
+{
+	//fmfを閉じる
+	Close();
 }
 
 void MiniMap::Draw()

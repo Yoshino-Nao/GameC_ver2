@@ -91,7 +91,7 @@ void Init(void)
 	ADD_RESOURCE("MapTip", CImage::CreateImage("Image/MapTip.bmp"));
 	ADD_RESOURCE("MapTip_64", CImage::CreateImage("Image/MapTip(64).bmp"));
 	ADD_RESOURCE("MiniMap", CImage::CreateImage("Image/MiniMap.png"));
-	ADD_RESOURCE("MiniMap_Back", CImage::CreateImage("Image/MiniMap_BackGround.png"));
+	//ADD_RESOURCE("MiniMap_Back", CImage::CreateImage("Image/MiniMap_BackGround.png"));
 	ADD_RESOURCE("Title", CImage::CreateImage("Image/Title.png"));
 	ADD_RESOURCE("Door", CImage::CreateImage("Image/Door.png"));
 	ADD_RESOURCE("License", CImage::CreateImage("Image/Light_Frame.png"));

@@ -39,7 +39,7 @@ Game::Game() :Base(eType_Scene)
 	//Base::Add(new Item(CVector2D(2048, 940)));
 	//Base::Add(new start(CVector2D(1200, 600)));
 	//Base::Add(new Goal2(CVector2D(1300, 600)));
-	Base::Add(new MiniMap(1));
+	
 	Base::Add(new UI());
 	Base::Add(new GaugeBack());
 	Base::Add(new GaugeRed());

@@ -12,6 +12,7 @@
 #include "../Title/Title.h"
 #include "../Item/Item.h"
 #include "../UI/Menu.h"
+#include "../Gimmick/Door.h"
 #include "Player.h"
 #include "Enemy.h"
 #include <iostream>
@@ -469,7 +470,7 @@ void Player::Collision(Base* b)
 	case eType_Field:
 		if (Map* m = dynamic_cast<Map*>(b)) {
 			CVector2D pos;
-			int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect,&pos);
+			int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect, &pos);
 			if (t != NULL_TIP){
 				m_pos.x = pos.x;
 			}
@@ -487,6 +488,19 @@ void Player::Collision(Base* b)
 			}
 		}
 		break;
-	
+	case eType_Door:
+		if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
+			//Base* a = Base::FindObject(eType_Field);
+			m_pos.x = m_pos_old.x;
+
+		}
+		if (Base::CollisionObject(CVector2D(m_pos_old.x, m_pos.y), m_rect, b->m_pos, b->m_rect)) {
+			//Base* a = Base::FindObject(eType_Field);
+			m_pos.y = m_pos_old.y;
+			m_vec.y = 0;
+			m_is_ground = true;
+			//m_is_land = false;
+			m_airjump = false;
+		}
 	}
 }

@@ -103,6 +103,8 @@ public:
 
 	//‹éŒ`“¯Žm‚Ì”»’è
 	static bool CollisionRect(Base* b1, Base* b2);
+
+	static bool CollisionObject(CVector2D p1, CRect r1, CVector2D p2, CRect r2);
 	//‹éŒ`‚Ì•\Ž¦
 	void DrawRect();
 };
