@@ -23,15 +23,44 @@ void Player::StateIdle()
 	
 	Move();
 
-	if (PUSH(CInput::eButton1)) {
+	if (PUSH(CInput::eButton3)) {
 		m_state = eState_Shooting;
+		m_attack_no++;
+	}
+	if (PUSH(CInput::eButton1)) {
+		m_state = eState_Attack1;
 		m_attack_no++;
 	}
 }
 
-void Player::StateAttack()
+void Player::StateAttack1()
 {
-	
+	m_img.ChangeAnimation(12, false, 0, true);
+	if (m_img.CheckAnimationEnd() && HOLD(CInput::eButton1)) {
+		m_state = eState_Attack2;
+	}
+	else if (m_img.CheckAnimationEnd() && HOLD(CInput::eRight) || HOLD(CInput::eLeft)) {
+		m_state = eState_Idle;
+	}
+}
+
+void Player::StateAttack2()
+{
+	m_img.ChangeAnimation(13, false, 0, true);
+	if (m_img.CheckAnimationEnd() && HOLD(CInput::eButton1)) {
+		m_state = eState_Attack3;
+	}
+	else if (m_img.CheckAnimationEnd() && HOLD(CInput::eRight) || HOLD(CInput::eLeft)) {
+		m_state = eState_Idle;
+	}
+}
+
+void Player::StateAttack3()
+{
+	m_img.ChangeAnimation(14, false, 0, true);
+	if (m_img.CheckAnimationEnd()) {
+		m_state = eState_Idle;
+	}
 }
 
 void Player::StateShooting()
@@ -75,7 +104,7 @@ void Player::StateShooting()
 #pragma endregion
 	*/
 	m_img.ChangeAnimation(15,false);
-	if (m_img.CheckAnimationEnd() && PUSH(CInput::eButton1)) {
+	if (m_img.CheckAnimationEnd() && PUSH(CInput::eButton3)) {
 		m_state = eState_Idle;
 	}
 	Ccnt--;
@@ -289,8 +318,14 @@ void Player::Update() {
 			StateIdle();
 			break;
 			//çUåÇèÛë‘
-		case eState_Attack:
-			StateAttack();
+		case eState_Attack1:
+			StateAttack1();
+			break;
+		case eState_Attack2:
+			StateAttack2();
+			break;
+		case eState_Attack3:
+			StateAttack3();
 			break;
 			//î≠éÀèÛë‘
 		case eState_Shooting:
@@ -375,7 +410,7 @@ void Player::Draw() {
 	m_img.SetFlipH(m_flip);
 	//ï`âÊ
 	m_img.Draw();
-	DrawRect();
+	//DrawRect();
 	
 }
 

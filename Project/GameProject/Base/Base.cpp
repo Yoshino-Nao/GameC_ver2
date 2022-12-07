@@ -185,11 +185,6 @@ bool Base::CollisionObject(CVector2D p1, CRect r1, CVector2D p2, CRect r2)
 	if (rect1.m_left <= rect2.m_right && rect1.m_right >= rect2.m_left &&
 		rect1.m_top <= rect2.m_bottom && rect1.m_bottom >= rect2.m_top)
 		return true;
-	/*
-	
-	
-	*/
-	
 	
 	return false;
 }

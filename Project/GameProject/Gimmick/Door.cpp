@@ -21,20 +21,5 @@ void Door::Draw()
 {
 	m_img.SetPos(GetScreenPos(m_pos));
 	m_img.Draw();
-	DrawRect();
-}
-
-void Door::Collision(Base* b)
-{
-	switch (b->m_type){
-	case eType_Player:
-		if (Base::CollisionRect(this, b)) {
-			//Base* a = Base::FindObject(eType_Field);
-		}
-		break;
-	}
-}
-
-void Door::Update()
-{
+	//DrawRect();
 }

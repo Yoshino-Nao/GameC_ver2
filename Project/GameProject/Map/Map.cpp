@@ -2,6 +2,7 @@
 #include"Map.h"
 #include"AreaChange.h"
 #include "../Gimmick/Door.h"
+#include "../Character/Enemy.h"
 Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 	//レイヤー0
 	m_map_tip[0] = COPY_RESOURCE("MapTip_64", CImage);
@@ -16,6 +17,7 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 36,
 			m_fmfHeader.byChipHeight * 98)));
+		Base::Add(new Enemy(CVector2D(m_fmfHeader.byChipWidth * 30, m_fmfHeader.byChipHeight * 98), false, eType_E_Slime1));
 		/*
 		//廊下　右へ
 		Base::Add(new AreaChange(2,					//次のマップの番号

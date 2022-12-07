@@ -6,7 +6,9 @@ private:
 	//ó‘Ô
 	enum {
 		eState_Idle,
-		eState_Attack,
+		eState_Attack1,
+		eState_Attack2,
+		eState_Attack3,
 		eState_Shooting,
 		eState_Damage,
 		eState_Down,
@@ -64,7 +66,9 @@ private:
 	CVector2D sc_vec;
 	//Šeó‘Ô‚Å‚Ì‹““®
 	void StateIdle();
-	void StateAttack();
+	void StateAttack1();
+	void StateAttack2();
+	void StateAttack3();
 	void StateShooting();
 	void StateDamage();
 	void StateDown();

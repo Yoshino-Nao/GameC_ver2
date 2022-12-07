@@ -24,11 +24,6 @@ Game::Game() :Base(eType_Scene)
 	//Base::Add(new Enemy(CVector2D(1280 + 256 * 2, 540), true));
 	//Base::Add(new Enemy(CVector2D(1280 + 256 * 3, 540), true));
 	//Base::Add(new Goal(CVector2D(0, 0)));
-	//Base::Add(new Enemy(CVector2D(MAP_TIP_SIZE * 16 + MAP_TIP_SIZE / 2, MAP_TIP_SIZE * 7 - 1), false, eType_E_Slime1));
-	//Base::Add(new Enemy(CVector2D(MAP_TIP_SIZE * 17 + MAP_TIP_SIZE / 2, MAP_TIP_SIZE * 7 - 1), false, eType_E_Slime1));
-	//Base::Add(new Enemy(CVector2D(MAP_TIP_SIZE * 18 + MAP_TIP_SIZE / 2, MAP_TIP_SIZE * 7 - 1), false, eType_E_Slime1));
-	//Base::Add(new Enemy(CVector2D(MAP_TIP_SIZE * 19 + MAP_TIP_SIZE / 2, MAP_TIP_SIZE * 7 - 1), false, eType_E_Slime1));
-	//Base::Add(new Enemy(CVector2D(MAP_TIP_SIZE * 20 + MAP_TIP_SIZE / 2, MAP_TIP_SIZE * 7 - 1), false, eType_E_Slime1));
 	//Base::Add(new Item_Score(CVector2D(MAP_TIP_SIZE * 4, MAP_TIP_SIZE * 6)));
 	//Base::Add(new Door(CVector2D(MAP_TIP_SIZE * 24 + MAP_TIP_SIZE / 2, MAP_TIP_SIZE * 6)));
 	//Base::Add(new Enemy(CVector2D(1280 + 256 * 2, 540), false,eType_Enemy2));

@@ -8,6 +8,4 @@ private:
 public:
 	Door(const CVector2D& pos);
 	void Draw();
-	void Collision(Base* b);
-	void Update();
 };
