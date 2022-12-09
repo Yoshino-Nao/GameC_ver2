@@ -107,6 +107,8 @@ public:
 	static bool CollisionObject(CVector2D p1, CRect r1, CVector2D p2, CRect r2);
 	//‹éŒ`‚Ì•\Ž¦
 	void DrawRect();
+
+	void DrawLine(CVector2D p1, CVector2D p2);
 };
 
 

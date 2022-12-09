@@ -24,7 +24,7 @@ void Player::StateIdle()
 	Move();
 
 	if (PUSH(CInput::eButton3)) {
-		m_state = eState_Shooting;
+		m_state = eState_Draw;
 		m_attack_no++;
 	}
 	if (PUSH(CInput::eButton1)) {
@@ -32,6 +32,8 @@ void Player::StateIdle()
 		m_attack_no++;
 	}
 }
+#pragma region Attack
+
 
 void Player::StateAttack1()
 {
@@ -78,50 +80,32 @@ void Player::StateAttack3()
 		m_state = eState_Idle;
 	}
 }
-
-void Player::StateShooting()
-{
-	/*
-#pragma region Bullet
-
-	//íeflipï‚ê≥
-	if (m_flip) {
-		Bulletpos = -60;
-	}
-	else {
-		Bulletpos = 60;
-	}
-	if (vec.x < -move_speed_max) {
-		vec.x = -move_speed_max;
-	}
-	if (vec.x > move_speed_max) {
-		vec.x = move_speed_max;
-	}
-	m_pos.x += vec.x;
-	Base* b = Base::FindObject(eType_Player_Bullet);
-	if (!b) {
-		if (Ccnt == 120)
-		{	
-			//Base::Add(new Effect_Ring("Effect_Ring", m_pos, m_flip, m_ang, 32, 144));
-		}
-		if (Ccnt == 60)
-		{
-			//Base::Add(new Effect_Ring("Effect_Ring2", m_pos, m_flip, m_ang, 32, 144));
-		}
-		if (FREE(CInput::eButton1)) 
-		{
-			if (Ccnt <= 120 && Ccnt >= 61) 
-			{
-				Base::Add(new Player_Bullet1(m_pos + CVector2D(Bulletpos, -75), m_flip, eType_Player_Bullet, m_attack_no));
-			}
-			m_state = eState_Idle;
-		}
-	}
 #pragma endregion
-	*/
-	m_img.ChangeAnimation(15,false);
+
+void Player::StateDraw()
+{
+	m_img.ChangeAnimation(15, false);
+	CVector2D mouse_pos = CInput::GetMousePoint();
+	CVector2D r = CInput::GetRStick(0);
+	DrawLine(CVector2D(m_pos.x, m_pos.y - 50), mouse_pos);
 	if (m_img.CheckAnimationEnd() && PUSH(CInput::eRight) || PUSH(CInput::eLeft)) {
 		m_state = eState_Idle;
+	}
+	else if (m_img.CheckAnimationEnd() && HOLD(CInput::eButton3)) {
+		m_state = eState_Shooting;
+		//Base::Add(new Player_Bullet1(CVector2D(m_pos.x, m_pos.y - 50), m_flip, m_attack_no));
+	}
+}
+void Player::StateShooting()
+{
+	
+	CVector2D mouse_pos = CInput::GetMousePoint();
+	CVector2D r = CInput::GetRStick(0);
+	DrawLine(CVector2D(m_pos.x, m_pos.y - 50), mouse_pos);
+	m_img.ChangeAnimation(17, true);
+	Base::Add(new Player_Bullet1(CVector2D(m_pos.x + m_atkpos, m_pos.y - 76), m_flip, m_attack_no));
+	if (!HOLD(CInput::eButton3)) {
+		m_state = eState_Draw;
 	}
 }
 
@@ -141,6 +125,8 @@ void Player::StateDamage()
 		m_state = eState_Idle;
 	}
 }
+
+
 
 void Player::StateDown()
 {
@@ -336,6 +322,9 @@ void Player::Update() {
 			break;
 		case eState_Attack3:
 			StateAttack3();
+			break;
+		case eState_Draw:
+			StateDraw();
 			break;
 			//î≠éÀèÛë‘
 		case eState_Shooting:

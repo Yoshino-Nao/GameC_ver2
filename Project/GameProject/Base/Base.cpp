@@ -146,7 +146,11 @@ void Base::DrawRect()
 		CVector2D(rect.m_width, rect.m_height),
 		CVector4D(1, 0, 0, 0.5f));
 }
-
+void Base::DrawLine(CVector2D p1, CVector2D p2)
+{
+	Utility::DrawLine(p1 - m_scroll, p2, CVector4D(1, 1, 1, 0.8f));
+}
+//DrawLine(const CVector3D &s, const CVector3D &e, const CVector4D &color);
 bool Base::CollisionRect(Base* b1, Base* b2) {
 	//b1‚Ì‹éŒ`
 	CRect rect1 = CRect(

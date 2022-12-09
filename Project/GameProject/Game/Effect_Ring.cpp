@@ -26,20 +26,18 @@ Effect_Ring::Effect_Ring(const char* name, const CVector2D& pos, bool flip, floa
 void Effect_Ring::Update()
 {
 
-	Base* b = Base::FindObject(eType_Player);
-	Player* f = dynamic_cast<Player*>(b);
 
 	//Base* b1 = Base::FindObject(eType_Player_Bullet1);
 	//Player_Bullet1* w = dynamic_cast<Player_Bullet1*>(b1);
 	//アニメーション更新
 	m_img.UpdateAnimation();
 
-	m_flip = f->GetFlipFlag();
-	if (m_flip) {
-		m_pos = f->GetPos() + CVector2D(+60, -70);
+	
+	if (!m_flip) {
+		m_pos = CVector2D(+60, -70);
 	}
 	else {
-		m_pos = f->GetPos() + CVector2D(-60, -70);
+		m_pos = CVector2D(-60, -70);
 	}
 	//アニメーション終了チェック
 	if (m_img.CheckAnimationEnd() || !HOLD(CInput::eButton1)) {

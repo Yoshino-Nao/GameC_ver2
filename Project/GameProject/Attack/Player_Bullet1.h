@@ -13,7 +13,7 @@ class Player_Bullet1 :public Base{
 	//UŒ‚”Ô†
 	int m_attack_no;
 public:
-	Player_Bullet1(const CVector2D& p, bool flip, int type, int attack_no);
+	Player_Bullet1(const CVector2D& p, bool flip, int attack_no);
 	void Update();
 	void Draw();
 	void Collision(Base* b);

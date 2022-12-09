@@ -9,6 +9,7 @@ private:
 		eState_Attack1,
 		eState_Attack2,
 		eState_Attack3,
+		eState_Draw,
 		eState_Shooting,
 		eState_Damage,
 		eState_Down,
@@ -70,6 +71,7 @@ private:
 	void StateAttack1();
 	void StateAttack2();
 	void StateAttack3();
+	void StateDraw();
 	void StateShooting();
 	void StateDamage();
 	void StateDown();
@@ -83,9 +85,7 @@ public:
 	void Update();
 	void Draw();
 	void Collision(Base* b);
-	int GetFlipFlag() {
-		return !m_flip;
-	}
+	
 	int GetHp() {
 		return m_hp;
 	}

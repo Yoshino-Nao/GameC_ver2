@@ -32,9 +32,6 @@
     <ClCompile Include="Item\Item.cpp">
       <Filter>Item</Filter>
     </ClCompile>
-    <ClCompile Include="Attack\Player_Bullet1.cpp">
-      <Filter>Attack</Filter>
-    </ClCompile>
     <ClCompile Include="Attack\EnemyBullet.cpp">
       <Filter>Attack</Filter>
     </ClCompile>
@@ -73,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="Gimmick\Door.cpp">
       <Filter>Gimmick</Filter>
+    </ClCompile>
+    <ClCompile Include="Attack\Player_Bullet1.cpp">
+      <Filter>Attack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -132,9 +132,6 @@
     <ClInclude Include="Item\Item.h">
       <Filter>Item</Filter>
     </ClInclude>
-    <ClInclude Include="Attack\Player_Bullet1.h">
-      <Filter>Attack</Filter>
-    </ClInclude>
     <ClInclude Include="Attack\EnemyBullet.h">
       <Filter>Attack</Filter>
     </ClInclude>
@@ -176,6 +173,9 @@
     </ClInclude>
     <ClInclude Include="Gimmick\Door.h">
       <Filter>Gimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="Attack\Player_Bullet1.h">
+      <Filter>Attack</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

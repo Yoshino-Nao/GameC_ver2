@@ -2,14 +2,14 @@
 #include "../Map/Map.h"
 #include "../Game/GameData.h"
 #include "../Character/Player.h"
-Player_Bullet1::Player_Bullet1(const CVector2D& p, bool flip, int type, int attack_no) 
+Player_Bullet1::Player_Bullet1(const CVector2D& p, bool flip, int attack_no)
 	:Base(eType_Player_Bullet)
 {
 	//画像複製
-	m_img = COPY_RESOURCE("Effect_Flame", CImage);
+	m_img = COPY_RESOURCE("bullet", CImage);
 	//m_img.SetSize(128, 32);
 	//再生アニメーション設定
-	m_img.ChangeAnimation(0);
+	//m_img.ChangeAnimation(0);
 	//座標設定
 	m_pos_old = m_pos = p;
 	//中心位置設定
@@ -28,24 +28,19 @@ Player_Bullet1::Player_Bullet1(const CVector2D& p, bool flip, int type, int atta
 	m_attack_no = attack_no;
 	//Player反転フラグ取得
 
-	Base* b = Base::FindObject(eType_Player);
-	Player* f = dynamic_cast<Player*>(b);
-	if (b) 
-	{
-		m_flip = f->GetFlipFlag();
-	}
+	
 
 }
 
 void Player_Bullet1::Update()
 {
 	m_pos_old = m_pos;
-	m_img.UpdateAnimation();
-	m_img.SetSize(128, 32);
-	m_img.SetCenter(80, 16);
+	//m_img.UpdateAnimation();
+	m_img.SetSize(12, 1);
+	//m_img.SetCenter(80, 16);
 	cnt--;
-	m_rect = CRect(-32, -24, 32, 24);
-	if (m_flip) {
+	m_rect = CRect(-6, -1, 6, 1);
+	if (!m_flip) {
 		CVector2D vec = CVector2D(10, 0);
 		m_pos += vec;
 	}
@@ -76,7 +71,7 @@ void Player_Bullet1::Collision(Base* b)
 		if (Map* m = dynamic_cast<Map*>(b)) {
 			int t = m->CollisionMap(m_pos, m_rect,&m_pos);
 			if (t != NULL_TIP)
-				m_vec = CVector2D(sin(m_ang) * -1, cos(m_ang));
+				SetKill();
 			
 		}
 		break;

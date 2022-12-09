@@ -10,7 +10,7 @@ Player_Bullet2::Player_Bullet2(const CVector2D& p, bool flip, int type, int atta
 	m_img = COPY_RESOURCE("Effect_Flame", CImage);
 	//m_img.SetSize(128, 32);
 	//再生アニメーション設定
-	m_img.ChangeAnimation(0);
+	//m_img.ChangeAnimation(0);
 	//座標設定
 	m_pos_old = m_pos = p;
 	//中心位置設定
@@ -29,12 +29,7 @@ Player_Bullet2::Player_Bullet2(const CVector2D& p, bool flip, int type, int atta
 	m_attack_no = attack_no;
 	//Player反転フラグ取得
 
-	Base* b = Base::FindObject(eType_Player);
-	Player* f = dynamic_cast<Player*>(b);
-	if (b)
-	{
-		m_flip = f->GetFlipFlag();
-	}
+	
 }
 
 void Player_Bullet2::Update()
