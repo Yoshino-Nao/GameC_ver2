@@ -4,6 +4,7 @@
 #include "../Map/Map.h"
 #include "../Attack/EnemyBullet.h"
 #include "../Attack/Player_Bullet1.h"
+#include "../Attack/Slash.h"
 #include "../Item/Item.h"
 #include "Enemy.h"
 #include "Player.h"
@@ -265,6 +266,21 @@ void Enemy::Collision(Base* b)
     switch (b->m_type) {
     case eType_Player_Bullet:
         if (Player_Bullet1* s = dynamic_cast<Player_Bullet1*>(b)) {
+            if (m_damage_no != s->GetAttackNo() && Base::CollisionRect(this, s)) {
+                //“¯‚¶UŒ‚‚Ì˜A‘±ƒ_ƒ[ƒW–hŽ~
+                m_damage_no = s->GetAttackNo();
+                m_hp -= 50;
+                if (m_hp <= 0) {
+                    m_state = eState_Down;
+                }
+                else {
+                    m_state = eState_Damage;
+                }
+            }
+        }
+        break;
+    case eType_Player_Attack:
+        if (Slash* s = dynamic_cast<Slash*>(b)) {
             if (m_damage_no != s->GetAttackNo() && Base::CollisionRect(this, s)) {
                 //“¯‚¶UŒ‚‚Ì˜A‘±ƒ_ƒ[ƒW–hŽ~
                 m_damage_no = s->GetAttackNo();

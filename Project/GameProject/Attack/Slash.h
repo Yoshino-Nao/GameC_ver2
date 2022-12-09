@@ -10,7 +10,7 @@ private:
 	//UŒ‚”Ô†
 	int m_attack_no;
 public:
-	Slash(const CVector2D& pos, bool flip, int type, int attack_no);
+	Slash(const CVector2D& pos, int r, bool flip, int type, int attack_no);
 	void Update();
 	void Draw();
 	int GetAttackNo() {

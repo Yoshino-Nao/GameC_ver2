@@ -25,6 +25,8 @@ private:
 	float move_yspeed_max;
 	//Y‰Á‘¬“x
 	float move_yspeed_add;
+	//–€C
+	float friction;
 	//ƒWƒƒƒ“ƒv—Í
 	float jump_pow;
 	CImage m_img;
@@ -44,9 +46,8 @@ private:
 	int Pstate;
 	//UŒ‚”Ô†
 	int m_attack_no;
-	//’eflip•â³’l
-	int Bulletpos;
-
+	//UŒ‚”­¶•â³’l
+	float m_atkpos = 60;
 	//—­‚ßŠÔ(120)
 	int Ccnt;
 	//–³“GŠÔ

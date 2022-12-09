@@ -35,7 +35,12 @@ void Player::StateIdle()
 
 void Player::StateAttack1()
 {
+	
 	m_img.ChangeAnimation(12, false, 0, true);
+	if (m_img.GetIndex() == 3) {
+		Base::Add(new Slash(CVector2D(m_pos.x + m_atkpos, m_pos.y - 50), 64, m_flip, eType_Player_Attack, m_attack_no));
+		
+	}
 	if (m_img.CheckAnimationEnd() && HOLD(CInput::eButton1)) {
 		m_state = eState_Attack2;
 	}
@@ -47,6 +52,10 @@ void Player::StateAttack1()
 void Player::StateAttack2()
 {
 	m_img.ChangeAnimation(13, false, 0, true);
+	if (m_img.GetIndex() == 4) {
+		Base::Add(new Slash(CVector2D(m_pos.x + m_atkpos, m_pos.y - 50), 64, m_flip, eType_Player_Attack, m_attack_no));
+		Base::Add(new Slash(CVector2D(m_pos.x, m_pos.y - 100), 32, m_flip, eType_Player_Attack, m_attack_no));
+	}
 	if (m_img.CheckAnimationEnd() && HOLD(CInput::eButton1)) {
 		m_state = eState_Attack3;
 	}
@@ -58,6 +67,13 @@ void Player::StateAttack2()
 void Player::StateAttack3()
 {
 	m_img.ChangeAnimation(14, false, 0, true);
+	if (m_img.GetIndex() == 4) {
+		Base::Add(new Slash(CVector2D(m_pos.x + m_atkpos + (m_atkpos / 2), m_pos.y - 30), 48, m_flip, eType_Player_Attack, m_attack_no));
+		Base::Add(new Slash(CVector2D(m_pos.x + m_atkpos + (m_atkpos / 2), m_pos.y - 127), 48, m_flip, eType_Player_Attack, m_attack_no));
+	}
+	if (m_img.GetIndex() == 5) {
+		Base::Add(new Slash(CVector2D(m_pos.x + m_atkpos + m_atkpos , m_pos.y - 20), 32, m_flip, eType_Player_Attack, m_attack_no));
+	}
 	if (m_img.CheckAnimationEnd()) {
 		m_state = eState_Idle;
 	}
@@ -104,12 +120,8 @@ void Player::StateShooting()
 #pragma endregion
 	*/
 	m_img.ChangeAnimation(15,false);
-	if (m_img.CheckAnimationEnd() && PUSH(CInput::eButton3)) {
+	if (m_img.CheckAnimationEnd() && PUSH(CInput::eRight) || PUSH(CInput::eLeft)) {
 		m_state = eState_Idle;
-	}
-	Ccnt--;
-	if (Ccnt <= 0) {
-		Ccnt = 0;
 	}
 }
 
@@ -161,16 +173,18 @@ Player::Player(const CVector2D& p, bool flip) :
 	//最大速度
 	move_xspeed_max = 10;
 	//加速度
-	move_xspeed_add = 0.5f;
+	move_xspeed_add = 1.0f;
 	//最大速度
 	move_yspeed_max = 18;
 	//加速度
 	move_yspeed_add = 0.5f;
+	//摩擦
+	friction = 0.9f;
 	//ジャンプ力
 	jump_pow = 9;
 	//着地フラグ
 	m_is_ground = true;
-
+	
 	m_is_land = false;
 	//２段ジャンプフラグ
 	m_airjump = false;
@@ -182,8 +196,8 @@ Player::Player(const CVector2D& p, bool flip) :
 	Pstate = 0;
 	//攻撃番号
 	m_attack_no = rand();
-	//弾flip補正値
-	Bulletpos = 60;
+	//攻撃発生補正値
+	m_atkpos = 60.0f;
 	//ダメージ番号
     m_damage_no = -1;
 	//溜め時間
@@ -244,12 +258,7 @@ void Player::Move()
 	if (vec.x > move_xspeed_max) {
 		vec.x = move_xspeed_max;
 	}*/
-
-	if (vec.y < -move_yspeed_max) {
-		vec.y = -move_yspeed_max;
-	}
 	
-	m_pos.x += vec.x;
 	//m_pos.y += vec.y;
 	//ジャンプ中なら
 	if (!m_is_ground) {
@@ -264,8 +273,8 @@ void Player::Move()
 			m_is_land = true;
 		}
 		//２段ジャンプ
-		if (m_airjump && m_img.GetIndex() >= 3 && PUSH(CInput::eButton2)) {
-			m_vec.y = (jump_pow * -0.5f);
+		if (m_airjump && m_img.GetIndex() >= 1 && PUSH(CInput::eButton2)) {
+			m_vec.y = (jump_pow * -0.7f);
 			m_is_ground = false;
 			m_airjump = false;
 		}
@@ -288,6 +297,7 @@ void Player::Move()
 		else {
 			if (m_is_land) {
 				m_img.ChangeAnimation(7, false);
+				m_airjump = true;
 				m_is_land = false; 
 				if (m_img.CheckAnimationEnd()) {
 					m_img.ChangeAnimation(0);
@@ -295,7 +305,7 @@ void Player::Move()
 
 			}
 			else {
-				vec.x = 0;
+				
 				//待機アニメーション
 				m_img.ChangeAnimation(0);
 			}
@@ -340,16 +350,6 @@ void Player::Update() {
 			StateDown();
 			break;
 		}
-		
-		/*
-		Base* a = Base::FindObject(eType_Player_Bullet1);
-		Player_Bullet1* w = dynamic_cast<Player_Bullet1*>(a);
-		if (a) {
-			Pstate = w->GetState();
-			if (Pstate == 2) {
-				//Base::Add(new Effect_Ring("Effect_Ring2", m_pos, m_flip, m_ang));
-			}
-		}*/
 		//スクロール補正
 		//目標値
 		CVector2D v3(0, 0);
@@ -359,21 +359,19 @@ void Player::Update() {
 			m_airjump = true;
 		}
 
-		if (m_vec.y > GRAVITY * 4 || m_vec.y < -1)
+		if (m_vec.y > GRAVITY * 4 || m_vec.y < -1|| HOLD(CInput::eDown))
 		{
 			v3.y = 300;
+		}
+		else if (HOLD(CInput::eUp)) {
+			v3.y = -300;
 		}
 		else
 		{
 			v3.y = 0;
 		}
-		if (m_flip) {
-			v3.x = -300;
-		}
-		else
-		{
-			v3.x = +300;
-		}
+		
+		m_flip ? v3.x = -300, m_atkpos = -60.0f : v3.x = +300, m_atkpos = 60.0f;
 
 		CVector2D v2 = v3 - sc_vec;
 		//スクロール加速度
@@ -390,17 +388,23 @@ void Player::Update() {
 				invtime = 0;
 			}
 		}
-
+		if (m_is_ground) {
+			vec.x *= friction;
+		}
+		
 		//重力による落下
 		m_vec.y += GRAVITY;
 		//アニメーション更新
 		m_img.UpdateAnimation();
-		m_pos += m_vec;
+		m_pos.x += vec.x;
+		m_pos.y += m_vec.y;
 		stpdtime = 0;
 		if (PUSH(CInput::eButton5)) {
 			Base::Add(new Menu());
 		}
+		
 	}
+	
 }
 
 void Player::Draw() {
@@ -515,7 +519,8 @@ void Player::Collision(Base* b)
 				m_vec.y = 0;
 				m_is_ground = true;
 				//m_is_land = false;
-				m_airjump = false;
+				//m_airjump = false;
+				
 				//基準値+補正値
 				//m_scroll.x = m_pos.x - 1280 / 2 + sc_ver.x;
 				//m_scroll.y = m_pos.y - 500 + sc_ver.y;
@@ -535,7 +540,7 @@ void Player::Collision(Base* b)
 			m_vec.y = 0;
 			m_is_ground = true;
 			//m_is_land = false;
-			m_airjump = false;
+			//m_airjump = false;
 		}
 	}
 }
