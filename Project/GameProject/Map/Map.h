@@ -61,8 +61,8 @@ public:
 class MiniMap :public Base, CFmfMap {
 private:
 	CImage m_img;
+	int m_mapnum;
 public:
-	CVector2D m_Ppos;
 	MiniMap(int nextArea);
 	~MiniMap();
 	void Draw();

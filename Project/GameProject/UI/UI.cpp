@@ -3,10 +3,10 @@
 #include "../Item/start.h"
 #include "../Item/Goal.h"
 #include "../Character/Player.h"
-UI::UI() :Base(eType_UI_Front) {
+UI::UI() :Base(eType_UI_Score) {
 	m_img.Load("Image/UI.png");
-	p_hp = 0;
-	
+	m_playerHP = -1;
+	digit = 0;
 }
 
 void UI::Draw() {
@@ -31,13 +31,27 @@ void UI::Draw() {
 		m_img.SetPos(100 - 24 * i, 0);
 		m_img.Draw();
 	}*/
+	m_old_playerHP = m_playerHP;
+
 	Base* p = Base::FindObject(eType_Player);
 	Player* h = dynamic_cast<Player*>(p);
 	if (p) {
-		p_hp = h->GetHp();
+		m_playerHP = h->GetHp();
+		if (m_playerHP <= 0) {
+			digit = 1;
+		}
+		else if (m_old_playerHP != m_playerHP) {
+			int hp = m_playerHP;
+			digit = 0;
+			while (hp != 0) {
+				hp /= 10;
+				digit++;
+			}
+		}
+		
 	}
-	for (int i = 0; i < 3; i++, p_hp /= 10) {
-		int s = p_hp % 10;
+	for (int i = 0; i < digit; i++, m_playerHP /= 10) {
+		int s = m_playerHP % 10;
 		m_img.SetRect(16 * s, 16, 16 * s + 16, 32);
 		m_img.SetSize(16, 16);
 		m_img.SetPos(90 - 16 * i, 6);

@@ -4,6 +4,11 @@
 #include "../Gimmick/Door.h"
 #include "../Character/Enemy.h"
 #include "../Character/Player.h"
+
+
+
+
+
 Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 	
 	//レイヤー0
@@ -20,20 +25,21 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		
 		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 36,
-			m_fmfHeader.byChipHeight * 98)));
+			m_fmfHeader.byChipHeight * 98),
+			0));
 		Base::Add(new Enemy(CVector2D(
 			m_fmfHeader.byChipWidth * 30,
 			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime1));
-		/*
-		//廊下　右へ
+		
+		//テストマップ２
 		Base::Add(new AreaChange(2,					//次のマップの番号
-			CRect(m_fmfHeader.byChipWidth * 33,		//エリアチェンジの判定
-				m_fmfHeader.byChipHeight * 14,		//左上
-				m_fmfHeader.byChipWidth * 1,		//横サイズ
-				m_fmfHeader.byChipHeight * 13),		//縦サイズ
+			CRect(m_fmfHeader.byChipWidth * 43,		//エリアチェンジの判定
+				m_fmfHeader.byChipHeight * 97,		//左上
+				m_fmfHeader.byChipWidth * 2,		//横サイズ
+				m_fmfHeader.byChipHeight * 2),		//縦サイズ
 			CVector2D(m_fmfHeader.byChipWidth * 1,	//次のマップの最初のプレイヤーの場所
-				m_fmfHeader.byChipHeight * 20)));
-		//廊下　左へ
+				m_fmfHeader.byChipHeight * 15)));
+		/*//廊下　左へ
 		Base::Add(new AreaChange(4,
 			CRect(m_fmfHeader.byChipWidth * 1,
 				m_fmfHeader.byChipHeight * 14,
@@ -41,6 +47,18 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 				m_fmfHeader.byChipHeight * 13),
 			CVector2D(m_fmfHeader.byChipWidth * 31,
 				m_fmfHeader.byChipHeight * 20)));*/
+		break;
+	case 2:
+		Open("Map/test64(2).fmf");
+		Base::Add(new MiniMap(nextArea));
+		Base::Add(new MiniMapPlayer(nextArea));
+		Base::Add(new AreaChange(1,					//次のマップの番号
+			CRect(m_fmfHeader.byChipWidth * 15,		//エリアチェンジの判定
+				m_fmfHeader.byChipHeight * 15,		//左上
+				m_fmfHeader.byChipWidth * 2,		//横サイズ
+				m_fmfHeader.byChipHeight * 2),		//縦サイズ
+			CVector2D(m_fmfHeader.byChipWidth * 1,	//次のマップの最初のプレイヤーの場所
+				m_fmfHeader.byChipHeight * 15)));
 		break;
 	}
 	
@@ -54,6 +72,7 @@ Map::~Map() {
 	//fmfを閉じる
 	Close();
 }
+#pragma region マップ描画 当たり判定
 
 void Map::Draw() {
 	if (m_kill) return;
@@ -216,18 +235,27 @@ int Map::CollisionMap(const CVector2D& pos, const CRect& rect, CVector2D* rev_po
 	}
 	return NULL_TIP;
 }
+#pragma endregion
+
+#pragma region ミニマップ
 static int MiniMapData[100][100] = { NULL };
-MiniMap::MiniMap(int nextArea) :Base(eType_UI_Mid)
+static int MiniMapData1[18][18] = { NULL };
+MiniMap::MiniMap(int nextArea) :Base(eType_MiniMapBack)
 {
+	
+	m_mapnum = nextArea;
 	m_img = COPY_RESOURCE("MiniMap", CImage);
 	switch (nextArea)
 	{
 	case 1:
-
 		Open("Map/test64.fmf");
+
+		break;
+	case 2:
+		Open("Map/test64(2).fmf");
 		break;
 	}
-	
+
 }
 
 MiniMap::~MiniMap()
@@ -252,8 +280,9 @@ void MiniMap::Draw()
 	int ey = sy + row;
 	if (ey > GetMapHeight())ey = GetMapHeight();
 
+	//int* p;
 	
-
+	//p = &MiniMapData[0][0];
 	//ミニマップ描画範囲
 	for (int j = sy; j < ey; j++) {
 		for (int i = sx; i < ex; i++) {
@@ -269,7 +298,18 @@ void MiniMap::Draw()
 
 			//m_fmfHeader.byChipWidth*i, m_fmfHeader.byChipHeight*j
 			//MiniMapData[GetChipWidth() * i][GetChipHeight() * j] = t;
-			MiniMapData[i][j] = t;
+			switch (m_mapnum)
+			{
+			case 1:
+				MiniMapData[i][j] = t;
+				break;
+			case 2:
+				MiniMapData1[i][j] = t;
+				break;
+			}
+			
+			//*p[i][j] = t;
+			//ctrl k ctrl c
 			//描画
 			//m_img.Draw();
 		}
@@ -279,8 +319,16 @@ void MiniMap::Draw()
 	for (int j = 0; j < GetMapWidth(); j++) {
 		for (int i = 0; i < GetMapHeight(); i++) {
 			//表示しない制御
-
-			if (MiniMapData[i][j] == NULL_TIP)continue;
+			switch (m_mapnum)
+			{
+			case 1:
+				if (MiniMapData[i][j] == NULL_TIP)continue;
+				break;
+			case 2:
+				if (MiniMapData1[i][j] == NULL_TIP)continue;
+				break;
+			}
+			//if (MiniMapData[i][j] == NULL_TIP)continue;
 			//int t = MiniMapData[i][j];
 
 			int t = GetValue(1, i, j);
@@ -298,16 +346,19 @@ void MiniMap::Draw()
 	}
 }
 
+
 MiniMapPlayer::MiniMapPlayer(int nextArea)
-	:Base(eType_UI_Front)
+	:Base(eType_MiniMapFront)
 {
 	m_img = COPY_RESOURCE("MiniMap", CImage);
 	m_Ppos = CVector2D(0, 0);
 	switch (nextArea)
 	{
 	case 1:
-
 		Open("Map/test64.fmf");
+		break;
+	case 2:
+		Open("Map/test64(2).fmf");
 		break;
 	}
 }
@@ -337,3 +388,4 @@ void MiniMapPlayer::Draw()
 		m_img.Draw();
 	}
 }
+#pragma endregion

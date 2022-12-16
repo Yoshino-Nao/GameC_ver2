@@ -5,15 +5,15 @@ class Player_Bullet1 :public Base{
 	CImage m_img;
 	//”½“]ƒtƒ‰ƒO
 	bool m_flip;
-
+	
 	//’eÁ–ÅŠÔ
 	int cnt;
-	//—­‚ßŠÔ(120)
-	//int Ccnt;
+
+	float m_speed;
 	//UŒ‚”Ô†
 	int m_attack_no;
 public:
-	Player_Bullet1(const CVector2D& p, bool flip, int attack_no);
+	Player_Bullet1(const CVector2D& p, float ang, bool flip, int attack_no);
 	void Update();
 	void Draw();
 	void Collision(Base* b);

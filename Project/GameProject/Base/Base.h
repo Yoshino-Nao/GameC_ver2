@@ -9,12 +9,14 @@ enum {
 	eType_Player,
 	eType_Player_Bullet,
 	eType_Enemy,
+	//“G‹æ•Ê—ptype
 	eType_E_Slime1,
 	eType_E_Slime2,
 	eType_E_Slime3,
 	eType_E_Witch1,
 	eType_E_Witch2,
 	eType_E_Dragon1,
+
 	eType_Bullet,
 	eType_Goal,
 	eType_Door,
@@ -33,6 +35,9 @@ enum {
 	eType_UI_Back,
 	eType_UI_Mid,
 	eType_UI_Front,
+	eType_UI_Score,
+	eType_MiniMapBack,
+	eType_MiniMapFront,
 	eType_AreaChange,
 };
 

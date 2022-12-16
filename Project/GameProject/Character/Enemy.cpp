@@ -6,6 +6,7 @@
 #include "../Attack/Player_Bullet1.h"
 #include "../Attack/Slash.h"
 #include "../Item/Item.h"
+#include "../Gimmick/Door.h"
 #include "Enemy.h"
 #include "Player.h"
 #include <iostream>
@@ -33,22 +34,16 @@ void Enemy::StateIdle(int type)
 
         break;
     case eType_E_Dragon1:
-        
         if (abs(v.x) <= 300) {
             m_state = eState_Attack;
         }
-
         break;
     }
-   
-
 }
 
 void Enemy::StateDamage(int type)
 {
-    
     cnt--;
-    
     m_img.ChangeAnimation(3, false);
     if (cnt <= 0) {
         m_img.ChangeAnimation(eAnimIdle);
@@ -151,30 +146,24 @@ Base(eType_Enemy) {
         m_img.SetCenter(190, 238);
         m_hp = 400;
         break;
-    }
-
-       //m_img.SetSize(96, 96);
-        
-        //当たり判定用矩形設定
-       // m_rect = CRect(-32, -64, 32, 0);
-        //再生アニメーション設定
-        m_img.ChangeAnimation(0);
-        //反転フラグ
-        m_flip = flip;
-        //中心位置設定
-       // m_img.SetCenter(48, 96);
-        //座標設定
-        m_pos_old = m_pos = p;
-        m_attack_no = rand();
-        //ダメージ番号
-        m_damage_no = -1;
-        m_is_ground = true;
-        CVector2D v(0, 0);
-        cnt = 30;
-        bcnt = 180;
-        stptime = 0;
-        EnemyType = type;
-       
+    };
+    //再生アニメーション設定
+    m_img.ChangeAnimation(0);
+    //反転フラグ
+    m_flip = flip;
+    //中心位置設定
+    // m_img.SetCenter(48, 96);
+    //座標設定
+    m_pos_old = m_pos = p;
+    m_attack_no = rand();
+    //ダメージ番号
+    m_damage_no = -1;
+    m_is_ground = true;
+    CVector2D v(0, 0);
+    cnt = 30;
+    bcnt = 180;
+    stptime = 0;
+    EnemyType = type;
 }
 
 Enemy::~Enemy()
@@ -190,63 +179,58 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
-    //std::cout << "Enemy" << std::endl;
-    m_pos_old = m_pos;
-   
-    if (m_is_ground && m_vec.y > GRAVITY * 4) {
-        m_is_ground = false;
+    Base* m = Base::FindObject(eType_Menu);
+    if (!m) {
+        //std::cout << "Enemy" << std::endl;
+        m_pos_old = m_pos;
+        if (m_is_ground && m_vec.y > GRAVITY * 4) {
+            m_is_ground = false;
+        }
+        switch (EnemyType) {
+        case eType_E_Slime1:
+        case eType_E_Slime2:
+        case eType_E_Slime3:
+        case eType_E_Dragon1:
+            //重力による落下
+            m_vec.y += GRAVITY;
+            break;
+        }
+        switch (m_state) {
+            //通常状態
+        case eState_Idle:
+            StateIdle(0);
+            break;
+            //ダメージ状態
+        case eState_Damage:
+            StateDamage(0);
+            break;
+            //ダウン状態
+        case eState_Down:
+            StateDown(0);
+            break;
+        case eState_Attack:
+            StateAttack(0);
+            break;
+        case eState_Wait:
+            StateWait(0);
+            break;
+        }
+        m_img.UpdateAnimation();
 
+        Base* b = Base::FindObject(eType_Player);
+        if (b) {
+            Player* f = dynamic_cast<Player*>(b);
+            v = f->m_pos - m_pos;
+        }
+        if (m_vec.x < 0) {
+            m_flip = false;
+        }
+        else if (m_vec.x > 0) {
+            m_flip = true;
+        }
+        //m_pos += m_vec;
+        m_pos += m_vec;
     }
-    switch (EnemyType) {
-    case eType_E_Slime1:
-    case eType_E_Slime2:
-    case eType_E_Slime3:
-    case eType_E_Dragon1:
-        //重力による落下
-         m_vec.y += GRAVITY;
-         break;
-
-    }
-   
-   
-    switch (m_state) {
-        //通常状態
-    case eState_Idle:
-        StateIdle(0);
-        break;
-        //ダメージ状態
-    case eState_Damage:
-        StateDamage(0);
-        break;
-        //ダウン状態
-    case eState_Down:
-        StateDown(0);
-        break;
-    case eState_Attack:
-        StateAttack(0);
-        break;
-    case eState_Wait:
-        StateWait(0);
-        break;
-    }
-    m_img.UpdateAnimation();
-
-    Base* b = Base::FindObject(eType_Player);
-    if (b) {
-        Player* f = dynamic_cast<Player*>(b);
-        v = f->m_pos - m_pos; 
-    }
-    if (m_vec.x < 0) {
-        m_flip = false;
-    }
-    else if (m_vec.x > 0) {
-        m_flip = true;
-    }
-    //m_pos += m_vec;
-    m_pos += m_vec;
-
-
-
 }
 
 void Enemy::Draw()
@@ -320,6 +304,26 @@ void Enemy::Collision(Base* b)
             }
         }
         break;
+    case eType_Door:
+        if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
+            if (Door* d = dynamic_cast<Door*>(b)) {
+                int k = d->GetKey();
+                if (k == 0) {
+                    d->SetKill();
+                }
+                else {
+                    m_pos.x = m_pos_old.x;
+                }
+            }
+        }
+        if (Base::CollisionObject(CVector2D(m_pos_old.x, m_pos.y), m_rect, b->m_pos, b->m_rect)) {
+
+            m_pos.y = m_pos_old.y;
+            m_vec.y = 0;
+            m_is_ground = true;
+            //m_is_land = false;
+            //m_airjump = false;
+        }
     case eType_Player:
         m_attack_no++;
         break;

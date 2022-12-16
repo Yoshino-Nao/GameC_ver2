@@ -5,7 +5,9 @@ class UI :public Base {
 public:
 	CImage m_img;
 	//ƒvƒŒƒCƒ„[HP
-	int p_hp;
+	int m_playerHP;
+	int m_old_playerHP;
+	int digit;
 public:
 	UI();
 	void Draw();

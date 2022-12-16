@@ -2,11 +2,11 @@
 
 Menu::Menu()
 	:Base(eType_Menu){
-	m_select = eCnt;
+	m_select = eLifeUp;
 	m_cnt = 0;
 }
 
-void Menu::UpDate()
+void Menu::Update()
 {
 	//選択
 	if (PUSH(CInput::eUp)) {
@@ -17,10 +17,11 @@ void Menu::UpDate()
 		m_select++;
 		if (m_select > 1) m_select = 1;
 	}
-	if (PUSH(CInput::eButton1)) {
+	if (PUSH(CInput::eButton4)) {
 		switch (m_select){
-		case eCnt:
-			m_cnt++;
+		case eLifeUp:
+			LifeUp();
+			//m_cnt++;
 			break;
 		case eExit:
 			SetKill();
@@ -36,7 +37,7 @@ void Menu::Draw()
 		CVector2D(100,300),
 	};
 	const char* text[2] = {
-		"Count",
+		"LifeUp",
 		"Exit"
 	};
 	for (int i = 0; i < 2; i++) {
@@ -45,6 +46,16 @@ void Menu::Draw()
 	//カーソル
 	FONT_T()->Draw(pos[m_select].x - 64, pos[m_select].y, 1, 1, 1, ">");
 	//テストデータの表示
-	FONT_T()->Draw(0, 128, 1, 0, 0, "m_cnt[%d]", m_cnt);
+	//FONT_T()->Draw(0, 128, 1, 0, 0, "m_cnt[%d]", m_cnt);
 
+}
+
+bool Menu::LifeUp()
+{
+	if (PUSH(CInput::eButton4)) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }

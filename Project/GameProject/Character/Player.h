@@ -9,28 +9,28 @@ private:
 		eState_Attack1,
 		eState_Attack2,
 		eState_Attack3,
-		eState_Draw,
+		eState_GunDraw,
 		eState_Shooting,
 		eState_Damage,
 		eState_Down,
 		
 
 	};
+	CImage m_img;
 	//状態変数
 	int m_state;
 	//X最大速度
 	float move_xspeed_max;
 	//X加速度
 	float move_xspeed_add;
-	//Y最高速度
+	//ジャンプ力
 	float move_yspeed_max;
-	//Y加速度
-	float move_yspeed_add;
-	//摩擦
-	float friction;
 	//ジャンプ力
 	float jump_pow;
-	CImage m_img;
+	//摩擦
+	float friction;
+	
+	
 	//反転フラグ
 	bool m_flip;
 	//着地フラグ
@@ -43,19 +43,26 @@ private:
 	int jumpindex;
 	//無敵フラグ
 	bool m_is_inv;
+	//エリアチェンジフラグ
+	bool m_enable_area_change;
+	//エリアチェンジオブジェクトに触れているフラグ
+	bool m_hit_area_change;
 	//AttackのState
-	int Pstate;
+	//int Pstate;
+	
 	//攻撃番号
 	int m_attack_no;
-	//攻撃発生補正値
-	float m_atkpos = 60;
-	//溜め時間(120)
-	int Ccnt;
-	//無敵時間
-	int invtime;
-	
 	//ダメージ番号
 	int m_damage_no;
+	//攻撃発生補正値
+	float m_atkpos = 60;
+	//発射レート
+	int rate;
+	//無敵時間
+	int invtime;
+	//停止時間
+	int stpdtime;
+	
 	//HP
 	int m_hp;
 	//最大HP
@@ -71,17 +78,17 @@ private:
 	void StateAttack1();
 	void StateAttack2();
 	void StateAttack3();
-	void StateDraw();
+	void StateGunDraw();
 	void StateShooting();
 	void StateDamage();
 	void StateDown();
 	
 
 public:
-	//停止時間
-	int stpdtime;
+	
 	Player(const CVector2D& p, bool flip);
 	void Move();
+	void LifeUp(int v);
 	void Update();
 	void Draw();
 	void Collision(Base* b);

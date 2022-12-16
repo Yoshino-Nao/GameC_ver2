@@ -3,14 +3,15 @@
 
 class Menu :public Base {
 	enum {
-		eCnt,
+		eLifeUp,
 		eExit
 	};
 	int m_select;
 	int m_cnt;
 public:
 	Menu();
-	void UpDate();
+	void Update();
 	void Draw();
+	bool LifeUp();
 };
 	
