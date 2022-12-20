@@ -10,7 +10,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include <iostream>
-void Enemy::StateIdle(int type)
+void Enemy::StateIdle()
 {
     cnt = 30;
     //m_vec.x = -1;
@@ -24,24 +24,34 @@ void Enemy::StateIdle(int type)
     case eType_E_Slime1:
     case eType_E_Slime2:
     case eType_E_Slime3:
-        m_vec.x = -1;
+        if (abs(v.x) <= 900) {
+            m_vec.x = -1;
+        }
+        else {
+            m_vec.x = 0;
+        }
         break;
     case eType_E_Witch1:
     case eType_E_Witch2:
         if (abs(v.x) <= 300) {
             m_state = eState_Attack;
         }
-
+        else {
+            m_vec.x = 0;
+        }
         break;
     case eType_E_Dragon1:
         if (abs(v.x) <= 300) {
             m_state = eState_Attack;
         }
+        else {
+            m_vec.x = 0;
+        }
         break;
     }
 }
 
-void Enemy::StateDamage(int type)
+void Enemy::StateDamage()
 {
     cnt--;
     m_img.ChangeAnimation(3, false);
@@ -51,20 +61,20 @@ void Enemy::StateDamage(int type)
     }
 }
 
-void Enemy::StateDown(int type)
+void Enemy::StateDown()
 {
     cnt -= 2;
     m_vec == CVector2D(0, 0);
     
     m_img.ChangeAnimation(4);
     if (cnt <= 0) {
-        Base::Add(new Effect("Effect_Smoke", m_pos + CVector2D(0, -128), m_flip));
-        Base::Add(new Item_LifeUp(m_pos));
+        Base::Add(new Effect("Effect_Smoke", m_pos + CVector2D(0, -128), m_flip, 128, 128));
+        Base::Add(new Item(CVector2D(m_pos.x, m_pos.y - 40), eType_Item_LifeUp));
         SetKill();
     }
 }
 
-void Enemy::StateAttack(int type)
+void Enemy::StateAttack()
 {
    
     m_img.ChangeAnimation(2, false);
@@ -87,7 +97,7 @@ void Enemy::StateAttack(int type)
     }
 }
 
-void Enemy::StateWait(int type)
+void Enemy::StateWait()
 {
 
     if (--bcnt<=0) {
@@ -168,6 +178,7 @@ Base(eType_Enemy) {
 
 Enemy::~Enemy()
 {
+   
     /*
     Base* e = Base::FindObject(eType_Player);
     Player* t = dynamic_cast<Player*>(e);
@@ -198,21 +209,21 @@ void Enemy::Update()
         switch (m_state) {
             //通常状態
         case eState_Idle:
-            StateIdle(0);
+            StateIdle();
             break;
             //ダメージ状態
         case eState_Damage:
-            StateDamage(0);
+            StateDamage();
             break;
             //ダウン状態
         case eState_Down:
-            StateDown(0);
+            StateDown();
             break;
         case eState_Attack:
-            StateAttack(0);
+            StateAttack();
             break;
         case eState_Wait:
-            StateWait(0);
+            StateWait();
             break;
         }
         m_img.UpdateAnimation();
@@ -268,7 +279,8 @@ void Enemy::Collision(Base* b)
             if (m_damage_no != s->GetAttackNo() && Base::CollisionRect(this, s)) {
                 //同じ攻撃の連続ダメージ防止
                 m_damage_no = s->GetAttackNo();
-                m_hp -= 50;
+                int pow = s->GetAttackPow();
+                m_hp -= pow;
                 if (m_hp <= 0) {
                     m_state = eState_Down;
                 }
@@ -278,15 +290,6 @@ void Enemy::Collision(Base* b)
             }
         }
         break;
-        /*if (Base::CollisionRect(this, b)) {
-            hp = -50;
-            //m_down = true;
-            if (hp=0)
-            m_img.ChangeAnimation(eAnimDown);
-            SetKill();
-            Base::Add(new Effect("Effect_Smoke", m_pos + CVector2D(0, -128), m_flip));
-        }
-        break;*/
     case eType_Field:
         if (Map* m = dynamic_cast<Map*>(b)) {
             CVector2D pos;
@@ -294,7 +297,6 @@ void Enemy::Collision(Base* b)
             if (t != NULL_TIP) {
                 m_pos.x = pos.x;
 				m_vec.x *= -1;
-                
             }
             t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect, &pos);
             if (t != NULL_TIP) {
@@ -307,13 +309,7 @@ void Enemy::Collision(Base* b)
     case eType_Door:
         if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
             if (Door* d = dynamic_cast<Door*>(b)) {
-                int k = d->GetKey();
-                if (k == 0) {
-                    d->SetKill();
-                }
-                else {
-                    m_pos.x = m_pos_old.x;
-                }
+                m_pos.x = m_pos_old.x;
             }
         }
         if (Base::CollisionObject(CVector2D(m_pos_old.x, m_pos.y), m_rect, b->m_pos, b->m_rect)) {
@@ -324,6 +320,7 @@ void Enemy::Collision(Base* b)
             //m_is_land = false;
             //m_airjump = false;
         }
+        break;
     case eType_Player:
         m_attack_no++;
         break;

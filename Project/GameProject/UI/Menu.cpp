@@ -1,30 +1,50 @@
 #include "Menu.h"
-
+#include "../Character/Player.h"
+#include"../Game/Game.h"
+#include"../Title/Title.h"
+#include "../Map/Map.h"
 Menu::Menu()
 	:Base(eType_Menu){
-	m_select = eLifeUp;
+	m_select = eItem;
+	m_Item_select = 0;
 	m_cnt = 0;
+	m_in_item = false;
 }
 
 void Menu::Update()
 {
 	//選択
-	if (PUSH(CInput::eUp)) {
-		m_select--;
-		if (m_select < 0) m_select = 0;
+	if (!m_in_item) {
+		if (PUSH(CInput::eUp)) {
+			m_select--;
+			if (m_select < 0) m_select = 0;
+		}
+		if (PUSH(CInput::eDown)) {
+			m_select++;
+			if (m_select > 1) m_select = 1;
+		}
 	}
-	if (PUSH(CInput::eDown)) {
-		m_select++;
-		if (m_select > 1) m_select = 1;
+	if (m_select == eItem && m_in_item) {
+		if (PUSH(CInput::eRight)) {
+			m_Item_select++;
+			if (m_Item_select > 1) m_Item_select = 1;
+		}
+		if (PUSH(CInput::eLeft)) {
+			m_Item_select--;
+			if (m_Item_select < 0) m_Item_select = 0;
+		}
 	}
-	if (PUSH(CInput::eButton4)) {
+	if (PUSH(CInput::eButton3)) {
 		switch (m_select){
-		case eLifeUp:
-			LifeUp();
-			//m_cnt++;
+		case eItem:
+			(!m_in_item ? m_in_item = true : m_in_item = false);
 			break;
 		case eExit:
-			SetKill();
+			Base::KillAll();
+			//ゲームシーンへ
+			Base::Add(new Title());
+			Base::Add(new License());
+			
 			break;
 		}
 	}
@@ -34,28 +54,25 @@ void Menu::Draw()
 {
 	CVector2D pos[2] = {
 		CVector2D(100,200),
-		CVector2D(100,300),
+		CVector2D(100,600),
+	};
+	CVector2D Itempos[2]{
+		CVector2D(300,200),
+		CVector2D(500,200),
 	};
 	const char* text[2] = {
-		"LifeUp",
+		"Item",
 		"Exit"
 	};
-	for (int i = 0; i < 2; i++) {
-		FONT_T()->Draw(pos[i].x, pos[i].y, 1, 1, 1, text[i]);
+	for (int j = 0; j < 2;j++) {
+		for (int i = 0; i < 2; i++) {
+			FONT_T()->Draw(pos[i].x, pos[i].y, 1, 1, 1, text[i]);
+		}
 	}
 	//カーソル
 	FONT_T()->Draw(pos[m_select].x - 64, pos[m_select].y, 1, 1, 1, ">");
+	//FONT_T()->Draw(Itempos[m_Item_select].x, Itempos[m_Item_select].y, 1, 1, 1, ">");
 	//テストデータの表示
 	//FONT_T()->Draw(0, 128, 1, 0, 0, "m_cnt[%d]", m_cnt);
 
-}
-
-bool Menu::LifeUp()
-{
-	if (PUSH(CInput::eButton4)) {
-		return true;
-	}
-	else {
-		return false;
-	}
 }

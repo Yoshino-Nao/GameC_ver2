@@ -1,6 +1,6 @@
 #include "Slash.h"
 
-Slash::Slash(const CVector2D& pos, int r, bool flip, int type, int attack_no)
+Slash::Slash(const CVector2D& pos, int r, bool flip, int type, int attack_no,int attack_pow)
 	:Base(type) {
 	//‰æ‘œ•¡»
 	m_img = COPY_RESOURCE("Effect_Slash", CImage);
@@ -18,6 +18,8 @@ Slash::Slash(const CVector2D& pos, int r, bool flip, int type, int attack_no)
 	m_img.ChangeAnimation(0, false);
 	//UŒ‚”Ô†
 	m_attack_no = attack_no;
+	//UŒ‚—Í
+	m_attack_pow = attack_pow;
 }
 
 void Slash::Update()
@@ -38,5 +40,5 @@ void Slash::Draw()
 	m_img.SetFlipH(m_flip);
 	m_img.Draw();
 	
-	DrawRect();
+	//DrawRect();
 }

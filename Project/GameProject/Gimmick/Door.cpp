@@ -25,9 +25,6 @@ Door::Door(const CVector2D& pos, int key)
 	m_img.SetCenter(64, 64);
 	//“–‚½‚è”»’è—p‹éŒ`
 	m_rect = CRect(-64, -64, 64, 64);
-	//m_rect = CRect(-3, -3, 3, 3);
-
-	
 }
 
 void Door::Draw()

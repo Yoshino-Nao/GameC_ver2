@@ -4,7 +4,7 @@
 #include "../Gimmick/Door.h"
 #include "../Character/Enemy.h"
 #include "../Character/Player.h"
-
+#include "../Item/Item.h"
 
 
 
@@ -30,7 +30,15 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		Base::Add(new Enemy(CVector2D(
 			m_fmfHeader.byChipWidth * 30,
 			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime1));
-		
+		/*Base::Add(new Enemy(CVector2D(
+			m_fmfHeader.byChipWidth * 31,
+			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime2));
+		Base::Add(new Enemy(CVector2D(
+			m_fmfHeader.byChipWidth * 32,
+			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime3));*/
+		Base::Add(new Item(CVector2D(
+			m_fmfHeader.byChipWidth * 26,
+			m_fmfHeader.byChipHeight * 94), eType_Item_Score));
 		//テストマップ２
 		Base::Add(new AreaChange(2,					//次のマップの番号
 			CRect(m_fmfHeader.byChipWidth * 43,		//エリアチェンジの判定
@@ -38,7 +46,7 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 				m_fmfHeader.byChipWidth * 2,		//横サイズ
 				m_fmfHeader.byChipHeight * 2),		//縦サイズ
 			CVector2D(m_fmfHeader.byChipWidth * 1,	//次のマップの最初のプレイヤーの場所
-				m_fmfHeader.byChipHeight * 15)));
+				m_fmfHeader.byChipHeight * 16)));
 		/*//廊下　左へ
 		Base::Add(new AreaChange(4,
 			CRect(m_fmfHeader.byChipWidth * 1,
@@ -57,8 +65,8 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 				m_fmfHeader.byChipHeight * 15,		//左上
 				m_fmfHeader.byChipWidth * 2,		//横サイズ
 				m_fmfHeader.byChipHeight * 2),		//縦サイズ
-			CVector2D(m_fmfHeader.byChipWidth * 1,	//次のマップの最初のプレイヤーの場所
-				m_fmfHeader.byChipHeight * 15)));
+			CVector2D(m_fmfHeader.byChipWidth * 43,	//次のマップの最初のプレイヤーの場所
+				m_fmfHeader.byChipHeight * 99)));
 		break;
 	}
 	
@@ -238,11 +246,12 @@ int Map::CollisionMap(const CVector2D& pos, const CRect& rect, CVector2D* rev_po
 #pragma endregion
 
 #pragma region ミニマップ
-static int MiniMapData[100][100] = { NULL };
-static int MiniMapData1[18][18] = { NULL };
+//static int MiniMapData[100][100] = { NULL };
+//static int MiniMapData1[18][18] = { NULL };
 MiniMap::MiniMap(int nextArea) :Base(eType_MiniMapBack)
 {
-	
+	MiniMapData[100][100] = { NULL };
+	MiniMapData1[18][18] = { NULL };
 	m_mapnum = nextArea;
 	m_img = COPY_RESOURCE("MiniMap", CImage);
 	switch (nextArea)
@@ -345,8 +354,9 @@ void MiniMap::Draw()
 		}
 	}
 }
-
-
+//実体
+int MiniMap::MiniMapData[100][100];
+int MiniMap::MiniMapData1[18][18];
 MiniMapPlayer::MiniMapPlayer(int nextArea)
 	:Base(eType_MiniMapFront)
 {

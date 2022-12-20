@@ -47,9 +47,9 @@ private:
 	bool m_enable_area_change;
 	//エリアチェンジオブジェクトに触れているフラグ
 	bool m_hit_area_change;
-	//AttackのState
-	//int Pstate;
 	
+	//攻撃力
+	int m_attack_pow;
 	//攻撃番号
 	int m_attack_no;
 	//ダメージ番号
@@ -69,6 +69,12 @@ private:
 	int m_hpmax;
 	//敵攻撃力
 	int m_pow;
+	//取得アイテム
+	//int m_ItemList[10];
+
+	CVector2D r;
+
+	CVector2D l;
 	//プレイヤー移動量
 	CVector2D vec;
 	//スクロール補間量
@@ -88,6 +94,7 @@ public:
 	
 	Player(const CVector2D& p, bool flip);
 	void Move();
+	void GetItem(int i);
 	void LifeUp(int v);
 	void Update();
 	void Draw();
@@ -99,6 +106,7 @@ public:
 	int GetHpMax() {
 		return m_hpmax;
 	}
+	
 	CVector2D GetPos() {
 		return m_pos;
 	}

@@ -6,9 +6,17 @@
 enum {
 	eType_Scene,
 	eType_Field,
+	eType_Door,
 	eType_Player,
 	eType_Player_Bullet,
+	eType_Bullet,
+	eType_Player_Attack,
+	eType_Enemy_Attack,
+	eType_Effect,
+	eType_AtkEffect,
+
 	eType_Enemy,
+
 	//敵区別用type
 	eType_E_Slime1,
 	eType_E_Slime2,
@@ -17,20 +25,17 @@ enum {
 	eType_E_Witch2,
 	eType_E_Dragon1,
 
-	eType_Bullet,
-	eType_Goal,
-	eType_Door,
-	eType_Player_Attack,
-	eType_Enemy_Attack,
-	eType_Effect,
-	eType_AtkEffect,
 	eType_Item,
+	//アイテム区別用ID
 	eType_Item_Score,
 	eType_Item_LifeUp,
+	
+	
+	
+	eType_Goal,
 	eType_start,
 	eType_Goal2,
 
-	
 	eType_Menu,
 	eType_UI_Back,
 	eType_UI_Mid,

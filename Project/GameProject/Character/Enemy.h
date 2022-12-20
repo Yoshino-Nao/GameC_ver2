@@ -28,11 +28,11 @@ private:
 	
 	CVector2D v;
 	//Šeó‘Ô‚Å‚Ì‹““®
-	void StateIdle(int type);
-	void StateDamage(int type);
-	void StateDown(int type);
-	void StateAttack(int type);
-	void StateWait(int type);
+	void StateIdle();
+	void StateDamage();
+	void StateDown();
+	void StateAttack();
+	void StateWait();
 public:
 	Enemy(const CVector2D& p, bool flip ,int type);
 	~Enemy();

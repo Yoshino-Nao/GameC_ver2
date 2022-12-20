@@ -8,7 +8,7 @@ private:
 	//”½“]ƒtƒ‰ƒO
 	bool m_flip;
 public:
-	Effect(const char* name, const CVector2D& pos, bool flip);
+	Effect(const char* name, const CVector2D& pos, bool flip, int w, int h);
 	void Update();
 	void Draw();
 };

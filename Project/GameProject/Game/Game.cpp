@@ -41,12 +41,15 @@ Game::Game() :Base(eType_Scene)
 	Base::Add(new GaugeGreen());
 	GameData::s_score = 0;
 	GameData::s_time = 60 * 60 * 10;
-	
 }
 
 
 Game::~Game()
 {
+
+	//ミニマップ初期化
+	memset(MiniMap::MiniMapData, 0, sizeof(MiniMap::MiniMapData[0][0]) * 100 * 100);
+	memset(MiniMap::MiniMapData1, 0, sizeof(MiniMap::MiniMapData[0][0]) * 18 * 18);
 	//全てのオブジェクトを破棄
 	//Base::KillAll();
 	//タイトルシーンへ

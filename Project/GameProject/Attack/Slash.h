@@ -7,12 +7,16 @@ private:
 	CImage m_img;
 	//”½“]ƒtƒ‰ƒO
 	bool m_flip;
+	int m_attack_pow;
 	//UŒ‚”Ô†
 	int m_attack_no;
 public:
-	Slash(const CVector2D& pos, int r, bool flip, int type, int attack_no);
+	Slash(const CVector2D& pos, int r, bool flip, int type, int attack_no, int attack_pow);
 	void Update();
 	void Draw();
+	int GetAttackPow() {
+		return m_attack_pow;
+	}
 	int GetAttackNo() {
 		return m_attack_no;
 	}

@@ -3,15 +3,24 @@
 
 class Menu :public Base {
 	enum {
-		eLifeUp,
+		eItem,
 		eExit
 	};
 	int m_select;
+	int m_Item_select;
 	int m_cnt;
+	bool m_in_item;
 public:
 	Menu();
 	void Update();
 	void Draw();
-	bool LifeUp();
+	bool LifeUp() {
+		if (PUSH(CInput::eButton4)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 };
 	
