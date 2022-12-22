@@ -69,8 +69,8 @@ private:
 	int m_hpmax;
 	//敵攻撃力
 	int m_pow;
-	//取得アイテム
-	//int m_ItemList[10];
+	//使用アイテム
+	int m_item_num;
 
 	CVector2D r;
 
@@ -95,6 +95,7 @@ public:
 	Player(const CVector2D& p, bool flip);
 	void Move();
 	void GetItem(int i);
+	void UseItem(int n);
 	void LifeUp(int v);
 	void Update();
 	void Draw();
@@ -106,7 +107,6 @@ public:
 	int GetHpMax() {
 		return m_hpmax;
 	}
-	
 	CVector2D GetPos() {
 		return m_pos;
 	}

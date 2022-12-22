@@ -93,10 +93,32 @@ void Player::StateGunDraw()
 {
 	m_img.ChangeAnimation(15, false);
 	CVector2D mouse_pos = CInput::GetMousePoint();
-	
-	DrawLine(CVector2D(m_pos.x, m_pos.y - 50), CVector2D(m_pos.x, m_pos.y));
-	//FONT_T()->Draw(100, 100, 1, 1, 1, "%.4f%.4f", r.x, r.y);
+	CVector2D r = CInput::GetRStick(0);
+	CVector2D HandPos(m_pos.x, m_pos.y - 70);
 
+	CVector2D Up(CVector2D::up);
+	//CVector2D RS(r);
+	
+	float dot = CVector2D::Dot(Up.GetNormalize(), r.GetNormalize());
+	//float dot = CVector2D::Cross(Up.GetNormalize(), r.GetNormalize());
+	
+	FONT_T()->Draw(100, 100, 1, 1, 1, "%.4f", dot);
+	//正面
+	if (dot < cosf(DtoR(60.0f)) && dot > cosf(DtoR(120.0f))) {
+		DrawLine(HandPos, HandPos + r, 1, 0, 0);
+	}//上方
+	else if (dot <= cosf(DtoR(120.0f)) && dot > cosf(DtoR(180.0f))) {
+		DrawLine(HandPos, HandPos + r, 0, 1, 0);
+	}//下方
+	else if (dot <= cosf(DtoR(0.0f)) && dot >= cosf(DtoR(60.0f))) {
+		DrawLine(HandPos, HandPos + r, 0, 0, 1);
+	}//上
+	else if (dot < cosf(DtoR(180.0f)) && dot >= cosf(DtoR(240.0f))) {
+		DrawLine(HandPos, HandPos + r, 0, 1, 1);
+	}//後ろ
+	else{
+		DrawLine(HandPos, HandPos + r, 1, 1, 1);
+	}
 	if (m_img.CheckAnimationEnd() && PUSH(CInput::eRight) || PUSH(CInput::eLeft)) {
 		m_state = eState_Idle;
 	}
@@ -110,8 +132,8 @@ void Player::StateShooting()
 {	
 	CVector2D mouse_pos = CInput::GetMousePoint();
 	CVector2D r = CInput::GetRStick(0);
-	CVector2D diff = mouse_pos - GetScreenPos(CVector2D(m_pos.x, m_pos.y - 50));
-	DrawLine(CVector2D(m_pos.x, m_pos.y - 50), mouse_pos);
+	CVector2D diff = mouse_pos - GetScreenPos(CVector2D(m_pos.x, m_pos.y - 70));
+	DrawLine(CVector2D(m_pos.x, m_pos.y - 70), mouse_pos, 1, 1, 1);
 	if (rate <= 0) {
 		Base::Add(new Player_Bullet1(CVector2D(m_pos.x + m_atkpos, m_pos.y - 76), atan2f(diff.y, diff.x), m_flip, m_attack_no));
 		m_img.ChangeAnimation(17, true);
@@ -261,9 +283,8 @@ void Player::Move()
 		vec.y = jump_pow;
 		m_vec.y = -move_yspeed_max;
 		m_is_ground = false;
-		m_airjump = true;
 	}
-	vec.x = min(max(vec.x, -move_xspeed_max), move_xspeed_max);
+	
 	/*
 	if (vec.x < -move_xspeed_max) {
 		vec.x = -move_xspeed_max;
@@ -273,6 +294,9 @@ void Player::Move()
 	}*/
 
 	//m_pos.y += vec.y;
+	if (m_is_ground) {
+		m_airjump = true;
+	}
 	//ジャンプ中なら
 	if (!m_is_ground) {
 		if (m_vec.y < 0) {
@@ -286,12 +310,22 @@ void Player::Move()
 			m_is_land = true;
 		}
 		//２段ジャンプ
-		if (m_airjump && m_img.GetIndex() >= 1 && PUSH(CInput::eButton2)) {
-			m_img.ChangeAnimation(5, false, 0, false);
+		if (m_airjump && m_img.GetIndex() >= 1 && PUSH(CInput::eButton2)){
+			m_img.ChangeAnimation(5, false);
+			
 			m_vec.y = (move_yspeed_max * -0.7f);
 			m_is_ground = false;
 			m_airjump = false;
 			Base::Add(new Effect("Effect_Ring_yoko", CVector2D(m_pos.x, m_pos.y), m_flip, 90, 30));
+		}
+		//２段ジャンプ時、軌道の方向転換
+		if (!m_airjump && m_img.GetIndex() >= 4) {
+			if (HOLD(CInput::eLeft)) {
+				vec.x = -move_xspeed_max * 0.5f;
+			}
+			else if (HOLD(CInput::eRight)) {
+				vec.x = move_xspeed_max * 0.5f;
+			}
 		}
 	}
 	else
@@ -310,11 +344,21 @@ void Player::Move()
 				m_is_land = false;
 			}
 		}
+	vec.x = min(max(vec.x, -move_xspeed_max), move_xspeed_max);
 }
 
 
 void Player::GetItem(int i)
 {
+}
+void Player::UseItem(int n)
+{
+	switch (n)
+	{
+	case 0:
+		
+		break;
+	}
 }
 void Player::LifeUp(int v)
 {
@@ -329,6 +373,8 @@ void Player::LifeUp(int v)
 void Player::Update() {
 	m_img.SetColor(1, 1, 1, 1);
 	Base* b = Base::FindObject(eType_Menu);
+#pragma region !Menu
+
 	if (!b) {
 		r = CInput::GetRStick(0);
 		l = CInput::GetLStick(0);
@@ -390,15 +436,17 @@ void Player::Update() {
 			{
 				v3.y = 0;
 			}
-
-			m_flip ? v3.x = -300 : v3.x = +300;
+			//カメラ補正
+			//ミニマップとアクションのしやすさの兼ね合いも考えて一旦OFF
+			//m_flip ? v3.x = -300 : v3.x = +300;
+			
 			m_flip ? m_atkpos = -60.0f : m_atkpos = 60.0f;
 			CVector2D v2 = v3 - sc_vec;
 			//スクロール加速度
 			sc_vec += v2 * 0.05;
 			//基準値+補正値
-			m_scroll.x = m_pos.x - 1280 / 2 + sc_vec.x;
-			m_scroll.y = m_pos.y - 600 + sc_vec.y;
+			m_scroll.x = m_pos.x - CCamera::GetCurrent()->GetWhidth()/2 + sc_vec.x;
+			m_scroll.y = m_pos.y - CCamera::GetCurrent()->GetHeight() / 1.4f + sc_vec.y;
 			//無敵時間
 			if (m_is_inv) {
 				invtime--;
@@ -426,6 +474,7 @@ void Player::Update() {
 			m_hit_area_change = false;
 		}
 	}
+#pragma endregion
 	Menu* m = dynamic_cast<Menu*>(b);
 	if (PUSH(CInput::eButton10)) {
 		if (m) {
@@ -433,11 +482,19 @@ void Player::Update() {
 		}
 		else {
 			Base::Add(new Menu());
+			
 		}
 	}
-	if (bool b=m->LifeUp()) {
-		LifeUp(10);
+	if (b) {
+		if (bool b = m->UseItemflag()) {
+			//int item_num = m->UseItemNum();
+			if (GameData::s_itemlist[m->UseItemNum()] > 0) {
+				UseItem(m->UseItemNum());
+				GameData::s_itemlist[m->UseItemNum()] -= 1;
+			}
+		}
 	}
+	
 }
 
 void Player::Draw() {

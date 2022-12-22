@@ -118,7 +118,7 @@ public:
 	//‹éŒ`‚Ì•\Ž¦
 	void DrawRect();
 
-	void DrawLine(CVector2D p1, CVector2D p2);
+	void DrawLine(CVector2D p1, CVector2D p2, float r, float g, float b);
 };
 
 

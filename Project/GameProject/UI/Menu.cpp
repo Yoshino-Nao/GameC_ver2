@@ -1,6 +1,7 @@
 #include "Menu.h"
 #include "../Character/Player.h"
 #include"../Game/Game.h"
+#include "../Game/GameData.h"
 #include"../Title/Title.h"
 #include "../Map/Map.h"
 Menu::Menu()
@@ -9,6 +10,7 @@ Menu::Menu()
 	m_Item_select = 0;
 	m_cnt = 0;
 	m_in_item = false;
+	m_use_item = false;
 }
 
 void Menu::Update()
@@ -39,7 +41,7 @@ void Menu::Update()
 		case eItem:
 			(!m_in_item ? m_in_item = true : m_in_item = false);
 			break;
-		case eExit:
+		case eTitle:
 			Base::KillAll();
 			//ゲームシーンへ
 			Base::Add(new Title());
@@ -47,6 +49,20 @@ void Menu::Update()
 			
 			break;
 		}
+	}
+	if (PUSH(CInput::eButton3) && m_in_item) {
+		m_use_item = true;
+		switch (m_Item_select) {
+		case 0:
+			
+			break;
+		case 1:
+			
+			break;
+		}
+	}
+	else {
+		m_use_item = false;
 	}
 }
 
@@ -62,17 +78,20 @@ void Menu::Draw()
 	};
 	const char* text[2] = {
 		"Item",
-		"Exit"
+		"Title"
 	};
-	for (int j = 0; j < 2;j++) {
-		for (int i = 0; i < 2; i++) {
-			FONT_T()->Draw(pos[i].x, pos[i].y, 1, 1, 1, text[i]);
-		}
+	for (int i = 0; i < 2; i++) {
+		FONT_T()->Draw(pos[i].x, pos[i].y, 1, 1, 1, text[i]);
+
+	}
+	for (int i = 0; i < 2; i++) {
+		//m_img
+		FONT_T()->Draw(Itempos[i].x, Itempos[i].y, 1, 1, 1, text[i]);
+
 	}
 	//カーソル
 	FONT_T()->Draw(pos[m_select].x - 64, pos[m_select].y, 1, 1, 1, ">");
-	//FONT_T()->Draw(Itempos[m_Item_select].x, Itempos[m_Item_select].y, 1, 1, 1, ">");
+	FONT_T()->Draw(Itempos[m_Item_select].x, Itempos[m_Item_select].y, 1, 1, 1, ">");
 	//テストデータの表示
 	//FONT_T()->Draw(0, 128, 1, 0, 0, "m_cnt[%d]", m_cnt);
-
 }

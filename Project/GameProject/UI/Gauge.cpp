@@ -17,7 +17,6 @@ void GaugeBack::Draw()
 GaugeGreen::GaugeGreen() :Base(eType_UI_Front)
 {
 	m_img.Load("Image/-5.png");
-	m_img.SetColor(0, 1, 0, 1);
 	player_hp = 0;
 	player_hpmax = 0;
 	m_hp = 0;
@@ -31,10 +30,15 @@ void GaugeGreen::Draw()
 		player_hpmax = h->GetHpMax();
 	}
 	//GreenGauge.fillAmount = (1.0f / (float)maxhp) * (float)hp;
+	
 	m_hp = (380.0f / (float)player_hpmax) * (float)player_hp;
 	//画像の最大サイズは380
 	//m_hpの値が残hpに対応
-	
+	float ratio = (1.0f / (float)player_hpmax) * (float)player_hp;
+	/*if ((float)player_hp / (float)player_hpmax < 0.6f) {
+		m_img.SetColor((player_hp % player_hpmax) * 0.1f, (float)player_hp / (float)player_hpmax, 0, 1);
+	}*/
+	m_img.SetColor(1.4f - ratio, ratio + 0.2f, 0, 1);
 	m_img.SetPos(0, 0);
 	m_img.SetRect(0, 0, m_hp, 30);
 	m_img.SetSize(m_hp, 30);

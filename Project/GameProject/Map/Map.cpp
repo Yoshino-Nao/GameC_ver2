@@ -348,13 +348,13 @@ void MiniMap::Draw()
 			//表示サイズ設定
 			m_img.SetSize(3, 3);
 			//表示位置設定
-			m_img.SetPos((1280 - GetMapWidth() * 3 + i * 3), (1 + j * 3));
+			m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - GetMapWidth() * 3 + i * 3), (1 + j * 3));
 			//描画
 			m_img.Draw();
 		}
 	}
 }
-//実体
+//実体を定義
 int MiniMap::MiniMapData[100][100];
 int MiniMap::MiniMapData1[18][18];
 MiniMapPlayer::MiniMapPlayer(int nextArea)
@@ -393,7 +393,7 @@ void MiniMapPlayer::Draw()
 		m_img.SetSize(3, 6);
 		m_img.SetCenter(0, 3);
 		//表示位置設定
-		m_img.SetPos((1280 - GetMapWidth() * 3 + px * 3), (1 + py * 3));
+		m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - GetMapWidth() * 3 + px * 3), (1 + py * 3));
 		//描画
 		m_img.Draw();
 	}

@@ -32,8 +32,8 @@ public:
 	@param	b				[in]	色（青）
 	@param	format			[in]	文字列、書式
 	**/
-	void Draw(int x,int y,float r,float g,float b, const char *format, ...);
-	void Draw(int x, int y, float r, float g, float b, const wchar_t *format, ...);
+	void Draw(int x, int y, float r, float g, float b, const char* format, ...);
+	void Draw(int x, int y, float r, float g, float b, const wchar_t* format, ...);
 
 	/*!
 	@brief	解放
