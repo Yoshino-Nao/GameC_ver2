@@ -62,20 +62,14 @@ class MiniMap :public Base, CFmfMap {
 private:
 	CImage m_img;
 	int m_mapnum;
-
+	CVector2D m_Ppos;
+	int x;
+	int y;
+	int s;
 public:
 	static int MiniMapData[100][100];
 	static int MiniMapData1[18][18];
 	MiniMap(int nextArea);
 	~MiniMap();
-	void Draw();
-};
-class MiniMapPlayer :public Base,CFmfMap {
-private:
-	CImage m_img;
-	CVector2D m_Ppos;
-public:
-	MiniMapPlayer(int nextArea);
-	~MiniMapPlayer();
 	void Draw();
 };

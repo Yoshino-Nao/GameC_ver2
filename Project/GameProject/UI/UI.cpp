@@ -6,6 +6,9 @@
 UI::UI() :Base(eType_UI_Score) {
 	m_img.Load("Image/UI.png");
 	m_playerHP = -1;
+	m_playerHPMax = 0;
+	m_old_playerHPMax = 0;
+	digit = 0;
 	digit = 0;
 }
 
@@ -37,6 +40,7 @@ void UI::Draw() {
 	Player* h = dynamic_cast<Player*>(p);
 	if (p) {
 		m_playerHP = h->GetHp();
+		m_playerHPMax = h->GetHpMax();
 		if (m_playerHP <= 0) {
 			digit = 1;
 		}
@@ -48,13 +52,35 @@ void UI::Draw() {
 				digit++;
 			}
 		}
-		
+		if (m_playerHPMax <= 0) {
+			digitMax = 1;
+		}
+		else if (m_old_playerHPMax != m_playerHPMax) {
+			int hpmax = m_playerHPMax;
+			digitMax = 0;
+			while (hpmax != 0) {
+				hpmax /= 10;
+				digitMax++;
+			}
+		}
 	}
+	
+	for (int i = 0; i < digitMax; i++, m_playerHPMax /= 10) {
+		int s = m_playerHPMax % 10;
+		m_img.SetRect(16 * s, 18, 16 * s + 16, 32);
+		m_img.SetSize(16, 18);
+		m_img.SetPos(90 + (16 * (digitMax + 1)) - (16 * i), 5);
+		m_img.Draw();
+	}
+	m_img.SetRect(16 * 10, 18, 16 * 10 + 16, 32);
+	m_img.SetSize(16, 18);
+	m_img.SetPos(160 - 16 * 3, 5);
+	m_img.Draw();
 	for (int i = 0; i < digit; i++, m_playerHP /= 10) {
 		int s = m_playerHP % 10;
-		m_img.SetRect(16 * s, 16, 16 * s + 16, 32);
-		m_img.SetSize(16, 16);
-		m_img.SetPos(90 - 16 * i, 6);
+		m_img.SetRect(16 * s, 18, 16 * s + 16, 32);
+		m_img.SetSize(16, 18);
+		m_img.SetPos(90 - 16 * i, 5);
 		m_img.Draw();
 	}
 	/*

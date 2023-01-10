@@ -25,13 +25,15 @@ void Player::StateIdle()
 	
 	
 	Move();
-
-	if (PUSH(CInput::eButton3)) {
-		m_state = eState_GunDraw;
-		m_attack_no++;
-	}
+	
+	
 	if (PUSH(CInput::eButton1)) {
+		m_atk_yoyaku = false;
+		m_attack_no++;
 		m_state = eState_Attack1;
+	}
+	if (PUSH(CInput::eButton6)) {
+		m_state = eState_GunDraw;
 		m_attack_no++;
 	}
 }
@@ -43,11 +45,15 @@ void Player::StateAttack1()
 		Base::Add(new Slash(CVector2D(m_pos.x + m_atkpos, m_pos.y - 50), 64,
 			m_flip, eType_Player_Attack, m_attack_no, m_attack_pow));
 	}
-	if (m_img.CheckAnimationEnd() && HOLD(CInput::eButton1)) {
-		m_state = eState_Attack2;
-		m_attack_no++;
+	if (m_img.GetIndex() >= 3 && HOLD(CInput::eButton1)) {
+		m_atk_yoyaku = true;
 	}
-	else if (m_img.CheckAnimationEnd() && HOLD(CInput::eRight) || HOLD(CInput::eLeft)) {
+	if (m_img.CheckAnimationEnd() && m_atk_yoyaku) {
+		m_attack_no++;
+		m_atk_yoyaku = false;
+		m_state = eState_Attack2;
+	}
+	else if (m_img.CheckAnimationEnd()) {
 		m_state = eState_Idle;
 	}
 }
@@ -61,11 +67,15 @@ void Player::StateAttack2()
 		Base::Add(new Slash(CVector2D(m_pos.x, m_pos.y - 100), 32, 
 			m_flip, eType_Player_Attack, m_attack_no, m_attack_pow));
 	}
-	if (m_img.CheckAnimationEnd() && HOLD(CInput::eButton1)) {
-		m_state = eState_Attack3;
-		m_attack_no++;
+	if (m_img.GetIndex() >= 4 && HOLD(CInput::eButton1)) {
+		m_atk_yoyaku = true;
 	}
-	else if (m_img.CheckAnimationEnd() && HOLD(CInput::eRight) || HOLD(CInput::eLeft)) {
+	if (m_img.CheckAnimationEnd() && m_atk_yoyaku) {
+		m_atk_yoyaku = false;
+		m_attack_no++;
+		m_state = eState_Attack3;
+	}
+	else if (m_img.CheckAnimationEnd()) {
 		m_state = eState_Idle;
 	}
 }
@@ -83,6 +93,7 @@ void Player::StateAttack3()
 		Base::Add(new Slash(CVector2D(m_pos.x + m_atkpos + m_atkpos , m_pos.y - 20), 32,
 			m_flip, eType_Player_Attack, m_attack_no, m_attack_pow));
 	}
+
 	if (m_img.CheckAnimationEnd()) {
 		m_state = eState_Idle;
 	}
@@ -93,36 +104,19 @@ void Player::StateGunDraw()
 {
 	m_img.ChangeAnimation(15, false);
 	CVector2D mouse_pos = CInput::GetMousePoint();
-	CVector2D r = CInput::GetRStick(0);
-	CVector2D HandPos(m_pos.x, m_pos.y - 70);
+	CVector2D HandPos(m_pos.x + (r.x * m_handpos), m_pos.y - 70 + (r.y * m_handpos));
+	r = r * 1000;
+	//
+	DrawLine(HandPos, HandPos + r , 1, 0, 0);
 
-	CVector2D Up(CVector2D::up);
-	//CVector2D RS(r);
+	FONT_T()->Draw(100, 100, 1, 1, 1, "%.4f%.4f", r.x, r.y);
 	
-	float dot = CVector2D::Dot(Up.GetNormalize(), r.GetNormalize());
-	//float dot = CVector2D::Cross(Up.GetNormalize(), r.GetNormalize());
-	
-	FONT_T()->Draw(100, 100, 1, 1, 1, "%.4f", dot);
-	//正面
-	if (dot < cosf(DtoR(60.0f)) && dot > cosf(DtoR(120.0f))) {
-		DrawLine(HandPos, HandPos + r, 1, 0, 0);
-	}//上方
-	else if (dot <= cosf(DtoR(120.0f)) && dot > cosf(DtoR(180.0f))) {
-		DrawLine(HandPos, HandPos + r, 0, 1, 0);
-	}//下方
-	else if (dot <= cosf(DtoR(0.0f)) && dot >= cosf(DtoR(60.0f))) {
-		DrawLine(HandPos, HandPos + r, 0, 0, 1);
-	}//上
-	else if (dot < cosf(DtoR(180.0f)) && dot >= cosf(DtoR(240.0f))) {
-		DrawLine(HandPos, HandPos + r, 0, 1, 1);
-	}//後ろ
-	else{
-		DrawLine(HandPos, HandPos + r, 1, 1, 1);
-	}
-	if (m_img.CheckAnimationEnd() && PUSH(CInput::eRight) || PUSH(CInput::eLeft)) {
+	if (m_img.CheckAnimationEnd() && 
+		PUSH(CInput::eRight) || PUSH(CInput::eLeft) || 
+		l.x >= 0.8f || l.x <= -0.8f) {
 		m_state = eState_Idle;
 	}
-	else if (m_img.CheckAnimationEnd() && HOLD(CInput::eButton3)) {
+	else if (m_img.CheckAnimationEnd() && HOLD(CInput::eButton6)) {
 		m_state = eState_Shooting;
 		rate = 0;
 		//Base::Add(new Player_Bullet1(CVector2D(m_pos.x, m_pos.y - 50), m_flip, m_attack_no));
@@ -131,19 +125,52 @@ void Player::StateGunDraw()
 void Player::StateShooting()
 {	
 	CVector2D mouse_pos = CInput::GetMousePoint();
-	CVector2D r = CInput::GetRStick(0);
-	CVector2D diff = mouse_pos - GetScreenPos(CVector2D(m_pos.x, m_pos.y - 70));
-	DrawLine(CVector2D(m_pos.x, m_pos.y - 70), mouse_pos, 1, 1, 1);
-	if (rate <= 0) {
-		Base::Add(new Player_Bullet1(CVector2D(m_pos.x + m_atkpos, m_pos.y - 76), atan2f(diff.y, diff.x), m_flip, m_attack_no));
+	CVector2D HandPos(m_pos.x + (r.x * m_handpos), m_pos.y - 70 + (r.y * m_handpos));
+	r = r * 1000;
+	
+	CVector2D Front;
+	m_flip ? Front = CVector2D::left : Front = CVector2D::right;
+	
+	float dot = CVector2D::Dot(Front.GetNormalize(), r.GetNormalize());
+	
+	//FONT_T()->Draw(100, 100, 1, 1, 1, "%.4f%.4f", r.x, r.y);
+	//正面
+	if (dot > cosf(DtoR(20.0f))) {
+		DrawLine(HandPos, HandPos + r, 1, 0, 0);
 		m_img.ChangeAnimation(17, true);
+	}//斜め上
+	else if (dot > cosf(DtoR(70.0f)) && r.y < 0) {
+		DrawLine(HandPos, HandPos + r, 0, 1, 0);
+		m_img.ChangeAnimation(18, true);
+	}//斜め下
+	else if (dot > cosf(DtoR(70.0f)) && r.y > 0) {
+		DrawLine(HandPos, HandPos + r, 0, 0, 1);
+		m_img.ChangeAnimation(16, true);
+	}//真上
+	else if (dot > cosf(DtoR(115.0f)) && r.y < 0) {
+		DrawLine(HandPos, HandPos + r, 1, 1, 1);
+		m_img.ChangeAnimation(19, true);
+		if (rate <= 0) {
+			Base::Add(new Player_Bullet1(CVector2D(HandPos.x, HandPos.y)
+				, atan2f(r.y, r.x), m_flip, m_attack_no, m_attack_pow * 0.1f));
+			
+			rate = 20;
+			m_attack_no++;
+		}
+	}
+	else {
+		m_img.ChangeAnimation(15, false);
+	}
+	if (rate <= 0 && dot > cosf(DtoR(70.0f))) {
+		Base::Add(new Player_Bullet1(HandPos
+			, atan2f(r.y, r.x), m_flip, m_attack_no, m_attack_pow * 0.1f));
 		rate = 20;
 		m_attack_no++;
 	}
 	rate--;
 
 	
-	if (FREE(CInput::eButton3)) {
+	if (FREE(CInput::eButton6)) {
 		m_state = eState_GunDraw;
 	}
 }
@@ -154,12 +181,12 @@ void Player::StateDamage()
 	m_img.ChangeAnimation(8, false);
 	m_is_inv = true;
 	invtime = 120;
-	if (m_flip) {
+	/*if (m_flip) {
 		m_pos.x += 5;
 	}
 	else {
 		m_pos.x -= 5;
-	}
+	}*/
 	if (m_img.CheckAnimationEnd()) 
 	{
 		m_state = eState_Idle;
@@ -179,6 +206,7 @@ Player::Player(const CVector2D& p, bool flip) :
 	Base(eType_Player) {
 	//画像複製
 	m_img = COPY_RESOURCE("Player", CImage);
+	//画像サイズ
 	m_img.SetSize(448, 448);
 	//中心位置設定
 	m_img.SetCenter(224, 412);
@@ -186,46 +214,40 @@ Player::Player(const CVector2D& p, bool flip) :
 	m_img.ChangeAnimation(0);
 	//座標設定
 	m_pos_old = m_pos = p;
-	
-
-	
 	//当たり判定
 	m_rect = CRect(-20, -104, 20, 0);
-	//状態変数
-	m_state = eState_Idle;
+#pragma region 変数
+
+#pragma region 移動関係
 	//X最大速度
 	move_xspeed_max = 10;
 	//加速度
 	move_xspeed_add = 1.0f;
 	//ジャンプ力
-	move_yspeed_max = 18;
-	//ジャンプ力
-	jump_pow = 9;
-	//加速度
-	//move_yspeed_add = 0.5f;
+	move_yspeed_max = 20;
+	//ジャンプ入力時間
+	jump_pow = 0;
 	//摩擦
 	friction = 0.9f;
-
+	//現在高度 過去高度
+	m_groundpos_old = m_groundpos = m_pos.y;
+	//高度差 高度差計算用
+	m_groundpos_diff = m_groundpos_diff2 = 0;
 	//反転フラグ
 	m_flip = flip;
-	//着地フラグ
+	//着地判定用フラグ
 	m_is_ground = true;
 	//着地モーションフラグ
 	m_is_land = false;
+	m_land2 = false;
 	//２段ジャンプフラグ
 	m_airjump = false;
-	//ジャンプindex取得
-	jumpindex = 0;
-	//無敵フラグ
-	m_is_inv = false;
-	//エリアチェンジフラグ
-	m_enable_area_change = true;
-	//エリアチェンジオブジェクトに触れているフラグ
-	m_hit_area_change = false;
+#pragma endregion
 
-	//AttackのState
-	//Pstate = 0;
-	// 
+#pragma region 攻撃関係
+	//攻撃予約フラグ
+	m_atk_yoyaku = false;
+	//攻撃力
 	m_attack_pow = 50;
 	//攻撃番号
 	m_attack_no = rand();
@@ -233,29 +255,34 @@ Player::Player(const CVector2D& p, bool flip) :
     m_damage_no = -1;
 	//攻撃発生補正値
 	m_atkpos = 60.0f;
-	
+	//手の位置
+	m_handpos = 30;
 	//発射レート
 	rate = 20;
+#pragma endregion
+
+#pragma region プレイヤーの状態
+	//状態変数
+	m_state = eState_Idle;
+	//無敵フラグ
+	m_is_inv = false;
 	//無敵時間
 	invtime = 0;
 	//停止時間
 	stpdtime = 0;
-
+	//エリアチェンジフラグ
+	m_enable_area_change = true;
+	//エリアチェンジオブジェクトに触れているフラグ
+	m_hit_area_change = false;
 	//最大HP   HP
 	m_hpmax = m_hp = 120;
-	//取得アイテム
-	//m_ItemList[10] = 0;
-	//敵攻撃力
-	m_pow = 0;
-	
+#pragma endregion
+	//スティック
 	r = CVector2D(0, 0);
 	l = CVector2D(0, 0);
-	//プレイヤー移動量
-	vec = CVector2D(0, 0);
-	////スクロール補間量
+	////スクロール補間用
 	sc_vec = CVector2D(0, 0);
-
-	
+#pragma endregion
 
 }
 
@@ -264,89 +291,146 @@ void Player::Move()
 	//移動フラグ
 	bool move_flag = false;
 	bool walk_flag = false;
-	//左移動
-	if (HOLD(CInput::eLeft) || l.x <= -0.9f) {
-		vec.x -= move_xspeed_add;
+	
+	//左走り
+	if (HOLD(CInput::eLeft) || l.x <= -0.8f) {
+		move_xspeed_max = 10;
+		m_vec.x -= move_xspeed_add * abs(l.x);
 		//反転フラグ
 		m_flip = true;
 		move_flag = true;
 	}
-	//右移動
-	if (HOLD(CInput::eRight) || l.x >= 0.9f) {
-		vec.x += move_xspeed_add;
+	else if (HOLD(CInput::eLeft) || l.x > -0.8f && l.x < -0.2f) {
+		move_xspeed_max = 3.0f * abs(l.x) + 3;
+		//m_is_ground ? move_xspeed_max = 5 : move_xspeed_max = 5;
+		m_vec.x -= move_xspeed_add * abs(l.x) * 0.7f;
+		//反転フラグ
+		m_flip = true;
+		walk_flag = true;
+	}
+	//右走り
+	if (HOLD(CInput::eRight) || l.x >= 0.8f) {
+		move_xspeed_max = 10;
+		m_vec.x += move_xspeed_add * abs(l.x);
 		//反転フラグ
 		m_flip = false;
 		move_flag = true;
 	}
-	//ジャンプ
-	if (m_is_ground && PUSH(CInput::eButton2)) {
-		vec.y = jump_pow;
-		m_vec.y = -move_yspeed_max;
-		m_is_ground = false;
-	}
-	
-	/*
-	if (vec.x < -move_xspeed_max) {
-		vec.x = -move_xspeed_max;
-	}
-	if (vec.x > move_xspeed_max) {
-		vec.x = move_xspeed_max;
-	}*/
+	else if (HOLD(CInput::eRight) || l.x < 0.8f && l.x > 0.2f) {
+		move_xspeed_max = 3.0f * abs(l.x) + 3;
+		//m_is_ground ? move_xspeed_max = 5 : move_xspeed_max = 5;
+		
+		m_vec.x += move_xspeed_add * abs(l.x) * 0.7f;
 
-	//m_pos.y += vec.y;
-	if (m_is_ground) {
-		m_airjump = true;
+		//反転フラグ
+		m_flip = false;
+		walk_flag = true;
 	}
+	m_vec.x = min(max(m_vec.x, -move_xspeed_max), move_xspeed_max);
+	//ジャンプ
+	if (m_is_ground && HOLD(CInput::eButton2)) {
+		jump_pow++;
+	}
+	//高度差を測定
+	m_groundpos_diff = m_groundpos - m_groundpos_old;
+
+	//FONT_T()->Draw(100, 100, 1, 1, 1, "vec.y:%f", m_vec.y);
+	//FONT_T()->Draw(100, 200, 1, 1, 1, "m_scroll.x%f", m_scroll.x);
+	//FONT_T()->Draw(100, 300, 1, 1, 1, "m_scroll.y%f", m_scroll.y);
 	//ジャンプ中なら
 	if (!m_is_ground) {
 		if (m_vec.y < 0) {
 			//上昇アニメーション
 			m_img.ChangeAnimation(5, false);
+			if (m_vec.y <= -10) {
+				//ジャンプの挙動をいい感じにするやつ
+				m_vec.y += 0.4f;		
+			}
+			//アニメーションの１枚目の時に高度測定
+			if (m_img.GetIndex() == 0) {
+				m_groundpos_old = m_groundpos;
+			}
 		}
 		else
 		{
 			//下降アニメーション
 			m_img.ChangeAnimation(6, false);
-			m_is_land = true;
+			//高度の差が280以下なら着地モーションフラグを立たせない
+			if (m_groundpos_diff > 280) {
+				m_is_land = true;
+				m_groundpos_diff2 = m_groundpos_diff;
+			}
+			//アニメーションの１枚目の時に高度測定
+			if (m_img.GetIndex() == 0) {
+				m_groundpos_old = m_groundpos;
+			}
+			//現在高度を測定
+			m_groundpos = m_pos.y;
 		}
 		//２段ジャンプ
-		if (m_airjump && m_img.GetIndex() >= 1 && PUSH(CInput::eButton2)){
+		if (m_airjump && m_img.GetIndex() >= 1 && PUSH(CInput::eButton2)) {
 			m_img.ChangeAnimation(5, false);
-			
+
 			m_vec.y = (move_yspeed_max * -0.7f);
 			m_is_ground = false;
 			m_airjump = false;
 			Base::Add(new Effect("Effect_Ring_yoko", CVector2D(m_pos.x, m_pos.y), m_flip, 90, 30));
 		}
-		//２段ジャンプ時、軌道の方向転換
+		//２段ジャンプ時、速度をリセット
 		if (!m_airjump && m_img.GetIndex() >= 4) {
 			if (HOLD(CInput::eLeft)) {
-				vec.x = -move_xspeed_max * 0.5f;
+				m_vec.x = -move_xspeed_max * 0.5f;
 			}
 			else if (HOLD(CInput::eRight)) {
-				vec.x = move_xspeed_max * 0.5f;
+				m_vec.x = move_xspeed_max * 0.5f;
 			}
 		}
 	}
-	else
-		//移動中なら
-		if (move_flag && !m_is_land) {
-			m_img.ChangeAnimation(2);
+	else {
+		m_airjump = true;
+		//大ジャンプ
+		if (HOLD(CInput::eButton2) && jump_pow >= 6) {
+			m_vec.y = -move_yspeed_max;
+			m_is_ground = false;
+			jump_pow = 0;	
+		}//小ジャンプ
+		if (FREE(CInput::eButton2) && jump_pow < 6 && jump_pow > 0) {
+			float ySpeed = 0;
+			if (jump_pow <= 5) {
+				ySpeed = 10 + jump_pow;
+			}
+			//m_vec.y = -move_yspeed_max * 0.5f;
+			m_vec.y = -ySpeed;
+			m_is_ground = false;
+			jump_pow = 0;
 		}
-		else if (!m_is_land) {
-			//待機アニメーション
-			m_img.ChangeAnimation(0);
-		}
-		else 
-		{
-			m_img.ChangeAnimation(7, false);
-			if (m_img.CheckAnimationEnd()) {
-				m_is_land = false;
+		if (!m_is_land) {
+			//走りアニメーション
+			if (move_flag) {
+				m_img.ChangeAnimation(2);
+			}//歩きアニメーション
+			else if (walk_flag) {
+				m_img.ChangeAnimation(1);
+			}//待機アニメーション
+			else {
+				m_img.ChangeAnimation(0);
 			}
 		}
-	vec.x = min(max(vec.x, -move_xspeed_max), move_xspeed_max);
+		else
+		{	//着地モーション
+			m_img.ChangeAnimation(7, false);
+			if (m_img.CheckAnimationEnd()) {
+				//着地モーションが終了までのカウント
+				m_vec.x = m_vec.x * 0.9f;
+				m_groundpos_diff2 -= 40;
+				if (m_groundpos_diff2 <= 0) {
+					m_is_land = false;
+					m_groundpos_diff2 = 0;
+				}
+			}
+		}
+	}
 }
-
 
 void Player::GetItem(int i)
 {
@@ -368,18 +452,53 @@ void Player::LifeUp(int v)
 	}
 }
 
-
+void Player::KnockBack(CVector2D m_epos,int pow)
+{
+	float ratio = (float)pow / (float)m_hpmax;
+	CVector2D e_pos = (m_pos - m_epos) * ratio;
+	m_vec = e_pos;
+}
 
 void Player::Update() {
 	m_img.SetColor(1, 1, 1, 1);
+	//スティックレッドゾーン
+	if (abs(r.x) <= 0.2f) {
+		r.x = 0.0f;
+	}
+	if (abs(r.y) <= 0.2f) {
+		r.y = 0.0f;
+	}
+	if (abs(l.x) <= 0.2f) {
+		l.x = 0.0f;
+	}
+	if (abs(l.y) <= 0.2f) {
+		l.y = 0.0f;
+	}
+	
 	Base* b = Base::FindObject(eType_Menu);
-#pragma region !Menu
-
+#pragma region メニューが開かれていない時
 	if (!b) {
 		r = CInput::GetRStick(0);
 		l = CInput::GetLStick(0);
+		if (HOLD(CInput::eLeft)) {
+			l.x = -1;
+		}
+		if (HOLD(CInput::eRight)) {
+			l.x = 1;
+		}
+		if (HOLD(CInput::eUp)) {
+			l.y = -1;
+		}
+		if (HOLD(CInput::eDown)) {
+			l.y = 1;
+		}
 		//std::cout << "Player" << std::endl;
 		m_pos_old = m_pos;
+		Base* a = Base::FindObject(eType_Enemy);
+		Enemy* e = dynamic_cast<Enemy*>(a);
+		if (a) {
+			stpdtime = e->GetStopTime();
+		}
 		stpdtime--;
 		if (stpdtime <= 0) {
 			//スクロール設定
@@ -456,23 +575,27 @@ void Player::Update() {
 					invtime = 0;
 				}
 			}
-			if (m_is_ground) {
-				vec.x *= friction;
-			}
+			
+			m_vec.x *= friction;
+			
 
 			//重力による落下
 			m_vec.y += GRAVITY;
 			//アニメーション更新
 			m_img.UpdateAnimation();
-			m_pos.x += vec.x;
-			m_pos.y += m_vec.y;
+			/*m_pos.x += vec.x;
+			m_pos.y += m_vec.y;*/
+			m_pos += m_vec;
 			stpdtime = 0;
 
 
-			if (!m_enable_area_change && !m_hit_area_change)
+			if (!m_enable_area_change && !m_hit_area_change) {
 				m_enable_area_change = true;
+				m_groundpos = m_pos.y;
+			}
 			m_hit_area_change = false;
 		}
+
 	}
 #pragma endregion
 	Menu* m = dynamic_cast<Menu*>(b);
@@ -482,7 +605,6 @@ void Player::Update() {
 		}
 		else {
 			Base::Add(new Menu());
-			
 		}
 	}
 	if (b) {
@@ -492,9 +614,11 @@ void Player::Update() {
 				UseItem(m->UseItemNum());
 				GameData::s_itemlist[m->UseItemNum()] -= 1;
 			}
+			else {
+
+			}
 		}
 	}
-	
 }
 
 void Player::Draw() {
@@ -568,8 +692,11 @@ void Player::Collision(Base* b)
 		if (Enemy* e = dynamic_cast<Enemy*>(b)) {
 			if (m_damage_no != e->GetAttackNo() && Base::CollisionRect(this, e) && !m_is_inv) {
 				m_damage_no = e->GetAttackNo();
-				m_pow = e->GetPow();
-				m_hp -= m_pow;
+				int get_pow = e->GetPow();
+				m_hp -= get_pow;
+				KnockBack(e->m_pos, get_pow);
+
+				
 				if (m_hp <= 0) {
 					m_state = eState_Down;
 				}
@@ -603,11 +730,16 @@ void Player::Collision(Base* b)
 			if (t != NULL_TIP){
 				m_pos.x = pos.x;
 			}
-			t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect,&pos);
+			t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect, &pos);
 			if (t != NULL_TIP) {
+				//FONT_T()->Draw(100, 200, 1, 1, 1, "pos.y:%f", pos.y);
+				//頭をぶつけたかの判定
+				if (m_pos.y >= pos.y) {
+					m_is_ground = true;
+				}
 				m_pos.y = pos.y;
 				m_vec.y = 0;
-				m_is_ground = true;
+				
 				//m_is_land = false;
 				//m_airjump = false;
 				
@@ -632,6 +764,7 @@ void Player::Collision(Base* b)
 					KillByType(eType_MiniMapFront); 
 					KillByType(eType_Enemy);
 					KillByType(eType_Item);
+					m_groundpos_diff = m_groundpos_diff2 = 0;
 					//次のマップを生成
 					Base::Add(new Map(a->m_nextArea, a->m_nextplayerpos));
 					//エリアチェンジ一時不許可
@@ -663,4 +796,3 @@ void Player::Collision(Base* b)
 		break;
 	}
 }
-

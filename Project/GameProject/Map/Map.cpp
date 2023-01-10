@@ -21,7 +21,7 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		//fmfからマップデータを読み込む
 		Open("Map/test64.fmf");
 		Base::Add(new MiniMap(nextArea));
-		Base::Add(new MiniMapPlayer(nextArea));
+		//Base::Add(new MiniMapPlayer(nextArea));
 		
 		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 36,
@@ -30,12 +30,12 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		Base::Add(new Enemy(CVector2D(
 			m_fmfHeader.byChipWidth * 30,
 			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime1));
-		/*Base::Add(new Enemy(CVector2D(
+		Base::Add(new Enemy(CVector2D(
 			m_fmfHeader.byChipWidth * 31,
 			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime2));
 		Base::Add(new Enemy(CVector2D(
 			m_fmfHeader.byChipWidth * 32,
-			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime3));*/
+			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime3));
 		Base::Add(new Item(CVector2D(
 			m_fmfHeader.byChipWidth * 26,
 			m_fmfHeader.byChipHeight * 94), eType_Item_Score));
@@ -59,7 +59,7 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 	case 2:
 		Open("Map/test64(2).fmf");
 		Base::Add(new MiniMap(nextArea));
-		Base::Add(new MiniMapPlayer(nextArea));
+		//Base::Add(new MiniMapPlayer(nextArea));
 		Base::Add(new AreaChange(1,					//次のマップの番号
 			CRect(m_fmfHeader.byChipWidth * 15,		//エリアチェンジの判定
 				m_fmfHeader.byChipHeight * 15,		//左上
@@ -253,6 +253,10 @@ MiniMap::MiniMap(int nextArea) :Base(eType_MiniMapBack)
 	MiniMapData[100][100] = { NULL };
 	MiniMapData1[18][18] = { NULL };
 	m_mapnum = nextArea;
+	m_Ppos = CVector2D(0, 0);
+	x = 0;
+	y = 0;
+	s = 0;
 	m_img = COPY_RESOURCE("MiniMap", CImage);
 	switch (nextArea)
 	{
@@ -302,7 +306,7 @@ void MiniMap::Draw()
 			//表示しない制御
 			if (t == NULL_TIP) continue;
 			*/
-			if (GetValue(1, i, j) == NULL_TIP || sy == 0)continue;
+			if (GetValue(1, i, j) == NULL_TIP || sy == 0 || sy == 100)continue;
 			int t = GetValue(1, i, j);
 
 			//m_fmfHeader.byChipWidth*i, m_fmfHeader.byChipHeight*j
@@ -323,10 +327,37 @@ void MiniMap::Draw()
 			//m_img.Draw();
 		}
 	}
+	//ミニマップ描画範囲設定
+	if (HOLD(CInput::eButton5)) {
+		ex = GetMapWidth();
+		ey = GetMapHeight();
+		sx = 0;
+		sy = 0;
 
-	//マップチップによる表示の繰り返し
-	for (int j = 0; j < GetMapWidth(); j++) {
-		for (int i = 0; i < GetMapHeight(); i++) {
+		//ミニマップ表示補正(拡大表示)
+		//横
+		x = CCamera::GetCurrent()->GetWhidth() / GetChipWidth() * 7;
+		//縦
+		y = CCamera::GetCurrent()->GetHeight() / GetChipHeight() * 10;
+		//y = 150;
+		s = 4;
+	}
+	else {
+		ex = min(GetMapWidth(), ex + 20);
+		ey = min(GetMapHeight(), ey + 5);
+		//ミニマップ表示補正(縮小表示)
+		//横
+		x = 1;
+		//縦
+		y = 25;
+		//サイズ
+		s = 8;
+	}
+	sy = max(0, sy - 10);
+
+	//マップチップデータによる表示の繰り返し
+	for (int j = sy; j < ey; j++) {
+		for (int i = sx; i < ex; i++) {
 			//表示しない制御
 			switch (m_mapnum)
 			{
@@ -339,63 +370,44 @@ void MiniMap::Draw()
 			}
 			//if (MiniMapData[i][j] == NULL_TIP)continue;
 			//int t = MiniMapData[i][j];
-
 			int t = GetValue(1, i, j);
-
-			
 			//画像切り抜き
 			m_img.SetRect(3 * t, 0, 3 * t + 3, 3);
 			//表示サイズ設定
-			m_img.SetSize(3, 3);
+			m_img.SetSize(s, s);
 			//表示位置設定
-			m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - GetMapWidth() * 3 + i * 3), (1 + j * 3));
+			m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + x) * s) + i * s, ((-ey + y) * s) + j * s);
 			//描画
 			m_img.Draw();
+			//プレイヤー表示
+			Base* p = Base::FindObject(eType_Player);
+			Player* h = dynamic_cast<Player*>(p);
+			if (p) {
+				m_Ppos = h->GetPos();
+				int px = m_Ppos.x / GetChipWidth();
+				int py = m_Ppos.y / GetChipHeight();
+				abs(px), abs(py);
+				//画像切り抜き
+				m_img.SetRect(6, 0, 6 + 3, 3);
+				//表示サイズ設定
+				m_img.SetSize(s, s * 2);
+				m_img.SetCenter(0, s);
+				//表示位置設定
+				//m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + 20) * s) + i * s, ((-ey + 25) * s) + j * s);
+				m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + x) * s) + px * s, ((-ey + y) * s) + py * s - s);
+				//描画
+				m_img.Draw();
+			}
 		}
 	}
+
+	//FONT_T()->Draw(100, 200, 1, 1, 1, "sx%d", sx);
+	//FONT_T()->Draw(100, 300, 1, 1, 1, "ex%d", ex);
+	//FONT_T()->Draw(100, 400, 1, 1, 1, "sy%d", sy);
+	//FONT_T()->Draw(100, 500, 1, 1, 1, "ey%d", ey);
 }
 //実体を定義
 int MiniMap::MiniMapData[100][100];
 int MiniMap::MiniMapData1[18][18];
-MiniMapPlayer::MiniMapPlayer(int nextArea)
-	:Base(eType_MiniMapFront)
-{
-	m_img = COPY_RESOURCE("MiniMap", CImage);
-	m_Ppos = CVector2D(0, 0);
-	switch (nextArea)
-	{
-	case 1:
-		Open("Map/test64.fmf");
-		break;
-	case 2:
-		Open("Map/test64(2).fmf");
-		break;
-	}
-}
 
-MiniMapPlayer::~MiniMapPlayer()
-{
-	Close();
-}
-
-void MiniMapPlayer::Draw()
-{
-	Base* p = Base::FindObject(eType_Player);
-	Player* h = dynamic_cast<Player*>(p);
-	if (p) {
-		m_Ppos = h->GetPos();
-		int px = m_Ppos.x / GetChipWidth();
-		int py = m_Ppos.y / GetChipHeight();
-		abs(px), abs(py);
-		//画像切り抜き
-		m_img.SetRect(6, 0, 6 + 3, 3);
-		//表示サイズ設定
-		m_img.SetSize(3, 6);
-		m_img.SetCenter(0, 3);
-		//表示位置設定
-		m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - GetMapWidth() * 3 + px * 3), (1 + py * 3));
-		//描画
-		m_img.Draw();
-	}
-}
 #pragma endregion

@@ -50,30 +50,31 @@ void Enemy::StateIdle()
         break;
     }
 }
-
+#pragma region ダメージ
 void Enemy::StateDamage()
 {
-    cnt--;
+    m_img.SetColor(2, 2, 2, 2);
     m_img.ChangeAnimation(3, false);
-    if (cnt <= 0) {
-        m_img.ChangeAnimation(eAnimIdle);
+    if (m_img.CheckAnimationEnd()) {
+       // m_img.ChangeAnimation(eAnimIdle);
         m_state = eState_Idle;
     }
+    
 }
 
 void Enemy::StateDown()
 {
-    cnt -= 2;
-    m_vec == CVector2D(0, 0);
     
-    m_img.ChangeAnimation(4);
-    if (cnt <= 0) {
+    
+    m_img.ChangeAnimation(4, false);
+    if (m_img.CheckAnimationEnd()) {
         Base::Add(new Effect("Effect_Smoke", m_pos + CVector2D(0, -128), m_flip, 128, 128));
         Base::Add(new Item(CVector2D(m_pos.x, m_pos.y - 40), eType_Item_LifeUp));
         SetKill();
     }
+    m_vec = CVector2D(0, 0);
 }
-
+#pragma endregion
 void Enemy::StateAttack()
 {
    
@@ -106,10 +107,18 @@ void Enemy::StateWait()
     }
 }
 
+void Enemy::KnockBack(CVector2D m_epos, int pow)
+{
+    float ratio = ((float)pow / (float)m_hpmax) * 0.5f;
+    CVector2D e_pos = (m_pos - m_epos) * ratio;
+    stptime = 60 * ratio;;
+    m_vec = e_pos;
+}
+
 Enemy::Enemy(const CVector2D& p, bool flip, int type):
 Base(eType_Enemy) {
     
-    //画像複製
+    //タイプ分け
     switch (type)
     {
     case eType_E_Slime1:
@@ -117,7 +126,7 @@ Base(eType_Enemy) {
         m_img.SetSize(96, 96);
         m_rect = CRect(-32, -56, 32, 0);
         m_img.SetCenter(48, 87);
-        m_hp = 50;
+        m_hpmax = m_hp = 150;
         m_pow = 30;
         break;
     case eType_E_Slime2:
@@ -125,21 +134,21 @@ Base(eType_Enemy) {
         m_img.SetSize(96, 96);
         m_rect = CRect(-32, -56, 32, 0);
         m_img.SetCenter(48, 87);
-        m_hp = 100;
+        m_hpmax = m_hp = 100;
         break;
     case eType_E_Slime3:
         m_img = COPY_RESOURCE("Slime3", CImage);
         m_img.SetSize(96, 96);
         m_rect = CRect(-32, -56, 32, 0);
         m_img.SetCenter(48, 87);
-        m_hp = 150;
+        m_hpmax = m_hp = 150;
         break;
     case eType_E_Witch1:
         m_img = COPY_RESOURCE("Witch1", CImage);
         m_img.SetSize(262, 264);
         m_rect = CRect(-64, -128, 64, 0);
         m_img.SetCenter(133, 226);
-        m_hp = 50;
+        m_hpmax = m_hp = 50;
         m_pow = 50;
         break;
     case eType_E_Witch2:
@@ -147,14 +156,14 @@ Base(eType_Enemy) {
         m_img.SetSize(262, 264);
         m_rect = CRect(-64, -128, 64, 0);
         m_img.SetCenter(133, 226);
-        m_hp = 250;
+        m_hpmax = m_hp = 250;
         break;
     case eType_E_Dragon1:
         m_img = COPY_RESOURCE("Dragon1", CImage);
         m_img.SetSize(460, 250);
         m_rect = CRect(-98, -190, 188, 0);
         m_img.SetCenter(190, 238);
-        m_hp = 400;
+        m_hpmax = m_hp = 400;
         break;
     };
     //再生アニメーション設定
@@ -165,11 +174,14 @@ Base(eType_Enemy) {
     // m_img.SetCenter(48, 96);
     //座標設定
     m_pos_old = m_pos = p;
+    //攻撃番号
     m_attack_no = rand();
     //ダメージ番号
     m_damage_no = -1;
+    //着地判定用フラグ
     m_is_ground = true;
-    CVector2D v(0, 0);
+    //敵とプレイヤーまでの距離
+    v = CVector2D(0, 0);
     cnt = 30;
     bcnt = 180;
     stptime = 0;
@@ -191,9 +203,12 @@ Enemy::~Enemy()
 void Enemy::Update()
 {
     Base* m = Base::FindObject(eType_Menu);
+#pragma region メニューが開かれてない時
     if (!m) {
+        m_img.SetColor(1, 1, 1, 1);
         //std::cout << "Enemy" << std::endl;
         m_pos_old = m_pos;
+        stptime--;
         if (m_is_ground && m_vec.y > GRAVITY * 4) {
             m_is_ground = false;
         }
@@ -239,9 +254,11 @@ void Enemy::Update()
         else if (m_vec.x > 0) {
             m_flip = true;
         }
-        //m_pos += m_vec;
+        /*m_pos.y += m_vec.y;
+        m_pos += vec;*/
         m_pos += m_vec;
     }
+#pragma endregion
 }
 
 void Enemy::Draw()
@@ -264,13 +281,16 @@ void Enemy::Collision(Base* b)
             if (m_damage_no != s->GetAttackNo() && Base::CollisionRect(this, s)) {
                 //同じ攻撃の連続ダメージ防止
                 m_damage_no = s->GetAttackNo();
-                m_hp -= 50;
-                if (m_hp <= 0) {
+                int get_pow = s->GetAttackPow();
+                m_hp -= get_pow;
+                
+                if (m_hp < 0) {
                     m_state = eState_Down;
                 }
                 else {
                     m_state = eState_Damage;
                 }
+                s->SetKill();
             }
         }
         break;
@@ -279,9 +299,10 @@ void Enemy::Collision(Base* b)
             if (m_damage_no != s->GetAttackNo() && Base::CollisionRect(this, s)) {
                 //同じ攻撃の連続ダメージ防止
                 m_damage_no = s->GetAttackNo();
-                int pow = s->GetAttackPow();
-                m_hp -= pow;
-                if (m_hp <= 0) {
+                int get_pow = s->GetAttackPow();
+                KnockBack(s->m_pos, get_pow);
+                m_hp -= get_pow;
+                if (m_hp < 0) {
                     m_state = eState_Down;
                 }
                 else {
@@ -323,6 +344,20 @@ void Enemy::Collision(Base* b)
         break;
     case eType_Player:
         m_attack_no++;
+        break;
+    case eType_Enemy:
+        if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
+            b->m_pos += m_vec * 0.5f;
+            m_pos.x = m_pos_old.x;
+        }
+        if (Base::CollisionObject(CVector2D(m_pos_old.x, m_pos.y), m_rect, b->m_pos, b->m_rect)) {
+
+            m_pos.y = m_pos_old.y;
+            m_vec.y = 0;
+            m_is_ground = true;
+            //m_is_land = false;
+            //m_airjump = false;
+        }
         break;
     }
 }

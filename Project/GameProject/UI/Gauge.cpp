@@ -30,14 +30,14 @@ void GaugeGreen::Draw()
 		player_hpmax = h->GetHpMax();
 	}
 	//GreenGauge.fillAmount = (1.0f / (float)maxhp) * (float)hp;
-	
-	m_hp = (380.0f / (float)player_hpmax) * (float)player_hp;
 	//画像の最大サイズは380
 	//m_hpの値が残hpに対応
+	m_hp = (380.0f / (float)player_hpmax) * (float)player_hp;
+	
+
+
 	float ratio = (1.0f / (float)player_hpmax) * (float)player_hp;
-	/*if ((float)player_hp / (float)player_hpmax < 0.6f) {
-		m_img.SetColor((player_hp % player_hpmax) * 0.1f, (float)player_hp / (float)player_hpmax, 0, 1);
-	}*/
+	
 	m_img.SetColor(1.4f - ratio, ratio + 0.2f, 0, 1);
 	m_img.SetPos(0, 0);
 	m_img.SetRect(0, 0, m_hp, 30);

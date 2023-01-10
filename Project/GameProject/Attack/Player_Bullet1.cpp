@@ -2,7 +2,7 @@
 #include "../Map/Map.h"
 #include "../Game/GameData.h"
 #include "../Character/Player.h"
-Player_Bullet1::Player_Bullet1(const CVector2D& p, float ang, bool flip, int attack_no)
+Player_Bullet1::Player_Bullet1(const CVector2D& p, float ang, bool flip, int attack_no, int pow)
 	:Base(eType_Player_Bullet)
 {
 	//‰æ‘œ•¡»
@@ -19,8 +19,9 @@ Player_Bullet1::Player_Bullet1(const CVector2D& p, float ang, bool flip, int att
 	//’eÁ–ÅŠÔ
 	cnt = 60;
 	//UŒ‚”Ô†
-	m_attack_no = rand();
+	//m_attack_no = rand();
 	m_attack_no = attack_no;
+	m_pow = pow;
 }
 
 void Player_Bullet1::Update()
@@ -61,7 +62,7 @@ void Player_Bullet1::Collision(Base* b)
 			
 		}
 		break;
-		//case eType_Enemy:
+	//case eType_Enemy:
 			//SetKill();
 
 	}

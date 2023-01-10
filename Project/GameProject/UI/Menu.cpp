@@ -86,12 +86,12 @@ void Menu::Draw()
 	}
 	for (int i = 0; i < 2; i++) {
 		//m_img
-		FONT_T()->Draw(Itempos[i].x, Itempos[i].y, 1, 1, 1, text[i]);
-
+		//FONT_T()->Draw(Itempos[i].x, Itempos[i].y, 1, 1, 1, text[i]);
+		FONT_T()->Draw(Itempos[i].x, Itempos[i].y+64, 1, 1, 1, "%d", GameData::s_itemlist[i]);
 	}
 	//カーソル
 	FONT_T()->Draw(pos[m_select].x - 64, pos[m_select].y, 1, 1, 1, ">");
-	FONT_T()->Draw(Itempos[m_Item_select].x, Itempos[m_Item_select].y, 1, 1, 1, ">");
+	FONT_T()->Draw(Itempos[m_Item_select].x - 64, Itempos[m_Item_select].y, 1, 1, 1, ">");
 	//テストデータの表示
 	//FONT_T()->Draw(0, 128, 1, 0, 0, "m_cnt[%d]", m_cnt);
 }
