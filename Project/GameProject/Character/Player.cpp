@@ -22,11 +22,7 @@
 
 void Player::StateIdle()
 {
-	
-	
 	Move();
-	
-	
 	if (PUSH(CInput::eButton1)) {
 		m_atk_yoyaku = false;
 		m_attack_no++;
@@ -202,6 +198,16 @@ void Player::StateDown()
 }
 #pragma endregion
 
+Player::~Player()
+{
+
+	////SetKill();
+	//Base::KillAll();
+	////タイトルシーンへ
+	//Base::Add(new Title());
+
+}
+
 Player::Player(const CVector2D& p, bool flip) :
 	Base(eType_Player) {
 	//画像複製
@@ -276,6 +282,8 @@ Player::Player(const CVector2D& p, bool flip) :
 	m_hit_area_change = false;
 	//最大HP   HP
 	m_hpmax = m_hp = 120;
+	//鍵
+	key = false;
 #pragma endregion
 	//スティック
 	r = CVector2D(0, 0);
@@ -439,8 +447,8 @@ void Player::UseItem(int n)
 {
 	switch (n)
 	{
-	case 0:
-		
+	case 1:
+		LifeUp(30);
 		break;
 	}
 }
@@ -480,16 +488,25 @@ void Player::Update() {
 	if (!b) {
 		r = CInput::GetRStick(0);
 		l = CInput::GetLStick(0);
-		if (HOLD(CInput::eLeft)) {
+		//PUSH(CInput::eButton6)
+		if (HOLD(CInput::eLeft) && HOLD(CInput::eButton6)) {
+			r.x = -1;
+		}else if (HOLD(CInput::eLeft)) {
 			l.x = -1;
 		}
-		if (HOLD(CInput::eRight)) {
+		if (HOLD(CInput::eRight) && HOLD(CInput::eButton6)) {
+			r.x = 1;
+		}else if (HOLD(CInput::eRight)) {
 			l.x = 1;
 		}
-		if (HOLD(CInput::eUp)) {
+		if (HOLD(CInput::eUp) && HOLD(CInput::eButton6)) {
+			r.y = -1;
+		}else if (HOLD(CInput::eUp)) {
 			l.y = -1;
 		}
-		if (HOLD(CInput::eDown)) {
+		if (HOLD(CInput::eDown) && HOLD(CInput::eButton6)) {
+			r.y = 1;
+		}else if (HOLD(CInput::eDown)) {
 			l.y = 1;
 		}
 		//std::cout << "Player" << std::endl;
@@ -546,7 +563,8 @@ void Player::Update() {
 
 			if (m_vec.y > GRAVITY * 4 || m_vec.y < -1 || HOLD(CInput::eDown))
 			{
-				v3.y = 300;
+				//v3.y = 300;
+				v3.y = m_vec.y * 10 + 100;
 			}
 			else if (HOLD(CInput::eUp)) {
 				v3.y = -300;
@@ -555,6 +573,7 @@ void Player::Update() {
 			{
 				v3.y = 0;
 			}
+			//FONT_T()->Draw(100, 100, 1, 1, 1, "m_vec.y:%f", m_vec.y);
 			//カメラ補正
 			//ミニマップとアクションのしやすさの兼ね合いも考えて一旦OFF
 			//m_flip ? v3.x = -300 : v3.x = +300;
@@ -608,7 +627,7 @@ void Player::Update() {
 		}
 	}
 	if (b) {
-		if (bool b = m->UseItemflag()) {
+		if (m->UseItemflag()) {
 			//int item_num = m->UseItemNum();
 			if (GameData::s_itemlist[m->UseItemNum()] > 0) {
 				UseItem(m->UseItemNum());
@@ -651,16 +670,20 @@ void Player::Collision(Base* b)
 					b->SetKill();
 					break;
 				case eType_Item_LifeUp:
-					LifeUp(30);
+					//LifeUp(30);
 					GameData::s_itemlist[0] += 1;
 					//m_ItemList[0] += 1;
+					b->SetKill();
+					break;
+				case eType_Item_Kay1:
+					key = true;
 					b->SetKill();
 					break;
 				}
 			}
 		}
 		break;
-	case eType_Item_Score:
+	/*case eType_Item_Score:
 		if (Base::CollisionRect(this, b)) {
 			GameData::s_score += 1;
 			b->SetKill();
@@ -670,8 +693,8 @@ void Player::Collision(Base* b)
 		if (Base::CollisionRect(this, b)) {
 			LifeUp(30);
 			b->SetKill();
-		}
-		break;
+		}*/
+	
 	case eType_Enemy_Attack:
 		if (Slash* s = dynamic_cast<Slash*>(b)) {
 			if (m_damage_no != s->GetAttackNo() && Base::CollisionRect(this, s) && !m_is_inv) {
@@ -778,7 +801,7 @@ void Player::Collision(Base* b)
 		if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
 			if (Door* door = dynamic_cast<Door*>(b)) {
 				int k = door->GetKey();
-				if (k == 0) {
+				if (k == 0 || key) {
 					door->SetKill();
 				}
 				else {

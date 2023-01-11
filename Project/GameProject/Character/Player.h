@@ -84,6 +84,9 @@ private:
 	int m_hp;
 	//最大HP
 	int m_hpmax;
+	//鍵
+	bool key;
+
 #pragma endregion
 
 	//右スティック
@@ -109,6 +112,7 @@ private:
 public:
 	
 	Player(const CVector2D& p, bool flip);
+	~Player();
 	void Move();
 	void GetItem(int i);
 	void UseItem(int n);

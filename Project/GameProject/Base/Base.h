@@ -16,7 +16,6 @@ enum {
 	eType_AtkEffect,
 
 	eType_Enemy,
-
 	//敵区別用type
 	eType_E_Slime1,
 	eType_E_Slime2,
@@ -29,7 +28,7 @@ enum {
 	//アイテム区別用ID
 	eType_Item_Score,
 	eType_Item_LifeUp,
-	
+	eType_Item_Kay1,
 	
 	
 	eType_Goal,

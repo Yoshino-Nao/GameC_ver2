@@ -7,6 +7,7 @@
 #include "../Attack/Slash.h"
 #include "../Item/Item.h"
 #include "../Gimmick/Door.h"
+#include "../UI/Gauge.h"
 #include "Enemy.h"
 #include "Player.h"
 #include <iostream>
@@ -24,8 +25,11 @@ void Enemy::StateIdle()
     case eType_E_Slime1:
     case eType_E_Slime2:
     case eType_E_Slime3:
-        if (abs(v.x) <= 900) {
+        if (v.x <= 900) {
             m_vec.x = -1;
+        }
+        else if (v.x <= -900) {
+            m_vec.x = 1;
         }
         else {
             m_vec.x = 0;
@@ -49,6 +53,12 @@ void Enemy::StateIdle()
         }
         break;
     }
+    if (m_vec.x < 0) {
+        m_flip = false;
+    }
+    else if (m_vec.x > 0) {
+        m_flip = true;
+    }
 }
 #pragma region ダメージ
 void Enemy::StateDamage()
@@ -59,7 +69,6 @@ void Enemy::StateDamage()
        // m_img.ChangeAnimation(eAnimIdle);
         m_state = eState_Idle;
     }
-    
 }
 
 void Enemy::StateDown()
@@ -186,11 +195,13 @@ Base(eType_Enemy) {
     bcnt = 180;
     stptime = 0;
     EnemyType = type;
+    //Base::Add(new EGaugeBack(m_rect.GetSize()));
+    //Base::Add(new EGaugeRed(m_pos, m_rect.GetSize().y, m_hpmax, m_hp));
+    //Base::Add(new EGaugeGreen(m_pos, m_rect.GetSize().y, m_hpmax, m_hp));
 }
 
 Enemy::~Enemy()
 {
-   
     /*
     Base* e = Base::FindObject(eType_Player);
     Player* t = dynamic_cast<Player*>(e);
@@ -202,6 +213,7 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
+    
     Base* m = Base::FindObject(eType_Menu);
 #pragma region メニューが開かれてない時
     if (!m) {
@@ -248,12 +260,7 @@ void Enemy::Update()
             Player* f = dynamic_cast<Player*>(b);
             v = f->m_pos - m_pos;
         }
-        if (m_vec.x < 0) {
-            m_flip = false;
-        }
-        else if (m_vec.x > 0) {
-            m_flip = true;
-        }
+        
         /*m_pos.y += m_vec.y;
         m_pos += vec;*/
         m_pos += m_vec;
@@ -300,7 +307,11 @@ void Enemy::Collision(Base* b)
                 //同じ攻撃の連続ダメージ防止
                 m_damage_no = s->GetAttackNo();
                 int get_pow = s->GetAttackPow();
-                KnockBack(s->m_pos, get_pow);
+                Base* b2 = Base::FindObject(eType_Player);
+                Player* p = dynamic_cast<Player*>(b2);
+                if (b2) {
+                    KnockBack(p->m_pos, get_pow);
+                }
                 m_hp -= get_pow;
                 if (m_hp < 0) {
                     m_state = eState_Down;

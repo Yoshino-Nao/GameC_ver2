@@ -10,6 +10,7 @@ class Menu :public Base {
 	int m_Item_select;
 	int m_cnt;
 	bool m_in_item;
+	bool m_b3free;
 	bool m_use_item;
 public:
 	Menu();

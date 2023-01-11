@@ -253,7 +253,6 @@ MiniMap::MiniMap(int nextArea) :Base(eType_MiniMapBack)
 	MiniMapData[100][100] = { NULL };
 	MiniMapData1[18][18] = { NULL };
 	m_mapnum = nextArea;
-	m_Ppos = CVector2D(0, 0);
 	x = 0;
 	y = 0;
 	s = 0;
@@ -383,9 +382,10 @@ void MiniMap::Draw()
 			Base* p = Base::FindObject(eType_Player);
 			Player* h = dynamic_cast<Player*>(p);
 			if (p) {
-				m_Ppos = h->GetPos();
-				int px = m_Ppos.x / GetChipWidth();
-				int py = m_Ppos.y / GetChipHeight();
+				CVector2D Ppos = h->m_pos;
+				//m_Ppos = h->GetPos();
+				int px = Ppos.x / GetChipWidth();
+				int py = Ppos.y / GetChipHeight();
 				abs(px), abs(py);
 				//画像切り抜き
 				m_img.SetRect(6, 0, 6 + 3, 3);
@@ -395,6 +395,24 @@ void MiniMap::Draw()
 				//表示位置設定
 				//m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + 20) * s) + i * s, ((-ey + 25) * s) + j * s);
 				m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + x) * s) + px * s, ((-ey + y) * s) + py * s - s);
+				//描画
+				m_img.Draw();
+			}
+			Base* d = Base::FindObject(eType_Door);
+			Door* j = dynamic_cast<Door*>(d);
+			if (d) {
+				CVector2D Dpos = j->m_pos;
+				int px = Dpos.x / GetChipWidth();
+				int py = Dpos.y / GetChipHeight();
+				abs(px), abs(py);
+				//画像切り抜き
+				m_img.SetRect(9, 0, 9 + 3, 3);
+				//表示サイズ設定
+				m_img.SetSize(s * 2, s * 2);
+				m_img.SetCenter(0, s);
+				//表示位置設定
+				//m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + 20) * s) + i * s, ((-ey + 25) * s) + j * s);
+				m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + x) * s) + px * s - 6, ((-ey + y)* s) + py * s - s);
 				//描画
 				m_img.Draw();
 			}

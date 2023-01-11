@@ -10,7 +10,9 @@ Menu::Menu()
 	m_Item_select = 0;
 	m_cnt = 0;
 	m_in_item = false;
+	m_b3free = false;
 	m_use_item = false;
+	GameData::s_itemlist[0] = 99;
 }
 
 void Menu::Update()
@@ -36,10 +38,16 @@ void Menu::Update()
 			if (m_Item_select < 0) m_Item_select = 0;
 		}
 	}
+	if (FREE(CInput::eButton3) && m_b3free) {
+		m_in_item = true;
+	}
 	if (PUSH(CInput::eButton3)) {
 		switch (m_select){
+			//ボタン３を押した後、離してアイテム選択に飛ぶ
 		case eItem:
-			(!m_in_item ? m_in_item = true : m_in_item = false);
+			m_b3free = true;
+			//(!m_in_item ? m_in_item = true : m_in_item = true);
+			//if (!m_in_item)m_in_item = true;
 			break;
 		case eTitle:
 			Base::KillAll();
@@ -50,18 +58,27 @@ void Menu::Update()
 			break;
 		}
 	}
+	if (PUSH(CInput::eButton4)) {
+		switch (m_select)
+		{
+		case eItem:
+			m_in_item = false;
+			m_b3free = false;
+			break;
+		}
+	}
 	if (PUSH(CInput::eButton3) && m_in_item) {
 		m_use_item = true;
 		switch (m_Item_select) {
 		case 0:
-			
+
 			break;
 		case 1:
-			
+
 			break;
 		}
 	}
-	else {
+	else if (m_use_item) {
 		m_use_item = false;
 	}
 }
@@ -82,7 +99,6 @@ void Menu::Draw()
 	};
 	for (int i = 0; i < 2; i++) {
 		FONT_T()->Draw(pos[i].x, pos[i].y, 1, 1, 1, text[i]);
-
 	}
 	for (int i = 0; i < 2; i++) {
 		//m_img

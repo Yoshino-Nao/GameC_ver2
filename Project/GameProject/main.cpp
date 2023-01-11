@@ -105,6 +105,7 @@ void Init(void)
 	ADD_RESOURCE("start", CImage::CreateImage("Image/start.png"));
 	ADD_RESOURCE("ball", CImage::CreateImage("Image/ball.png"));
 	ADD_RESOURCE("GaugeW", CImage::CreateImage("Image/-5.png"));
+	ADD_RESOURCE("GaugeE", CImage::CreateImage("Image/-4.png"));
 	ADD_RESOURCE("bullet", CImage::CreateImage("Image/bullet.png"));
 //ADD_RESOURCE("Item", CImage::CreateImage("Image/Item.png"));
 	/*//ÉvÉåÉCÉÑÅ[ÇÃê∂ê¨

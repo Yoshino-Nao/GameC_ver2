@@ -30,14 +30,23 @@ Item::Item(const CVector2D& pos, int item_id)
 		m_img.ChangeAnimation(0);
 		m_img.SetColor(0, 1, 0, 1);
 		break;
+	case eType_Item_Kay1:
+		m_img = COPY_RESOURCE("coin", CImage);
+		m_img.SetCenter(24, 48);
+		m_rect = CRect(-24, -24, 24, 24);
+		m_img.SetSize(48, 96);
+		m_img.ChangeAnimation(0);
+		m_img.SetColor(1, 0, 0, 1);
+		break;
 	}
+
 }
 
 void Item::Draw()
 {
 	m_img.SetPos(GetScreenPos(m_pos));
 	m_img.Draw();
-	//DrawRect();
+	DrawRect();
 }
 
 void Item::Collision(Base* b)
