@@ -66,7 +66,7 @@ private:
 	int y;
 	int s;
 public:
-	static int MiniMapData[100][100];
+	static int MiniMapData[120][100];
 	static int MiniMapData1[18][18];
 	MiniMap(int nextArea);
 	~MiniMap();

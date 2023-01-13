@@ -344,7 +344,7 @@ void Player::Move()
 
 	//FONT_T()->Draw(100, 100, 1, 1, 1, "vec.y:%f", m_vec.y);
 	//FONT_T()->Draw(100, 200, 1, 1, 1, "l.x%f", l.x);
-	FONT_T()->Draw(100, 300, 1, 1, 1, "l.y%f", l.y);
+	//FONT_T()->Draw(100, 300, 1, 1, 1, "l.y%f", l.y);
 	//FONT_T()->Draw(100, 300, 1, 1, 1, "m_scroll.y%f", m_scroll.y);
 	//ジャンプ中なら
 	if (!m_is_ground) {
@@ -430,7 +430,7 @@ void Player::Move()
 			m_img.ChangeAnimation(7, false);
 			if (m_img.CheckAnimationEnd()) {
 				//着地モーションが終了までのカウント
-				m_vec.x = m_vec.x * 0.9f;
+				m_vec.x = m_vec.x * 0.8f;
 				m_groundpos_diff2 -= 40;
 				if (m_groundpos_diff2 <= 0) {
 					m_is_land = false;
@@ -447,13 +447,16 @@ void Player::Move()
 		m_is_ground = false;
 		//m_airjump = true;
 	}
-
-	if (m_vec.y > GRAVITY * 4 || m_vec.y < -1 || HOLD(CInput::eDown))
+	
+	if (m_vec.y > GRAVITY * 4 || m_vec.y < -1)
 	{
-		//v3.y = 300;
-		v3.y = m_vec.y * 10 + 100;
+		//落下中、下にスクロール;
+		v3.y = min(m_vec.y * 10 + 100, 500);
 	}
-	else if (HOLD(CInput::eUp)) {
+	else if (l.y > 0) {
+		v3.y = 300;
+	}
+	else if (l.y < 0) {
 		v3.y = -300;
 	}
 	else

@@ -250,7 +250,8 @@ int Map::CollisionMap(const CVector2D& pos, const CRect& rect, CVector2D* rev_po
 //static int MiniMapData1[18][18] = { NULL };
 MiniMap::MiniMap(int nextArea) :Base(eType_MiniMapBack)
 {
-	MiniMapData[100][100] = { NULL };
+	//マップエディタと合わせる
+	MiniMapData[120][100] = { NULL };
 	MiniMapData1[18][18] = { NULL };
 	m_mapnum = nextArea;
 	x = 0;
@@ -305,7 +306,7 @@ void MiniMap::Draw()
 			//表示しない制御
 			if (t == NULL_TIP) continue;
 			*/
-			if (GetValue(1, i, j) == NULL_TIP || sy == 0 || sy == 100)continue;
+			if (GetValue(1, i, j) == NULL_TIP || sy == 0 || sy == GetMapHeight())continue;
 			int t = GetValue(1, i, j);
 
 			//m_fmfHeader.byChipWidth*i, m_fmfHeader.byChipHeight*j
@@ -333,7 +334,7 @@ void MiniMap::Draw()
 		sx = 0;
 		sy = 0;
 
-		//ミニマップ表示補正(拡大表示)
+		//ミニマップ表示位置(拡大表示)
 		//横
 		x = CCamera::GetCurrent()->GetWhidth() / GetChipWidth() * 7;
 		//縦
@@ -344,7 +345,7 @@ void MiniMap::Draw()
 	else {
 		ex = min(GetMapWidth(), ex + 20);
 		ey = min(GetMapHeight(), ey + 5);
-		//ミニマップ表示補正(縮小表示)
+		//ミニマップ表示位置(縮小表示)
 		//横
 		x = 1;
 		//縦
@@ -419,13 +420,13 @@ void MiniMap::Draw()
 		}
 	}
 
-	//FONT_T()->Draw(100, 200, 1, 1, 1, "sx%d", sx);
-	//FONT_T()->Draw(100, 300, 1, 1, 1, "ex%d", ex);
-	//FONT_T()->Draw(100, 400, 1, 1, 1, "sy%d", sy);
-	//FONT_T()->Draw(100, 500, 1, 1, 1, "ey%d", ey);
+	FONT_T()->Draw(100, 200, 1, 1, 1, "sx%d", sx);
+	FONT_T()->Draw(100, 300, 1, 1, 1, "ex%d", ex);
+	FONT_T()->Draw(100, 400, 1, 1, 1, "sy%d", sy);
+	FONT_T()->Draw(100, 500, 1, 1, 1, "ey%d", ey);
 }
 //実体を定義
-int MiniMap::MiniMapData[100][100];
+int MiniMap::MiniMapData[120][100];
 int MiniMap::MiniMapData1[18][18];
 
 #pragma endregion
