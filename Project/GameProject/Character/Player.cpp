@@ -108,7 +108,7 @@ void Player::StateGunDraw()
 	FONT_T()->Draw(100, 100, 1, 1, 1, "%.4f%.4f", r.x, r.y);
 	
 	if (m_img.CheckAnimationEnd() && 
-		PUSH(CInput::eRight) || PUSH(CInput::eLeft) || 
+		//PUSH(CInput::eRight) || PUSH(CInput::eLeft) || 
 		l.x >= 0.8f || l.x <= -0.8f) {
 		m_state = eState_Idle;
 	}
@@ -343,7 +343,8 @@ void Player::Move()
 	m_groundpos_diff = m_groundpos - m_groundpos_old;
 
 	//FONT_T()->Draw(100, 100, 1, 1, 1, "vec.y:%f", m_vec.y);
-	//FONT_T()->Draw(100, 200, 1, 1, 1, "m_scroll.x%f", m_scroll.x);
+	//FONT_T()->Draw(100, 200, 1, 1, 1, "l.x%f", l.x);
+	FONT_T()->Draw(100, 300, 1, 1, 1, "l.y%f", l.y);
 	//FONT_T()->Draw(100, 300, 1, 1, 1, "m_scroll.y%f", m_scroll.y);
 	//ジャンプ中なら
 	if (!m_is_ground) {
@@ -438,6 +439,36 @@ void Player::Move()
 			}
 		}
 	}
+#pragma region スクロール補正
+	//目標値
+	CVector2D v3(0, 0);
+	//落ちていたら落下中状態へ移行
+	if (m_is_ground && m_vec.y > GRAVITY * 4) {
+		m_is_ground = false;
+		//m_airjump = true;
+	}
+
+	if (m_vec.y > GRAVITY * 4 || m_vec.y < -1 || HOLD(CInput::eDown))
+	{
+		//v3.y = 300;
+		v3.y = m_vec.y * 10 + 100;
+	}
+	else if (HOLD(CInput::eUp)) {
+		v3.y = -300;
+	}
+	else
+	{
+		v3.y = 0;
+	}
+	//FONT_T()->Draw(100, 100, 1, 1, 1, "m_vec.y:%f", m_vec.y);
+	//カメラ補正
+	//ミニマップとアクションのしやすさの兼ね合いも考えて一旦OFF
+	//m_flip ? v3.x = -300 : v3.x = +300;
+	m_flip ? m_atkpos = -60.0f : m_atkpos = 60.0f;
+	CVector2D v2 = v3 - sc_vec;
+	//スクロール加速度
+	sc_vec += v2 * 0.05;
+#pragma endregion
 }
 
 void Player::GetItem(int i)
@@ -488,7 +519,7 @@ void Player::Update() {
 	if (!b) {
 		r = CInput::GetRStick(0);
 		l = CInput::GetLStick(0);
-		//PUSH(CInput::eButton6)
+		//方向キーでL,Rを操作
 		if (HOLD(CInput::eLeft) && HOLD(CInput::eButton6)) {
 			r.x = -1;
 		}else if (HOLD(CInput::eLeft)) {
@@ -554,35 +585,34 @@ void Player::Update() {
 			}
 			//スクロール補正
 			//目標値
-			CVector2D v3(0, 0);
-			//落ちていたら落下中状態へ移行
-			if (m_is_ground && m_vec.y > GRAVITY * 4) {
-				m_is_ground = false;
-				//m_airjump = true;
-			}
+			//CVector2D v3(0, 0);
+			////落ちていたら落下中状態へ移行
+			//if (m_is_ground && m_vec.y > GRAVITY * 4) {
+			//	m_is_ground = false;
+			//	//m_airjump = true;
+			//}
 
-			if (m_vec.y > GRAVITY * 4 || m_vec.y < -1 || HOLD(CInput::eDown))
-			{
-				//v3.y = 300;
-				v3.y = m_vec.y * 10 + 100;
-			}
-			else if (HOLD(CInput::eUp)) {
-				v3.y = -300;
-			}
-			else
-			{
-				v3.y = 0;
-			}
-			//FONT_T()->Draw(100, 100, 1, 1, 1, "m_vec.y:%f", m_vec.y);
-			//カメラ補正
-			//ミニマップとアクションのしやすさの兼ね合いも考えて一旦OFF
-			//m_flip ? v3.x = -300 : v3.x = +300;
-			
-			m_flip ? m_atkpos = -60.0f : m_atkpos = 60.0f;
-			CVector2D v2 = v3 - sc_vec;
-			//スクロール加速度
-			sc_vec += v2 * 0.05;
-			//基準値+補正値
+			//if (m_vec.y > GRAVITY * 4 || m_vec.y < -1 || HOLD(CInput::eDown))
+			//{
+			//	//v3.y = 300;
+			//	v3.y = m_vec.y * 10 + 100;
+			//}
+			//else if (HOLD(CInput::eUp)) {
+			//	v3.y = -300;
+			//}
+			//else
+			//{
+			//	v3.y = 0;
+			//}
+			////FONT_T()->Draw(100, 100, 1, 1, 1, "m_vec.y:%f", m_vec.y);
+			////カメラ補正
+			////ミニマップとアクションのしやすさの兼ね合いも考えて一旦OFF
+			////m_flip ? v3.x = -300 : v3.x = +300;
+			//m_flip ? m_atkpos = -60.0f : m_atkpos = 60.0f;
+			//CVector2D v2 = v3 - sc_vec;
+			////スクロール加速度
+			//sc_vec += v2 * 0.05;
+			////基準値+補正値
 			m_scroll.x = m_pos.x - CCamera::GetCurrent()->GetWhidth()/2 + sc_vec.x;
 			m_scroll.y = m_pos.y - CCamera::GetCurrent()->GetHeight() / 1.4f + sc_vec.y;
 			//無敵時間
@@ -750,16 +780,19 @@ void Player::Collision(Base* b)
 		if (Map* m = dynamic_cast<Map*>(b)) {
 			CVector2D pos;
 			int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect, &pos);
-			if (t != NULL_TIP){
+			if (t == 1) {
 				m_pos.x = pos.x;
 			}
 			t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect, &pos);
-			if (t != NULL_TIP) {
+			if (t == 1) {
 				//FONT_T()->Draw(100, 200, 1, 1, 1, "pos.y:%f", pos.y);
 				//頭をぶつけたかの判定
 				if (m_pos.y >= pos.y) {
 					m_is_ground = true;
 				}
+				/*else {
+					pos.y = m_pos.y;
+				}*/
 				m_pos.y = pos.y;
 				m_vec.y = 0;
 				
@@ -770,6 +803,13 @@ void Player::Collision(Base* b)
 				//m_scroll.x = m_pos.x - 1280 / 2 + sc_ver.x;
 				//m_scroll.y = m_pos.y - 500 + sc_ver.y;
 				
+			}//すり抜け床の判定
+			if (t == 3) {//ジャンプ中、下入力中はすり抜ける
+				if (m_pos.y >= pos.y && m_vec.y >= 0 && l.y != 1) {
+					m_vec.y = 0;
+					m_is_ground = true;
+					m_pos.y = pos.y;
+				}
 			}
 		}
 		break;
@@ -801,7 +841,7 @@ void Player::Collision(Base* b)
 		if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
 			if (Door* door = dynamic_cast<Door*>(b)) {
 				int k = door->GetKey();
-				if (k == 0 || key) {
+				if (k == 0 || k == key) {
 					door->SetKill();
 				}
 				else {

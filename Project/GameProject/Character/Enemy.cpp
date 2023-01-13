@@ -362,7 +362,9 @@ void Enemy::Collision(Base* b)
             m_pos.x = m_pos_old.x;
         }
         if (Base::CollisionObject(CVector2D(m_pos_old.x, m_pos.y), m_rect, b->m_pos, b->m_rect)) {
-
+            if (b->m_pos.y <= m_pos.y) {
+                //m_pos.x += b->m_pos.x - m_pos.x;
+            }
             m_pos.y = m_pos_old.y;
             m_vec.y = 0;
             m_is_ground = true;

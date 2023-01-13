@@ -26,7 +26,7 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 36,
 			m_fmfHeader.byChipHeight * 98),
-			0));
+			1));
 		Base::Add(new Enemy(CVector2D(
 			m_fmfHeader.byChipWidth * 30,
 			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime1));
@@ -38,7 +38,7 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime3));
 		Base::Add(new Item(CVector2D(
 			m_fmfHeader.byChipWidth * 26,
-			m_fmfHeader.byChipHeight * 94), eType_Item_Score));
+			m_fmfHeader.byChipHeight * 94), eType_Item_Kay1));
 		//テストマップ２
 		Base::Add(new AreaChange(2,					//次のマップの番号
 			CRect(m_fmfHeader.byChipWidth * 43,		//エリアチェンジの判定
@@ -371,7 +371,7 @@ void MiniMap::Draw()
 			//int t = MiniMapData[i][j];
 			int t = GetValue(1, i, j);
 			//画像切り抜き
-			m_img.SetRect(3 * t, 0, 3 * t + 3, 3);
+			m_img.SetRect(3 * 1, 0, 3 * 1 + 3, 3);
 			//表示サイズ設定
 			m_img.SetSize(s, s);
 			//表示位置設定
