@@ -118,6 +118,7 @@ public:
 	void DrawRect();
 
 	void DrawLine(CVector2D p1, CVector2D p2, float r, float g, float b);
+	//void DrawSector(const CVector2D& pos, const float start, const float end, const float size, const CVector4D& color);
 };
 
 

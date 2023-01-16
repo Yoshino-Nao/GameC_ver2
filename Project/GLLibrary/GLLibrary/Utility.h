@@ -99,7 +99,7 @@ namespace Utility {
 	void DrawCapsule(const CVector2D& s, const CVector2D& e, const float size, const CVector4D& color);
 	void DrawArrow(const CVector3D& pos, const CVector3D& rot, const float size, const CVector4D& color);
 	void DrawArrow(const CVector2D& pos, const float ang, const float size, const CVector4D& color);
-
+	void DrawSector(const CVector2D& pos, const float start, const float end, const float size, const CVector4D& color);//
 	void DrawTriangle(const CVector3D vertex[], int count, const CVector4D& color, const CMatrix& mat);
 	void DrawQuad(const CVector3D vertex[], int count, const CVector4D& color, const CMatrix& mat);
 	void DrawCircle(const CVector2D vertex[], const int count,const CVector2D& pos, const CVector4D& color);

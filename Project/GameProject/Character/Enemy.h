@@ -20,6 +20,8 @@ private:
 	bool m_flip;
 	//着地判定用フラグ
 	bool m_is_ground;
+	//敵がプレイヤーを見つけたか
+	bool m_is_find;
 	//ダメージ番号
 	int m_damage_no;
 	//攻撃番号
@@ -38,6 +40,10 @@ private:
 	int EnemyType;
 	//敵とプレイヤーまでの距離
 	CVector2D v;
+	//正面ベクトル
+	CVector2D Front;
+	//ドット積用変数
+	float dot;
 	//各状態での挙動
 	void StateIdle();
 	void StateDamage();

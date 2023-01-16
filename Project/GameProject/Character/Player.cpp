@@ -466,7 +466,7 @@ void Player::Move()
 	//FONT_T()->Draw(100, 100, 1, 1, 1, "m_vec.y:%f", m_vec.y);
 	//カメラ補正
 	//ミニマップとアクションのしやすさの兼ね合いも考えて一旦OFF
-	//m_flip ? v3.x = -300 : v3.x = +300;
+	m_flip ? v3.x = -200 : v3.x = +200;
 	m_flip ? m_atkpos = -60.0f : m_atkpos = 60.0f;
 	CVector2D v2 = v3 - sc_vec;
 	//スクロール加速度

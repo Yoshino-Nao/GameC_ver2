@@ -17,9 +17,9 @@
 
 Game::Game() :Base(eType_Scene)
 {
-	//Base::Add(new Field());
+	//Base::Add(new Field());45,10
 	Base::Add(new Map(1,CVector2D(32 * 90, 32 * 100)));
-	Base::Add(new Player(CVector2D(64 * 45, 64 * 10), false));
+	Base::Add(new Player(CVector2D(64 * 2, 64 * 97), false));
 	//Base::Add(new Attack(CVector2D(1280, 560), false));
 	//Base::Add(new Enemy(CVector2D(1280 + 256 * 2, 540), true));
 	//Base::Add(new Enemy(CVector2D(1280 + 256 * 3, 540), true));

@@ -150,6 +150,10 @@ void Base::DrawLine(CVector2D p1, CVector2D p2, float r, float g, float b)
 {
 	Utility::DrawLine(p1 - m_scroll, p2-m_scroll, CVector4D(r, g, b, 0.8f));
 }
+//void Base::DrawSector(const CVector2D& pos, const float start, const float end, const float size, const CVector4D& color)
+//{
+//	Utility::DrawSector(pos, start, end, size, color);
+//}
 //DrawLine(const CVector3D &s, const CVector3D &e, const CVector4D &color);
 bool Base::CollisionRect(Base* b1, Base* b2) {
 	//b1‚Ì‹éŒ`

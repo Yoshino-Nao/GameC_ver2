@@ -19,17 +19,31 @@ void Enemy::StateIdle()
     //const float move_speed = 4;
 
     //bool move_flag = false;
-
     m_img.ChangeAnimation(0);
     switch (EnemyType) {
     case eType_E_Slime1:
     case eType_E_Slime2:
     case eType_E_Slime3:
-        if (v.x <= 900) {
-            m_vec.x = -1;
+        m_flip ? Front = CVector2D::right : Front = CVector2D::left;
+        //DrawLine(m_pos, m_pos + Front * 500, 1, 0, 0);
+        dot = CVector2D::Dot(Front.GetNormalize(), v.GetNormalize());
+        if (dot > cosf(DtoR(45.0f)) && 900.0f > v.Length()) {
+            m_is_find = true;
         }
-        else if (v.x <= -900) {
-            m_vec.x = 1;
+        else {
+            m_is_find = false;
+        }
+        if (m_is_find) {
+            /*if (v.Length() <= 900) {
+                m_vec.x = -1;
+            }
+            else if (v.x <= -900) {
+                m_vec.x = 1;
+            }
+            else {
+                m_vec.x = 0;
+            }*/
+            m_flip ? m_vec.x = 1 : m_vec.x = -1;
         }
         else {
             m_vec.x = 0;
@@ -189,8 +203,14 @@ Base(eType_Enemy) {
     m_damage_no = -1;
     //着地判定用フラグ
     m_is_ground = true;
+    //敵がプレイヤーを見つけたか
+    m_is_find = false;
     //敵とプレイヤーまでの距離
     v = CVector2D(0, 0);
+    //正面ベクトル
+    Front = CVector2D(0, 0);
+    //ドット積用変数
+    dot = 0;
     cnt = 30;
     bcnt = 180;
     stptime = 0;
@@ -328,7 +348,14 @@ void Enemy::Collision(Base* b)
             int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect, &pos);
             if (t != NULL_TIP) {
                 m_pos.x = pos.x;
-				m_vec.x *= -1;
+                /*if (m_flip) {
+                    m_flip = false;
+                    m_vec.x *= -1.0f;
+                }
+                else if (!m_flip) {
+                    m_flip = true;
+                    m_vec.x *= -1.0f;
+                }*/
             }
             t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect, &pos);
             if (t != NULL_TIP) {
@@ -342,6 +369,7 @@ void Enemy::Collision(Base* b)
         if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
             if (Door* d = dynamic_cast<Door*>(b)) {
                 m_pos.x = m_pos_old.x;
+
             }
         }
         if (Base::CollisionObject(CVector2D(m_pos_old.x, m_pos.y), m_rect, b->m_pos, b->m_rect)) {
