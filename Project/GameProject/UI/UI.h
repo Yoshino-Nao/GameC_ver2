@@ -15,5 +15,12 @@ public:
 	UI();
 	void Draw();
 };
+class UIimg :public Base {
+public:
+	CImage m_img;
+public:
+	UIimg();
+	void Draw();
+};
 
 

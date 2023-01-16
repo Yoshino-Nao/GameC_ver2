@@ -23,7 +23,7 @@
 void Player::StateIdle()
 {
 	Move();
-	if (PUSH(CInput::eButton1)) {
+	if (PUSH(CInput::eButton1) && m_getSword) {
 		m_atk_yoyaku = false;
 		m_attack_no++;
 		m_state = eState_Attack1;
@@ -283,9 +283,13 @@ Player::Player(const CVector2D& p, bool flip) :
 	//最大HP   HP
 	m_hpmax = m_hp = 120;
 	//２段ジャンプアイテム取得
-	m_getairjump = false;
+	//m_getairjump = false;
+	//剣アイテム取得
+	//m_getSword = false;
+	//デバッグ用
+	m_getairjump = m_getSword = true;
 	//鍵
-	key1 = false;
+	key = 0;
 #pragma endregion
 	//スティック
 	r = CVector2D(0, 0);
@@ -702,6 +706,7 @@ void Player::Collision(Base* b)
 {
 	switch (b->m_type) {
 		//ゴール判定
+#pragma region アイテムコリジョン
 	case eType_Goal:
 		if (Base::CollisionRect(this, b)) {
 			b->SetKill();
@@ -714,7 +719,7 @@ void Player::Collision(Base* b)
 				switch (id)
 				{
 				case eType_Item_Score:
-					GameData::s_score += 1;
+					//GameData::s_score += 1;
 					b->SetKill();
 					break;
 				case eType_Item_LifeUp:
@@ -727,14 +732,19 @@ void Player::Collision(Base* b)
 					m_getairjump = true;
 					b->SetKill();
 					break;
+				case eType_Item_Sword:
+					m_getSword = true;
+					b->SetKill();
+					break;
 				case eType_Item_Kay1:
-					key1 = true;
+					GameData::s_key += 1;
 					b->SetKill();
 					break;
 				}
 			}
 		}
 		break;
+#pragma endregion
 	/*case eType_Item_Score:
 		if (Base::CollisionRect(this, b)) {
 			GameData::s_score += 1;
@@ -746,7 +756,7 @@ void Player::Collision(Base* b)
 			LifeUp(30);
 			b->SetKill();
 		}*/
-	
+#pragma region 攻撃コリジョン
 	case eType_Enemy_Attack:
 		if (Slash* s = dynamic_cast<Slash*>(b)) {
 			if (m_damage_no != s->GetAttackNo() && Base::CollisionRect(this, s) && !m_is_inv) {
@@ -798,6 +808,8 @@ void Player::Collision(Base* b)
 			}
 		}
 		break;
+#pragma endregion
+#pragma region マップオブジェクトコリジョン
 	case eType_Field:
 		if (Map* m = dynamic_cast<Map*>(b)) {
 			CVector2D pos;
@@ -870,7 +882,8 @@ void Player::Collision(Base* b)
 					door->SetKill();
 					break;
 				case 1:
-					if (key1) {
+					if (GameData::s_key > 0) {
+						GameData::s_key -= 1;
 						door->SetKill();
 					}
 					break;
@@ -885,5 +898,6 @@ void Player::Collision(Base* b)
 			//m_airjump = false;
 		}
 		break;
+#pragma endregion
 	}
 }

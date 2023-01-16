@@ -39,7 +39,8 @@ Game::Game() :Base(eType_Scene)
 	Base::Add(new GaugeBack());
 	Base::Add(new GaugeRed());
 	Base::Add(new GaugeGreen());
-	GameData::s_score = 0;
+	Base::Add(new UIimg());
+	GameData::s_key = 0;
 	//GameData::s_time = 60 * 60 * 10;
 }
 

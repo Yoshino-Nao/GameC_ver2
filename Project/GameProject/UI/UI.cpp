@@ -13,14 +13,15 @@ UI::UI() :Base(eType_UI_Score) {
 }
 
 void UI::Draw() {
-	int score = GameData::s_score;
-	for (int i = 0; i < 3; i++, score /= 10) {
-		int s = score % 10;
+	int key = GameData::s_key;
+	for (int i = 0; i < 1; i++, key /= 10) {
+		int s = key % 10;
 		m_img.SetRect(16 * s, 16, 16 * s + 16, 32);
-		m_img.SetSize(16, 16);
-		m_img.SetPos(500 - 16 * i, 0);
+		m_img.SetSize(24, 24);
+		m_img.SetPos(600 - 16 * i, 8);
 		m_img.Draw();
 	}
+	FONT_T()->Draw(575, 30, 1, 1, 1, "X");
 	/*
 	Base* b = Base::FindObject(eType_start);
 	if (!b) {
@@ -94,4 +95,17 @@ void UI::Draw() {
 		m_img.Draw();
 	}
 	*/
+}
+
+UIimg::UIimg() :Base(eType_UI_Front)
+{
+	m_img = COPY_RESOURCE("Key", CImage);
+	m_img.SetSize(16 * 2, 16 * 2);
+	m_img.SetPos(550 - 16, 4);
+	//m_img.SetColor(1, 1, 1, 1);
+}
+
+void UIimg::Draw()
+{
+	m_img.Draw();
 }

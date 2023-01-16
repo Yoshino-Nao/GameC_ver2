@@ -26,9 +26,13 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 			m_fmfHeader.byChipHeight * 45),
 			1));*/
 		Base::Add(new Door(CVector2D(
+			m_fmfHeader.byChipWidth * 60,
+			m_fmfHeader.byChipHeight * 45),
+			1));
+		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 7,
 			m_fmfHeader.byChipHeight * 45),
-			3));
+			1));
 		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 83,
 			m_fmfHeader.byChipHeight * 11), 
@@ -53,7 +57,10 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 			m_fmfHeader.byChipHeight * 19), eType_Item_Kay1));
 		Base::Add(new Item(CVector2D(
 			m_fmfHeader.byChipWidth * 104 + 32,
-			m_fmfHeader.byChipHeight * 44), eType_Item_AirJump));//104,44
+			m_fmfHeader.byChipHeight * 44), eType_Item_AirJump));//64 * 45, 64 * 10
+		Base::Add(new Item(CVector2D(
+			m_fmfHeader.byChipWidth * 55 + 32,
+			m_fmfHeader.byChipHeight * 45), eType_Item_Sword));
 		//テストマップ２
 		Base::Add(new AreaChange(2,					//次のマップの番号
 			CRect(m_fmfHeader.byChipWidth * 43,		//エリアチェンジの判定

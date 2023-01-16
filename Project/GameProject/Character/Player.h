@@ -86,8 +86,10 @@ private:
 	int m_hpmax;
 	//２段ジャンプアイテム取得
 	bool m_getairjump;
-	//鍵
-	bool key1;
+	//剣アイテム取得
+	bool m_getSword;
+	//汎用鍵
+	int key;
 
 #pragma endregion
 

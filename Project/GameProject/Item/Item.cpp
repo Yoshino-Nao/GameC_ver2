@@ -41,12 +41,11 @@ Item::Item(const CVector2D& pos, int item_id)
 		m_img.SetColor(0, 0, 0, 0);
 		break;
 	case eType_Item_Sword:
-		m_img = COPY_RESOURCE("coin", CImage);
-		m_img.SetCenter(24, 48);
-		m_rect = CRect(-24, -24, 24, 24);
-		m_img.SetSize(48, 96);
-		m_img.ChangeAnimation(0);
-		m_img.SetColor(0, 0, 0, 0);
+		m_img = COPY_RESOURCE("Sword", CImage);
+		m_img.SetCenter(14 * 3, 2 * 3);
+		m_rect = CRect(-14 * 3, -4 * 3, 14 * 3, 4 * 3);
+		m_img.SetSize(33 * 3, 6);
+		//m_img.SetColor(0, 0, 0, 0);
 		break;
 	case eType_Item_Kay1:
 		m_img = COPY_RESOURCE("coin", CImage);
