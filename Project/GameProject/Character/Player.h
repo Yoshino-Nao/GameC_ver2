@@ -84,8 +84,10 @@ private:
 	int m_hp;
 	//最大HP
 	int m_hpmax;
+	//２段ジャンプアイテム取得
+	bool m_getairjump;
 	//鍵
-	bool key;
+	bool key1;
 
 #pragma endregion
 

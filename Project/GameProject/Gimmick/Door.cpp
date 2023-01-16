@@ -1,7 +1,4 @@
 #include "Door.h"
-#include "../Character/Player.h"
-#include "../Map/Map.h"
-#include "../Map/fmfmap.h"
 Door::Door(const CVector2D& pos, int key)
 	:Base(eType_Door)
 {	

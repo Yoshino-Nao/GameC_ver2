@@ -1,4 +1,5 @@
 #include "Item.h"
+#include "../Game/Effect.h"
 #include "../Game/GameData.h"
 #include "../Map/Map.h"
 #include "../Gimmick/Door.h"
@@ -7,6 +8,7 @@ Item::Item(const CVector2D& pos, int item_id)
 {
 	//‰æ‘œ·‚µ‘Ö‚¦—\’è
 	m_item_id = item_id;
+	m_cnt = 0;
 	m_pos = pos;
 	m_pos_old = m_pos;
 	//m_rect = CRect(-24, -24, 24, 24);
@@ -30,7 +32,39 @@ Item::Item(const CVector2D& pos, int item_id)
 		m_img.ChangeAnimation(0);
 		m_img.SetColor(0, 1, 0, 1);
 		break;
+	case eType_Item_AirJump:
+		m_img = COPY_RESOURCE("coin", CImage);
+		m_img.SetCenter(24, 48);
+		m_rect = CRect(-24, -24, 24, 24);
+		m_img.SetSize(48, 96);
+		m_img.ChangeAnimation(0);
+		m_img.SetColor(0, 0, 0, 0);
+		break;
+	case eType_Item_Sword:
+		m_img = COPY_RESOURCE("coin", CImage);
+		m_img.SetCenter(24, 48);
+		m_rect = CRect(-24, -24, 24, 24);
+		m_img.SetSize(48, 96);
+		m_img.ChangeAnimation(0);
+		m_img.SetColor(0, 0, 0, 0);
+		break;
 	case eType_Item_Kay1:
+		m_img = COPY_RESOURCE("coin", CImage);
+		m_img.SetCenter(24, 48);
+		m_rect = CRect(-24, -24, 24, 24);
+		m_img.SetSize(48, 96);
+		m_img.ChangeAnimation(0);
+		m_img.SetColor(1, 0, 0, 1);
+		break;
+	case eType_Item_Kay2:
+		m_img = COPY_RESOURCE("coin", CImage);
+		m_img.SetCenter(24, 48);
+		m_rect = CRect(-24, -24, 24, 24);
+		m_img.SetSize(48, 96);
+		m_img.ChangeAnimation(0);
+		m_img.SetColor(1, 0, 0, 1);
+		break;
+	case eType_Item_Kay3:
 		m_img = COPY_RESOURCE("coin", CImage);
 		m_img.SetCenter(24, 48);
 		m_rect = CRect(-24, -24, 24, 24);
@@ -86,10 +120,15 @@ void Item::Collision(Base* b)
 
 void Item::Update()
 {
+	m_cnt--;
 	m_pos_old = m_pos;
 	m_img.UpdateAnimation();
 	if (m_is_ground && m_vec.y > GRAVITY * 4) {
 		m_is_ground = false;
+	}
+	if (m_item_id == eType_Item_AirJump && m_cnt <= 0) {
+		Base::Add(new Effect("Effect_Ring_yoko", CVector2D(m_pos.x, m_pos.y), true, 90, 30));
+		m_cnt = 60;
 	}
 	m_vec.y += GRAVITY;
 	m_pos.y += m_vec.y;

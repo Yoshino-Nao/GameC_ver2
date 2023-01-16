@@ -7,6 +7,7 @@ enum {
 	eType_Scene,
 	eType_Field,
 	eType_Door,
+	eType_BreakWall,
 	eType_Player,
 	eType_Player_Bullet,
 	eType_Bullet,
@@ -28,8 +29,11 @@ enum {
 	//アイテム区別用ID
 	eType_Item_Score,
 	eType_Item_LifeUp,
+	eType_Item_AirJump,
+	eType_Item_Sword,
 	eType_Item_Kay1,
-	
+	eType_Item_Kay2,
+	eType_Item_Kay3,
 	
 	eType_Goal,
 	eType_start,

@@ -74,6 +74,9 @@
     <ClCompile Include="Attack\Player_Bullet1.cpp">
       <Filter>Attack</Filter>
     </ClCompile>
+    <ClCompile Include="Gimmick\BreakWall.cpp">
+      <Filter>Gimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Game">
@@ -176,6 +179,9 @@
     </ClInclude>
     <ClInclude Include="Attack\Player_Bullet1.h">
       <Filter>Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="Gimmick\BreakWall.h">
+      <Filter>Gimmick</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

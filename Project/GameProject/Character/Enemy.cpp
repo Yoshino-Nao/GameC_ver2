@@ -7,6 +7,7 @@
 #include "../Attack/Slash.h"
 #include "../Item/Item.h"
 #include "../Gimmick/Door.h"
+#include "../Gimmick/BreakWall.h"
 #include "../UI/Gauge.h"
 #include "Enemy.h"
 #include "Player.h"
@@ -92,7 +93,15 @@ void Enemy::StateDown()
     m_img.ChangeAnimation(4, false);
     if (m_img.CheckAnimationEnd()) {
         Base::Add(new Effect("Effect_Smoke", m_pos + CVector2D(0, -128), m_flip, 128, 128));
-        Base::Add(new Item(CVector2D(m_pos.x, m_pos.y - 40), eType_Item_LifeUp));
+        switch (m_type)
+        {
+        case eType_E_Slime1:
+            Base::Add(new Item(CVector2D(m_pos.x, m_pos.y - 40), eType_Item_LifeUp));
+            break;
+        case eType_E_Slime3:
+            Base::Add(new Item(CVector2D(m_pos.x, m_pos.y - 40), eType_Item_LifeUp));
+            break;
+        }
         SetKill();
     }
     m_vec = CVector2D(0, 0);
@@ -348,14 +357,14 @@ void Enemy::Collision(Base* b)
             int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect, &pos);
             if (t != NULL_TIP) {
                 m_pos.x = pos.x;
-                /*if (m_flip) {
+                if (m_flip) {
                     m_flip = false;
                     m_vec.x *= -1.0f;
                 }
                 else if (!m_flip) {
                     m_flip = true;
                     m_vec.x *= -1.0f;
-                }*/
+                }
             }
             t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect, &pos);
             if (t != NULL_TIP) {
@@ -381,17 +390,34 @@ void Enemy::Collision(Base* b)
             //m_airjump = false;
         }
         break;
+    case eType_BreakWall:
+        if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
+            if (BreakWall* d = dynamic_cast<BreakWall*>(b)) {
+                m_pos.x = m_pos_old.x;
+
+            }
+        }
+        if (Base::CollisionObject(CVector2D(m_pos_old.x, m_pos.y), m_rect, b->m_pos, b->m_rect)) {
+
+            m_pos.y = m_pos_old.y;
+            m_vec.y = 0;
+            m_is_ground = true;
+            //m_is_land = false;
+            //m_airjump = false;
+        }
+        break;
     case eType_Player:
         m_attack_no++;
         break;
     case eType_Enemy:
         if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
-            b->m_pos += m_vec * 0.5f;
+            //b->m_pos += m_vec * 0.5f;
+            m_pos += b->m_vec * 0.5f;
             m_pos.x = m_pos_old.x;
         }
         if (Base::CollisionObject(CVector2D(m_pos_old.x, m_pos.y), m_rect, b->m_pos, b->m_rect)) {
             if (b->m_pos.y <= m_pos.y) {
-                //m_pos.x += b->m_pos.x - m_pos.x;
+                m_vec.x = 0;
             }
             m_pos.y = m_pos_old.y;
             m_vec.y = 0;

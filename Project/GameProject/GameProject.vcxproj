@@ -23,6 +23,7 @@
     <ClCompile Include="Game\Effect_Ring.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\GameData.cpp" />
+    <ClCompile Include="Gimmick\BreakWall.cpp" />
     <ClCompile Include="Gimmick\Door.cpp" />
     <ClCompile Include="Item\Goal.cpp" />
     <ClCompile Include="Item\Goal2.cpp" />
@@ -50,6 +51,7 @@
     <ClInclude Include="Game\Effect_Ring.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\GameData.h" />
+    <ClInclude Include="Gimmick\BreakWall.h" />
     <ClInclude Include="Gimmick\Door.h" />
     <ClInclude Include="Item\Goal.h" />
     <ClInclude Include="Item\Goal2.h" />

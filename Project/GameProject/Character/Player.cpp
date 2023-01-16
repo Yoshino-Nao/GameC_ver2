@@ -105,7 +105,7 @@ void Player::StateGunDraw()
 	//
 	DrawLine(HandPos, HandPos + r , 1, 0, 0);
 
-	FONT_T()->Draw(100, 100, 1, 1, 1, "%.4f%.4f", r.x, r.y);
+	//FONT_T()->Draw(100, 100, 1, 1, 1, "%.4f%.4f", r.x, r.y);
 	
 	if (m_img.CheckAnimationEnd() && 
 		//PUSH(CInput::eRight) || PUSH(CInput::eLeft) || 
@@ -128,23 +128,23 @@ void Player::StateShooting()
 	m_flip ? Front = CVector2D::left : Front = CVector2D::right;
 	
 	float dot = CVector2D::Dot(Front.GetNormalize(), r.GetNormalize());
-	
+	//FONT_T()->Draw(100, 100, 1, 1, 1, "%.4f%.4f", r.x, r.y);
 	//FONT_T()->Draw(100, 100, 1, 1, 1, "%.4f%.4f", r.x, r.y);
 	//正面
 	if (dot > cosf(DtoR(20.0f))) {
-		DrawLine(HandPos, HandPos + r, 1, 0, 0);
+		//DrawLine(HandPos, HandPos + r, 1, 0, 0);
 		m_img.ChangeAnimation(17, true);
 	}//斜め上
 	else if (dot > cosf(DtoR(70.0f)) && r.y < 0) {
-		DrawLine(HandPos, HandPos + r, 0, 1, 0);
+		//DrawLine(HandPos, HandPos + r, 0, 1, 0);
 		m_img.ChangeAnimation(18, true);
 	}//斜め下
 	else if (dot > cosf(DtoR(70.0f)) && r.y > 0) {
-		DrawLine(HandPos, HandPos + r, 0, 0, 1);
+		//DrawLine(HandPos, HandPos + r, 0, 0, 1);
 		m_img.ChangeAnimation(16, true);
 	}//真上
 	else if (dot > cosf(DtoR(115.0f)) && r.y < 0) {
-		DrawLine(HandPos, HandPos + r, 1, 1, 1);
+		//DrawLine(HandPos, HandPos + r, 1, 1, 1);
 		m_img.ChangeAnimation(19, true);
 		if (rate <= 0) {
 			Base::Add(new Player_Bullet1(CVector2D(HandPos.x, HandPos.y)
@@ -282,8 +282,10 @@ Player::Player(const CVector2D& p, bool flip) :
 	m_hit_area_change = false;
 	//最大HP   HP
 	m_hpmax = m_hp = 120;
+	//２段ジャンプアイテム取得
+	m_getairjump = false;
 	//鍵
-	key = false;
+	key1 = false;
 #pragma endregion
 	//スティック
 	r = CVector2D(0, 0);
@@ -301,14 +303,14 @@ void Player::Move()
 	bool walk_flag = false;
 	
 	//左走り
-	if (HOLD(CInput::eLeft) || l.x <= -0.8f) {
+	if (l.x <= -0.8f) {
 		move_xspeed_max = 10;
 		m_vec.x -= move_xspeed_add * abs(l.x);
 		//反転フラグ
 		m_flip = true;
 		move_flag = true;
 	}
-	else if (HOLD(CInput::eLeft) || l.x > -0.8f && l.x < -0.2f) {
+	else if (l.x > -0.8f && l.x < -0.2f) {
 		move_xspeed_max = 3.0f * abs(l.x) + 3;
 		//m_is_ground ? move_xspeed_max = 5 : move_xspeed_max = 5;
 		m_vec.x -= move_xspeed_add * abs(l.x) * 0.7f;
@@ -317,14 +319,14 @@ void Player::Move()
 		walk_flag = true;
 	}
 	//右走り
-	if (HOLD(CInput::eRight) || l.x >= 0.8f) {
+	if (l.x >= 0.8f) {
 		move_xspeed_max = 10;
 		m_vec.x += move_xspeed_add * abs(l.x);
 		//反転フラグ
 		m_flip = false;
 		move_flag = true;
 	}
-	else if (HOLD(CInput::eRight) || l.x < 0.8f && l.x > 0.2f) {
+	else if (l.x < 0.8f && l.x > 0.2f) {
 		move_xspeed_max = 3.0f * abs(l.x) + 3;
 		//m_is_ground ? move_xspeed_max = 5 : move_xspeed_max = 5;
 		
@@ -377,7 +379,7 @@ void Player::Move()
 			m_groundpos = m_pos.y;
 		}
 		//２段ジャンプ
-		if (m_airjump && m_img.GetIndex() >= 1 && PUSH(CInput::eButton2)) {
+		if (m_airjump && m_img.GetIndex() >= 1 && PUSH(CInput::eButton2) && m_getairjump) {
 			m_img.ChangeAnimation(5, false);
 
 			m_vec.y = (move_yspeed_max * -0.7f);
@@ -430,7 +432,8 @@ void Player::Move()
 			m_img.ChangeAnimation(7, false);
 			if (m_img.CheckAnimationEnd()) {
 				//着地モーションが終了までのカウント
-				m_vec.x = m_vec.x * 0.8f;
+				//m_vec.x = m_vec.x * 0.8f;
+				m_vec.x = 0;
 				m_groundpos_diff2 -= 40;
 				if (m_groundpos_diff2 <= 0) {
 					m_is_land = false;
@@ -533,6 +536,18 @@ void Player::Update() {
 		}else if (HOLD(CInput::eRight)) {
 			l.x = 1;
 		}
+		/*if (HOLD(CInput::eLeft)) {
+			l.x = -1;
+		}
+		else if (HOLD(CInput::eRight)) {
+			l.x = 1;
+		}
+		else if (HOLD(CInput::eLeft) && HOLD(CInput::eRight)) {
+			l.x = 0;
+		}*/
+
+
+
 		if (HOLD(CInput::eUp) && HOLD(CInput::eButton6)) {
 			r.y = -1;
 		}else if (HOLD(CInput::eUp)) {
@@ -708,8 +723,12 @@ void Player::Collision(Base* b)
 					//m_ItemList[0] += 1;
 					b->SetKill();
 					break;
+				case eType_Item_AirJump:
+					m_getairjump = true;
+					b->SetKill();
+					break;
 				case eType_Item_Kay1:
-					key = true;
+					key1 = true;
 					b->SetKill();
 					break;
 				}
@@ -844,11 +863,17 @@ void Player::Collision(Base* b)
 		if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
 			if (Door* door = dynamic_cast<Door*>(b)) {
 				int k = door->GetKey();
-				if (k == 0 || k == key) {
+				m_pos.x = m_pos_old.x;
+				switch (k)
+				{
+				case 0:
 					door->SetKill();
-				}
-				else {
-					m_pos.x = m_pos_old.x;
+					break;
+				case 1:
+					if (key1) {
+						door->SetKill();
+					}
+					break;
 				}
 			}
 		}

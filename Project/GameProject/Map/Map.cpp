@@ -2,12 +2,10 @@
 #include"Map.h"
 #include"AreaChange.h"
 #include "../Gimmick/Door.h"
+#include"../Gimmick/BreakWall.h"
 #include "../Character/Enemy.h"
 #include "../Character/Player.h"
 #include "../Item/Item.h"
-
-
-
 
 Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 	
@@ -23,10 +21,24 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		Base::Add(new MiniMap(nextArea));
 		//Base::Add(new MiniMapPlayer(nextArea));
 		
+		/*Base::Add(new Door(CVector2D(
+			m_fmfHeader.byChipWidth * 26,
+			m_fmfHeader.byChipHeight * 45),
+			1));*/
 		Base::Add(new Door(CVector2D(
-			m_fmfHeader.byChipWidth * 36,
-			m_fmfHeader.byChipHeight * 98),
-			1));
+			m_fmfHeader.byChipWidth * 7,
+			m_fmfHeader.byChipHeight * 45),
+			3));
+		Base::Add(new Door(CVector2D(
+			m_fmfHeader.byChipWidth * 83,
+			m_fmfHeader.byChipHeight * 11), 
+			10));
+		for (int i = 0; i <= 31; i++) {
+			Base::Add(new BreakWall(CVector2D(
+				m_fmfHeader.byChipWidth * (27 + i),
+				m_fmfHeader.byChipHeight * 39)));
+		}
+		
 		Base::Add(new Enemy(CVector2D(
 			m_fmfHeader.byChipWidth * 30,
 			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime1));
@@ -37,8 +49,11 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 			m_fmfHeader.byChipWidth * 32,
 			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime3));
 		Base::Add(new Item(CVector2D(
-			m_fmfHeader.byChipWidth * 26,
-			m_fmfHeader.byChipHeight * 94), eType_Item_Kay1));
+			m_fmfHeader.byChipWidth * 5 + 32,
+			m_fmfHeader.byChipHeight * 19), eType_Item_Kay1));
+		Base::Add(new Item(CVector2D(
+			m_fmfHeader.byChipWidth * 104 + 32,
+			m_fmfHeader.byChipHeight * 44), eType_Item_AirJump));//104,44
 		//テストマップ２
 		Base::Add(new AreaChange(2,					//次のマップの番号
 			CRect(m_fmfHeader.byChipWidth * 43,		//エリアチェンジの判定
@@ -399,9 +414,10 @@ void MiniMap::Draw()
 				//描画
 				m_img.Draw();
 			}
-			Base* d = Base::FindObject(eType_Door);
-			Door* j = dynamic_cast<Door*>(d);
-			if (d) {
+			//bがlist型
+			auto d = Base::FindObjects(eType_Door);
+			for (auto& b : d) {
+				Door* j = dynamic_cast<Door*>(b);
 				CVector2D Dpos = j->m_pos;
 				int px = Dpos.x / GetChipWidth();
 				int py = Dpos.y / GetChipHeight();
@@ -420,10 +436,10 @@ void MiniMap::Draw()
 		}
 	}
 
-	FONT_T()->Draw(100, 200, 1, 1, 1, "sx%d", sx);
-	FONT_T()->Draw(100, 300, 1, 1, 1, "ex%d", ex);
-	FONT_T()->Draw(100, 400, 1, 1, 1, "sy%d", sy);
-	FONT_T()->Draw(100, 500, 1, 1, 1, "ey%d", ey);
+	//FONT_T()->Draw(100, 200, 1, 1, 1, "sx%d", sx);
+	//FONT_T()->Draw(100, 300, 1, 1, 1, "ex%d", ex);
+	//FONT_T()->Draw(100, 400, 1, 1, 1, "sy%d", sy);
+	//FONT_T()->Draw(100, 500, 1, 1, 1, "ey%d", ey);
 }
 //実体を定義
 int MiniMap::MiniMapData[120][100];

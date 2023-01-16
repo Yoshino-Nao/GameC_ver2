@@ -7,6 +7,7 @@ private:
 	CImage m_img;
 	bool m_is_ground;
 	int m_item_id;
+	int m_cnt;
 public:
 	Item(const CVector2D& pos,int item_id);
 	void Draw();
