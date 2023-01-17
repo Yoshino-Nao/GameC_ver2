@@ -49,7 +49,7 @@ Game::~Game()
 {
 
 	//ミニマップ初期化
-	memset(MiniMap::MiniMapData, 0, sizeof(MiniMap::MiniMapData[0][0]) * 100 * 100);
+	memset(MiniMap::MiniMapData, 0, sizeof(MiniMap::MiniMapData[0][0]) * 120 * 55);
 	memset(MiniMap::MiniMapData1, 0, sizeof(MiniMap::MiniMapData[0][0]) * 18 * 18);
 	//全てのオブジェクトを破棄
 	//
@@ -59,15 +59,18 @@ void Game::Update()
 {
 	//std::cout << "game" << std::endl;
 	//ゴールがなければゲームシーン終了
-	if (!Base::FindObject(eType_Goal)) {
-		SetKill();
+	if (Base::FindObject(eType_Goal)) {
+		Base::KillAll();
+		//ゲームシーンへ
+		Base::Add(new Title());
+		Base::Add(new License());
 	}
 
 	//プレイヤー死亡　ボタン１でゲームシーン終了
 	if (!Base::FindObject(eType_Player)) {
-		//SetKill();
 		Base::KillAll();
-		//タイトルシーンへ
+		//ゲームシーンへ
 		Base::Add(new Title());
+		Base::Add(new License());
 	}
 }

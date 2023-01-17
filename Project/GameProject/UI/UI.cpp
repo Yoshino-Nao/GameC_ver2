@@ -22,6 +22,26 @@ void UI::Draw() {
 		m_img.Draw();
 	}
 	FONT_T()->Draw(575, 30, 1, 1, 1, "X");
+
+	int key2 = GameData::s_key2;
+	for (int i = 0; i < 1; i++, key /= 10) {
+		int s = key2 % 10;
+		m_img.SetRect(16 * s, 16, 16 * s + 16, 32);
+		m_img.SetSize(24, 24);
+		m_img.SetPos(700 - 16 * i, 8);
+		m_img.Draw();
+	}
+	FONT_T()->Draw(675, 30, 1, 1, 1, "X");
+
+	int key3 = GameData::s_key3;
+	for (int i = 0; i < 1; i++, key /= 10) {
+		int s = key3 % 10;
+		m_img.SetRect(16 * s, 16, 16 * s + 16, 32);
+		m_img.SetSize(24, 24);
+		m_img.SetPos(800 - 16 * i, 8);
+		m_img.Draw();
+	}
+	FONT_T()->Draw(775, 30, 1, 1, 1, "X");
 	/*
 	Base* b = Base::FindObject(eType_start);
 	if (!b) {
@@ -99,13 +119,39 @@ void UI::Draw() {
 
 UIimg::UIimg() :Base(eType_UI_Front)
 {
-	m_img = COPY_RESOURCE("Key", CImage);
-	m_img.SetSize(16 * 2, 16 * 2);
-	m_img.SetPos(550 - 16, 4);
-	//m_img.SetColor(1, 1, 1, 1);
+	
+	
+	//
 }
 
 void UIimg::Draw()
 {
-	m_img.Draw();
+	for (int i = 0; i <= 3; i++) {
+		switch (i)
+		{
+		case 0://key1
+			m_img = COPY_RESOURCE("Key", CImage);
+			m_img.SetSize(16 * 2, 16 * 2);
+			m_img.SetPos(550 - 16, 4);
+			m_img.SetColor(0.8f, 0.8f, 0.8f, 1);
+			m_img.Draw();
+			break;
+		case 1://key2
+			m_img = COPY_RESOURCE("Key", CImage);
+			m_img.SetSize(16 * 2, 16 * 2);
+			m_img.SetPos(650 - 16, 4);
+			m_img.SetColor(1.0f, 0.5f, 0.5f, 1);
+			m_img.Draw();
+			break;
+		case 2://key3
+			m_img = COPY_RESOURCE("Key", CImage);
+			m_img.SetSize(16 * 2, 16 * 2);
+			m_img.SetPos(750 - 16, 4);
+			m_img.SetColor(1.0f, 1.0f, 0.5f, 1);
+			m_img.Draw();
+			break;
+		}
+
+	}
+	
 }

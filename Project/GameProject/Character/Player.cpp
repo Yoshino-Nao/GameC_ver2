@@ -16,6 +16,8 @@
 #include "../UI/Menu.h"
 #include "../UI/Gauge.h"
 #include "../Gimmick/Door.h"
+#include "../Gimmick/BreakWall.h"
+#include "../Gimmick/Event.h"
 #include "Player.h"
 #include "Enemy.h"
 #include <iostream>
@@ -86,8 +88,9 @@ void Player::StateAttack3()
 			m_flip, eType_Player_Attack, m_attack_no, m_attack_pow));
 	}
 	if (m_img.GetIndex() == 5) {
-		Base::Add(new Slash(CVector2D(m_pos.x + m_atkpos + m_atkpos , m_pos.y - 20), 32,
+		Base::Add(new Slash(CVector2D(m_pos.x + m_atkpos + m_atkpos + m_atkpos, m_pos.y - 20), 40,
 			m_flip, eType_Player_Attack, m_attack_no, m_attack_pow));
+		
 	}
 
 	if (m_img.CheckAnimationEnd()) {
@@ -281,13 +284,14 @@ Player::Player(const CVector2D& p, bool flip) :
 	//エリアチェンジオブジェクトに触れているフラグ
 	m_hit_area_change = false;
 	//最大HP   HP
-	m_hpmax = m_hp = 120;
+	m_hpmax = 120;
+	m_hp = 120;
 	//２段ジャンプアイテム取得
-	//m_getairjump = false;
 	//剣アイテム取得
-	//m_getSword = false;
+	m_getairjump = false;
+	m_getSword = false;
 	//デバッグ用
-	m_getairjump = m_getSword = true;
+	//m_getairjump = m_getSword = true;
 	//鍵
 	key = 0;
 #pragma endregion
@@ -483,12 +487,13 @@ void Player::Move()
 
 void Player::GetItem(int i)
 {
+
 }
 void Player::UseItem(int n)
 {
 	switch (n)
 	{
-	case 1:
+	case 0:
 		LifeUp(30);
 		break;
 	}
@@ -740,6 +745,14 @@ void Player::Collision(Base* b)
 					GameData::s_key += 1;
 					b->SetKill();
 					break;
+				case eType_Item_Kay2:
+					GameData::s_key2 += 1;
+					b->SetKill();
+					break;
+				case eType_Item_Kay3:
+					GameData::s_key3 += 1;
+					b->SetKill();
+					break;
 				}
 			}
 		}
@@ -857,6 +870,9 @@ void Player::Collision(Base* b)
 					//マップとエリアチェンジオブジェクトを削除
 					KillByType(eType_Field);
 					KillByType(eType_AreaChange);
+					KillByType(eType_Event);
+					KillByType(eType_BreakWall);
+					KillByType(eType_Door);
 					KillByType(eType_MiniMapBack);
 					KillByType(eType_MiniMapFront); 
 					KillByType(eType_Enemy);
@@ -871,6 +887,37 @@ void Player::Collision(Base* b)
 		}
 
 		break;
+	case eType_Event:
+		if (Base::CollisionRect(this, b)) {
+			Base* b = Base::FindObject(eType_Event);
+			Event* e = dynamic_cast<Event*>(b);
+			int eventnum = e->GetEventNum();
+			switch (eventnum)
+			{
+			case 0:
+				auto p = Base::FindObjects(eType_BreakWall);
+				for (auto& b : p) {
+					BreakWall* h = dynamic_cast<BreakWall*>(b);
+					Base::Add(new Effect("Effect_Smoke", h->m_pos, m_flip, 128, 128));
+					h->SetKill();
+				}
+				e->SetKill();
+				break;
+			}
+		}
+		break;
+	case eType_BreakWall:
+		if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
+			m_pos.x = m_pos_old.x;
+		}
+		if (Base::CollisionObject(CVector2D(m_pos_old.x, m_pos.y), m_rect, b->m_pos, b->m_rect)) {
+			m_pos.y = m_pos_old.y;
+			m_vec.y = 0;
+			m_is_ground = true;
+			//m_is_land = false;
+			//m_airjump = false;
+		}
+		break;
 	case eType_Door:
 		if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
 			if (Door* door = dynamic_cast<Door*>(b)) {
@@ -884,6 +931,18 @@ void Player::Collision(Base* b)
 				case 1:
 					if (GameData::s_key > 0) {
 						GameData::s_key -= 1;
+						door->SetKill();
+					}
+					break;
+				case 2:
+					if (GameData::s_key2 > 0) {
+						GameData::s_key2 -= 1;
+						door->SetKill();
+					}
+					break;
+				case 3:
+					if (GameData::s_key3 > 0) {
+						GameData::s_key3 -= 1;
 						door->SetKill();
 					}
 					break;

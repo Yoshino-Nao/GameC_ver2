@@ -3,6 +3,7 @@
 #include "../Game/GameData.h"
 #include "../Map/Map.h"
 #include "../Gimmick/Door.h"
+#include "../Gimmick/BreakWall.h"
 Item::Item(const CVector2D& pos, int item_id)
 	:Base(eType_Item)
 {
@@ -48,38 +49,34 @@ Item::Item(const CVector2D& pos, int item_id)
 		//m_img.SetColor(0, 0, 0, 0);
 		break;
 	case eType_Item_Kay1:
-		m_img = COPY_RESOURCE("coin", CImage);
-		m_img.SetCenter(24, 48);
+		m_img = COPY_RESOURCE("Key", CImage);
+		m_img.SetCenter(24, 24);
 		m_rect = CRect(-24, -24, 24, 24);
-		m_img.SetSize(48, 96);
-		m_img.ChangeAnimation(0);
-		m_img.SetColor(1, 0, 0, 1);
+		m_img.SetSize(48, 48);
+		m_img.SetColor(0.8f, 0.8f, 0.8f, 1);
 		break;
 	case eType_Item_Kay2:
-		m_img = COPY_RESOURCE("coin", CImage);
-		m_img.SetCenter(24, 48);
+		m_img = COPY_RESOURCE("Key", CImage);
+		m_img.SetCenter(24, 24);
 		m_rect = CRect(-24, -24, 24, 24);
-		m_img.SetSize(48, 96);
-		m_img.ChangeAnimation(0);
-		m_img.SetColor(1, 0, 0, 1);
+		m_img.SetSize(48, 48);
+		m_img.SetColor(1.0f, 0.5f, 0.5f, 1);
 		break;
 	case eType_Item_Kay3:
-		m_img = COPY_RESOURCE("coin", CImage);
-		m_img.SetCenter(24, 48);
+		m_img = COPY_RESOURCE("Key", CImage);
+		m_img.SetCenter(24, 24);
 		m_rect = CRect(-24, -24, 24, 24);
-		m_img.SetSize(48, 96);
-		m_img.ChangeAnimation(0);
-		m_img.SetColor(1, 0, 0, 1);
+		m_img.SetSize(48, 48);
+		m_img.SetColor(1.0f, 1.0f, 0.5f, 1);
 		break;
 	}
-
 }
 
 void Item::Draw()
 {
 	m_img.SetPos(GetScreenPos(m_pos));
 	m_img.Draw();
-	DrawRect();
+	//DrawRect();
 }
 
 void Item::Collision(Base* b)
@@ -106,6 +103,19 @@ void Item::Collision(Base* b)
 			if (Door* d = dynamic_cast<Door*>(b)) {
 				m_pos.x = m_pos_old.x;
 			}
+		}
+		if (Base::CollisionObject(CVector2D(m_pos_old.x, m_pos.y), m_rect, b->m_pos, b->m_rect)) {
+
+			m_pos.y = m_pos_old.y;
+			m_vec.y = 0;
+			m_is_ground = true;
+		}
+		break;
+	case eType_BreakWall:
+		if (Base::CollisionObject(CVector2D(m_pos.x, m_pos_old.y), m_rect, b->m_pos, b->m_rect)) {
+			
+			m_pos.x = m_pos_old.x;
+			
 		}
 		if (Base::CollisionObject(CVector2D(m_pos_old.x, m_pos.y), m_rect, b->m_pos, b->m_rect)) {
 

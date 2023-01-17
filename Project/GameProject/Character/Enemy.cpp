@@ -88,18 +88,19 @@ void Enemy::StateDamage()
 
 void Enemy::StateDown()
 {
-    
-    
     m_img.ChangeAnimation(4, false);
     if (m_img.CheckAnimationEnd()) {
         Base::Add(new Effect("Effect_Smoke", m_pos + CVector2D(0, -128), m_flip, 128, 128));
-        switch (m_type)
+        switch (EnemyType)
         {
         case eType_E_Slime1:
             Base::Add(new Item(CVector2D(m_pos.x, m_pos.y - 40), eType_Item_LifeUp));
             break;
+        case eType_E_Slime2:
+            Base::Add(new Item(CVector2D(m_pos.x, m_pos.y - 40), eType_Item_Kay2));
+            break;
         case eType_E_Slime3:
-            Base::Add(new Item(CVector2D(m_pos.x, m_pos.y - 40), eType_Item_LifeUp));
+            Base::Add(new Item(CVector2D(m_pos.x, m_pos.y - 40), eType_Item_Kay3));
             break;
         }
         SetKill();

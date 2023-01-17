@@ -3,9 +3,13 @@
 #include"AreaChange.h"
 #include "../Gimmick/Door.h"
 #include"../Gimmick/BreakWall.h"
+#include"../Gimmick/Event.h"
 #include "../Character/Enemy.h"
 #include "../Character/Player.h"
 #include "../Item/Item.h"
+#include"../Item/Goal.h"
+#include"../Title/Title.h"
+
 
 Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 	
@@ -21,50 +25,74 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		Base::Add(new MiniMap(nextArea));
 		//Base::Add(new MiniMapPlayer(nextArea));
 		
-		/*Base::Add(new Door(CVector2D(
+		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 26,
 			m_fmfHeader.byChipHeight * 45),
-			1));*/
+			1));
 		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 60,
 			m_fmfHeader.byChipHeight * 45),
 			1));
+
 		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 7,
 			m_fmfHeader.byChipHeight * 45),
-			1));
+			2));
 		Base::Add(new Door(CVector2D(
-			m_fmfHeader.byChipWidth * 83,
+			m_fmfHeader.byChipWidth * 98,
+			m_fmfHeader.byChipHeight * 21),
+			2));
+
+		Base::Add(new Door(CVector2D(
+			m_fmfHeader.byChipWidth * 108,
 			m_fmfHeader.byChipHeight * 11), 
-			10));
+			3));
 		for (int i = 0; i <= 31; i++) {
-			Base::Add(new BreakWall(CVector2D(
+			Base::Add(new BreakWall(0, CVector2D(
 				m_fmfHeader.byChipWidth * (27 + i),
 				m_fmfHeader.byChipHeight * 39)));
 		}
 		
 		Base::Add(new Enemy(CVector2D(
-			m_fmfHeader.byChipWidth * 30,
-			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime1));
+			m_fmfHeader.byChipWidth * 40,
+			m_fmfHeader.byChipHeight * 37), true, eType_E_Slime1));
+		Base::Add(new Enemy(CVector2D(
+			m_fmfHeader.byChipWidth * 42,
+			m_fmfHeader.byChipHeight * 37), true, eType_E_Slime1));
+		Base::Add(new Enemy(CVector2D(
+			m_fmfHeader.byChipWidth * 44,
+			m_fmfHeader.byChipHeight * 37), true, eType_E_Slime1));
 		Base::Add(new Enemy(CVector2D(
 			m_fmfHeader.byChipWidth * 31,
-			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime2));
-		Base::Add(new Enemy(CVector2D(
-			m_fmfHeader.byChipWidth * 32,
-			m_fmfHeader.byChipHeight * 98), false, eType_E_Slime3));
+			m_fmfHeader.byChipHeight * 98), true, eType_E_Slime2));
+		
 		Base::Add(new Item(CVector2D(
 			m_fmfHeader.byChipWidth * 5 + 32,
 			m_fmfHeader.byChipHeight * 19), eType_Item_Kay1));
+		Base::Add(new Item(CVector2D(
+			m_fmfHeader.byChipWidth * 28 + 32,
+			m_fmfHeader.byChipHeight * 38), eType_Item_Kay1));
+		Base::Add(new Item(CVector2D(
+			m_fmfHeader.byChipWidth * 99 + 32,
+			m_fmfHeader.byChipHeight * 23), eType_Item_Kay2));
+		Base::Add(new Item(CVector2D(
+			m_fmfHeader.byChipWidth * 97 + 32,
+			m_fmfHeader.byChipHeight * 23), eType_Item_Kay3));
 		Base::Add(new Item(CVector2D(
 			m_fmfHeader.byChipWidth * 104 + 32,
 			m_fmfHeader.byChipHeight * 44), eType_Item_AirJump));//64 * 45, 64 * 10
 		Base::Add(new Item(CVector2D(
 			m_fmfHeader.byChipWidth * 55 + 32,
 			m_fmfHeader.byChipHeight * 45), eType_Item_Sword));
+		Base::Add(new Event(0,
+			CRect(m_fmfHeader.byChipWidth * 55,
+				m_fmfHeader.byChipHeight * 45,
+				m_fmfHeader.byChipWidth * 2,
+				m_fmfHeader.byChipHeight * 2)));
 		//テストマップ２
 		Base::Add(new AreaChange(2,					//次のマップの番号
-			CRect(m_fmfHeader.byChipWidth * 43,		//エリアチェンジの判定
-				m_fmfHeader.byChipHeight * 97,		//左上
+			CRect(m_fmfHeader.byChipWidth * 117,		//エリアチェンジの判定
+				m_fmfHeader.byChipHeight * 10,		//左上
 				m_fmfHeader.byChipWidth * 2,		//横サイズ
 				m_fmfHeader.byChipHeight * 2),		//縦サイズ
 			CVector2D(m_fmfHeader.byChipWidth * 1,	//次のマップの最初のプレイヤーの場所
@@ -79,17 +107,27 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 				m_fmfHeader.byChipHeight * 20)));*/
 		break;
 	case 2:
-		Open("Map/test64(2).fmf");
+		//Open("Map/test64(2).fmf");
 		Base::Add(new MiniMap(nextArea));
+
+		/*Base::Add(new Goal(CVector2D(m_fmfHeader.byChipWidth * 8,
+			m_fmfHeader.byChipHeight * 16)));*/
+
+		if (Base::FindObject(eType_Player)) {
+			Base::KillAll();
+			//ゲームシーンへ
+			Base::Add(new Title());
+			Base::Add(new License());
+		}
 		//Base::Add(new MiniMapPlayer(nextArea));
-		Base::Add(new AreaChange(1,					//次のマップの番号
-			CRect(m_fmfHeader.byChipWidth * 15,		//エリアチェンジの判定
-				m_fmfHeader.byChipHeight * 15,		//左上
-				m_fmfHeader.byChipWidth * 2,		//横サイズ
-				m_fmfHeader.byChipHeight * 2),		//縦サイズ
-			CVector2D(m_fmfHeader.byChipWidth * 43,	//次のマップの最初のプレイヤーの場所
-				m_fmfHeader.byChipHeight * 99)));
-		break;
+		//Base::Add(new AreaChange(1,					//次のマップの番号
+		//	CRect(m_fmfHeader.byChipWidth * 15,		//エリアチェンジの判定
+		//		m_fmfHeader.byChipHeight * 15,		//左上
+		//		m_fmfHeader.byChipWidth * 2,		//横サイズ
+		//		m_fmfHeader.byChipHeight * 2),		//縦サイズ
+		//	CVector2D(m_fmfHeader.byChipWidth * 43,	//次のマップの最初のプレイヤーの場所
+		//		m_fmfHeader.byChipHeight * 99)));
+		//break;
 	}
 	
 	//プレイヤーの位置決定
@@ -273,7 +311,7 @@ int Map::CollisionMap(const CVector2D& pos, const CRect& rect, CVector2D* rev_po
 MiniMap::MiniMap(int nextArea) :Base(eType_MiniMapBack)
 {
 	//マップエディタと合わせる
-	MiniMapData[120][100] = { NULL };
+	MiniMapData[120][55] = { NULL };
 	MiniMapData1[18][18] = { NULL };
 	m_mapnum = nextArea;
 	x = 0;
@@ -449,7 +487,7 @@ void MiniMap::Draw()
 	//FONT_T()->Draw(100, 500, 1, 1, 1, "ey%d", ey);
 }
 //実体を定義
-int MiniMap::MiniMapData[120][100];
+int MiniMap::MiniMapData[120][55];
 int MiniMap::MiniMapData1[18][18];
 
 #pragma endregion

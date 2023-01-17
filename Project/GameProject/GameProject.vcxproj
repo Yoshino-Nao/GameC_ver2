@@ -25,6 +25,7 @@
     <ClCompile Include="Game\GameData.cpp" />
     <ClCompile Include="Gimmick\BreakWall.cpp" />
     <ClCompile Include="Gimmick\Door.cpp" />
+    <ClCompile Include="Gimmick\Event.cpp" />
     <ClCompile Include="Item\Goal.cpp" />
     <ClCompile Include="Item\Goal2.cpp" />
     <ClCompile Include="Item\Item.cpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="Game\GameData.h" />
     <ClInclude Include="Gimmick\BreakWall.h" />
     <ClInclude Include="Gimmick\Door.h" />
+    <ClInclude Include="Gimmick\Event.h" />
     <ClInclude Include="Item\Goal.h" />
     <ClInclude Include="Item\Goal2.h" />
     <ClInclude Include="Item\Item.h" />

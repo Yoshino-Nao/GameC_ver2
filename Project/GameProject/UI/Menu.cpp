@@ -12,7 +12,7 @@ Menu::Menu()
 	m_in_item = false;
 	m_b3free = false;
 	m_use_item = false;
-	//GameData::s_itemlist[0] = 99;
+	GameData::s_itemlist[0] = 99;
 }
 
 void Menu::Update()

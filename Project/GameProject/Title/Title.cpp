@@ -13,6 +13,7 @@ Title::~Title() {
 	Base::Add(new Game());
 }
 void Title::Update(){
+	m_img.SetSize(CCamera::GetCurrent()->GetWhidth(), CCamera::GetCurrent()->GetHeight());
 	//ボタン1でタイトル破棄
 	if (PUSH(CInput::eButton10)) {
 
@@ -22,19 +23,20 @@ void Title::Update(){
 void Title::Draw() {
 	m_img.Draw();
 	//文字表示
-	m_title_text.Draw(64, 256, 0, 0, 0, "Title");
-	m_title_text.Draw(64, 512, 0, 0, 0, "Push.Enter");
+	m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2 - 180, CCamera::GetCurrent()->GetHeight() / 2, 1, 1, 1, "Title");
+	m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2 - 180, CCamera::GetCurrent()->GetHeight() / 1.2, 1, 1, 1, "Push.Enter");
 }
 
 License::License():Base(eType_Scene)
 {
 	m_img = COPY_RESOURCE("License", CImage);
-	m_img.SetPos(1280 - 73, 720 - 63);
+	
 	m_img.SetSize(73, 63);
 }
 
 void License::Update()
 {
+	m_img.SetPos(CCamera::GetCurrent()->GetWhidth() - 73, CCamera::GetCurrent()->GetHeight() - 63);
 	if (PUSH(CInput::eButton10)) {
 		SetKill();
 	}

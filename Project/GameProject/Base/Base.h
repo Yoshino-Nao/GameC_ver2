@@ -47,6 +47,7 @@ enum {
 	eType_MiniMapBack,
 	eType_MiniMapFront,
 	eType_AreaChange,
+	eType_Event,
 };
 
 class Base {
