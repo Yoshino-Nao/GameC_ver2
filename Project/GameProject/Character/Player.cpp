@@ -126,7 +126,7 @@ void Player::StateShooting()
 	CVector2D mouse_pos = CInput::GetMousePoint();
 	CVector2D HandPos(m_pos.x + (r.x * m_handpos), m_pos.y - 70 + (r.y * m_handpos));
 	r = r * 1000;
-	
+	DrawLine(HandPos, HandPos + r, 1, 0, 0);
 	CVector2D Front;
 	m_flip ? Front = CVector2D::left : Front = CVector2D::right;
 	
@@ -374,8 +374,8 @@ void Player::Move()
 		{
 			//下降アニメーション
 			m_img.ChangeAnimation(6, false);
-			//高度の差が280以下なら着地モーションフラグを立たせない
-			if (m_groundpos_diff > 280) {
+			//高度の差が300以下なら着地モーションフラグを立たせない
+			if (m_groundpos_diff > 300) {
 				m_is_land = true;
 				m_groundpos_diff2 = m_groundpos_diff;
 			}
@@ -464,10 +464,10 @@ void Player::Move()
 		//落下中、下にスクロール;
 		v3.y = min(m_vec.y * 10 + 100, 500);
 	}
-	else if (l.y > 0) {
+	else if (r.y > 0.8) {
 		v3.y = 300;
 	}
-	else if (l.y < 0) {
+	else if (r.y < -0.8) {
 		v3.y = -300;
 	}
 	else
