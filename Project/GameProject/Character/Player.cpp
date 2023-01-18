@@ -291,7 +291,7 @@ Player::Player(const CVector2D& p, bool flip) :
 	m_getairjump = false;
 	m_getSword = false;
 	//デバッグ用
-	//m_getairjump = m_getSword = true;
+	m_getairjump = m_getSword = true;
 	//鍵
 	key = 0;
 #pragma endregion

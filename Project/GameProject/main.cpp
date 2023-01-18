@@ -37,14 +37,14 @@ void Init(void)
 	//フレーム制御初期化
 	CFPS::Init();
 	//ボタンの設定
-	CInput::Init();
-	CInput::SetButton(0, CInput::eButton1, 'Z');//攻撃
-	CInput::SetButton(0, CInput::eButton2, 'X');//ジャンプ
-	CInput::SetButton(0, CInput::eButton3, 'C');//決定
-	CInput::SetButton(0, CInput::eButton4, 'V');//キャンセル
-	CInput::SetButton(0, CInput::eButton5, VK_SPACE);//ミニマップ表示
-	CInput::SetButton(0, CInput::eButton6, 'A');//銃
-	CInput::SetButton(0, CInput::eButton7, 'S');
+	CInput::Init();//1:攻撃 2:ジャンプ 3:決定 4:キャンセル 5:ミニマップ表示 :6銃
+	CInput::SetButton(0, CInput::eButton4, 'Z');
+	CInput::SetButton(0, CInput::eButton3, 'X');
+	CInput::SetButton(0, CInput::eButton2, 'C');
+	CInput::SetButton(0, CInput::eButton1, 'V');
+	CInput::SetButton(0, CInput::eButton5, VK_SPACE);
+	CInput::SetButton(0, CInput::eButton7, 'A');
+	CInput::SetButton(0, CInput::eButton6, 'S');
 	CInput::SetButton(0, CInput::eButton8, 'D');
 	CInput::SetButton(0, CInput::eButton9, 'F');
 	CInput::SetButton(0, CInput::eButton10, VK_RETURN);
