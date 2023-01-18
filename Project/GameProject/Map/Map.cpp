@@ -34,10 +34,10 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 			m_fmfHeader.byChipHeight * 45),
 			1));
 
-		Base::Add(new Door(CVector2D(
+		/*Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 7,
 			m_fmfHeader.byChipHeight * 45),
-			2));
+			2));*/
 		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 98,
 			m_fmfHeader.byChipHeight * 21),

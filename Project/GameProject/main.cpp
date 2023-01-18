@@ -109,6 +109,7 @@ void Init(void)
 	ADD_RESOURCE("bullet", CImage::CreateImage("Image/bullet.png"));
 	ADD_RESOURCE("Sword", CImage::CreateImage("Image/Sword.png"));
 	ADD_RESOURCE("Key", CImage::CreateImage("Image/Key.png"));
+	ADD_RESOURCE("Lattice", CImage::CreateImage("Image/a.png"));
 //ADD_RESOURCE("Item", CImage::CreateImage("Image/Item.png"));
 	/*//ÉvÉåÉCÉÑÅ[ÇÃê∂ê¨
 	Base::Add(new Player(CVector2D(200, 500), false));
