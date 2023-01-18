@@ -37,7 +37,7 @@ void Init(void)
 	//フレーム制御初期化
 	CFPS::Init();
 	//ボタンの設定
-	CInput::Init();//1:攻撃 2:ジャンプ 3:決定 4:キャンセル 5:ミニマップ表示 :6銃
+	CInput::Init();//1:攻撃 2:ジャンプ 3:決定 4:キャンセル 5:ミニマップ表示 :6銃 10:ゲームスタート
 	CInput::SetButton(0, CInput::eButton4, 'Z');
 	CInput::SetButton(0, CInput::eButton3, 'X');
 	CInput::SetButton(0, CInput::eButton2, 'C');
@@ -85,7 +85,7 @@ void Init(void)
 	ADD_RESOURCE("Effect_Blood", CImage::CreateImage("Image/Effect_Blood.png", effect_blood_anim_data, 128, 128));
 	ADD_RESOURCE("Effect_Flame", CImage::CreateImage("Image/Effect_Flame.png", effect_flame_anim_data, 1080, 320));
 	ADD_RESOURCE("Effect_Ring", CImage::CreateImage("Image/Effect_Ring.png", effect_ring_anim_data, 160, 720));
-	ADD_RESOURCE("Effect_Ring_yoko", CImage::CreateImage("Image/Effect_Ring_yoko.png", effect_ring_anim_data, 720, 160));
+	//ADD_RESOURCE("Effect_Ring_yoko", CImage::CreateImage("Image/Effect_Ring_yoko.png", effect_ring_anim_data, 720, 160));
 	ADD_RESOURCE("Effect_Ring2", CImage::CreateImage("Image/Effect_Ring_2.png", effect_ring_anim_data, 240, 720));
 	ADD_RESOURCE("Effect_Spiral", CImage::CreateImage("Image/Effect_Spiral.png", effect_ring_anim_data, 540, 720));
 	ADD_RESOURCE("coin", CImage::CreateImage("Image/coin.png", effect_coin_anim_data, 640, 1080));
