@@ -159,7 +159,7 @@ Base(eType_Enemy) {
         m_img.SetSize(96, 96);
         m_rect = CRect(-32, -56, 32, 0);
         m_img.SetCenter(48, 87);
-        m_hpmax = m_hp = 150;
+        m_hpmax = m_hp = 50;
         m_pow = 30;
         break;
     case eType_E_Slime2:

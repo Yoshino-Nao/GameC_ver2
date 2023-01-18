@@ -38,12 +38,12 @@ void Init(void)
 	CFPS::Init();
 	//ボタンの設定
 	CInput::Init();
-	CInput::SetButton(0, CInput::eButton1, 'Z');
-	CInput::SetButton(0, CInput::eButton2, 'X');
-	CInput::SetButton(0, CInput::eButton3, 'C');
-	CInput::SetButton(0, CInput::eButton4, 'V');
-	CInput::SetButton(0, CInput::eButton5, VK_SPACE);
-	CInput::SetButton(0, CInput::eButton6, 'A');
+	CInput::SetButton(0, CInput::eButton1, 'Z');//攻撃
+	CInput::SetButton(0, CInput::eButton2, 'X');//ジャンプ
+	CInput::SetButton(0, CInput::eButton3, 'C');//決定
+	CInput::SetButton(0, CInput::eButton4, 'V');//キャンセル
+	CInput::SetButton(0, CInput::eButton5, VK_SPACE);//ミニマップ表示
+	CInput::SetButton(0, CInput::eButton6, 'A');//銃
 	CInput::SetButton(0, CInput::eButton7, 'S');
 	CInput::SetButton(0, CInput::eButton8, 'D');
 	CInput::SetButton(0, CInput::eButton9, 'F');
