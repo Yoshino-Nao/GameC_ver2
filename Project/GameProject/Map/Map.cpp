@@ -23,8 +23,10 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		//fmfからマップデータを読み込む
 		Open("Map/test64.fmf");
 		Base::Add(new MiniMap(nextArea));
-		//Base::Add(new MiniMapPlayer(nextArea));
+		//Base::Add(new MiniMapPlayer(nextArea)); 64 * 45, 64 * 10
 		
+		Base::Add(new Item(CVector2D(m_fmfHeader.byChipWidth * 50,
+			m_fmfHeader.byChipHeight * 10), eType_Item_LifeUp));
 		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 26,
 			m_fmfHeader.byChipHeight * 45),
@@ -80,7 +82,7 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 			m_fmfHeader.byChipHeight * 23), eType_Item_Kay3));
 		Base::Add(new Item(CVector2D(
 			m_fmfHeader.byChipWidth * 104 + 32,
-			m_fmfHeader.byChipHeight * 44), eType_Item_AirJump));//64 * 45, 64 * 10
+			m_fmfHeader.byChipHeight * 44), eType_Item_AirJump));
 		Base::Add(new Item(CVector2D(
 			m_fmfHeader.byChipWidth * 55 + 32,
 			m_fmfHeader.byChipHeight * 45), eType_Item_Sword));
@@ -311,7 +313,7 @@ int Map::CollisionMap(const CVector2D& pos, const CRect& rect, CVector2D* rev_po
 MiniMap::MiniMap(int nextArea) :Base(eType_MiniMapBack)
 {
 	//マップエディタと合わせる
-	MiniMapData[120][55] = { NULL };
+	MiniMapData[120][100] = { NULL };
 	MiniMapData1[18][18] = { NULL };
 	m_mapnum = nextArea;
 	x = 0;
@@ -357,6 +359,7 @@ void MiniMap::Draw()
 	
 	//p = &MiniMapData[0][0];
 	//ミニマップ描画範囲
+	
 	for (int j = sy; j < ey; j++) {
 		for (int i = sx; i < ex; i++) {
 			/*if (stage1data[i][j] == 0)continue;
@@ -396,9 +399,9 @@ void MiniMap::Draw()
 
 		//ミニマップ表示位置(拡大表示)
 		//横
-		x = CCamera::GetCurrent()->GetWhidth() / GetChipWidth() * 7;
+		x = (CCamera::GetCurrent()->GetWhidth() / GetMapWidth()) * 6;
 		//縦
-		y = CCamera::GetCurrent()->GetHeight() / GetChipHeight() * 10;
+		y = (CCamera::GetCurrent()->GetHeight() / GetChipHeight()) * 12;
 		//y = 150;
 		s = 4;
 	}
@@ -414,7 +417,7 @@ void MiniMap::Draw()
 		s = 8;
 	}
 	sy = max(0, sy - 10);
-
+	m_img.DrawBegin();
 	//マップチップデータによる表示の繰り返し
 	for (int j = sy; j < ey; j++) {
 		for (int i = sx; i < ex; i++) {
@@ -438,7 +441,7 @@ void MiniMap::Draw()
 			//表示位置設定
 			m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + x) * s) + i * s, ((-ey + y) * s) + j * s);
 			//描画
-			m_img.Draw();
+			m_img.DrawS();
 			//プレイヤー表示
 			Base* p = Base::FindObject(eType_Player);
 			Player* h = dynamic_cast<Player*>(p);
@@ -457,7 +460,7 @@ void MiniMap::Draw()
 				//m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + 20) * s) + i * s, ((-ey + 25) * s) + j * s);
 				m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + x) * s) + px * s, ((-ey + y) * s) + py * s - s);
 				//描画
-				m_img.Draw();
+				m_img.DrawS();
 			}
 			//bがlist型
 			auto d = Base::FindObjects(eType_Door);
@@ -476,18 +479,18 @@ void MiniMap::Draw()
 				//m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + 20) * s) + i * s, ((-ey + 25) * s) + j * s);
 				m_img.SetPos((CCamera::GetCurrent()->GetWhidth() - (ex + x) * s) + px * s - 6, ((-ey + y)* s) + py * s - s);
 				//描画
-				m_img.Draw();
+				m_img.DrawS();
 			}
 		}
 	}
-
+	m_img.DrawEnd();
 	//FONT_T()->Draw(100, 200, 1, 1, 1, "sx%d", sx);
 	//FONT_T()->Draw(100, 300, 1, 1, 1, "ex%d", ex);
 	//FONT_T()->Draw(100, 400, 1, 1, 1, "sy%d", sy);
 	//FONT_T()->Draw(100, 500, 1, 1, 1, "ey%d", ey);
 }
 //実体を定義
-int MiniMap::MiniMapData[120][55];
+int MiniMap::MiniMapData[120][100];
 int MiniMap::MiniMapData1[18][18];
 
 #pragma endregion

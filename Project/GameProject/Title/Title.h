@@ -3,6 +3,7 @@
 #include"../Base/Base.h"
 
 class Title :public Base {
+	float m_s;
 	//画像オブジェクト
 	CImage m_img;
 	//文字表示オブジェクト

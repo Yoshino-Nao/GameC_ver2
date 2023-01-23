@@ -291,15 +291,15 @@ Player::Player(const CVector2D& p, bool flip) :
 	m_getairjump = false;
 	m_getSword = false;
 	//デバッグ用
-	m_getairjump = m_getSword = true;
-	//鍵
-	key = 0;
+	//m_getairjump = m_getSword = true;
 #pragma endregion
 	//スティック
 	r = CVector2D(0, 0);
 	l = CVector2D(0, 0);
 	////スクロール補間用
 	sc_vec = CVector2D(0, 0);
+	//
+	m_menukill = false;
 #pragma endregion
 
 }
@@ -354,7 +354,7 @@ void Player::Move()
 
 	//FONT_T()->Draw(100, 100, 1, 1, 1, "vec.y:%f", m_vec.y);
 	//FONT_T()->Draw(100, 200, 1, 1, 1, "l.x%f", l.x);
-	//FONT_T()->Draw(100, 300, 1, 1, 1, "l.y%f", l.y);
+	//FONT_T()->Draw(100, 300, 1, 1, 1, "%f", m_groundpos_diff2);
 	//FONT_T()->Draw(100, 300, 1, 1, 1, "m_scroll.y%f", m_scroll.y);
 	//ジャンプ中なら
 	if (!m_is_ground) {
@@ -374,13 +374,15 @@ void Player::Move()
 		{
 			//下降アニメーション
 			m_img.ChangeAnimation(6, false);
+			
 			//高度の差が300以下なら着地モーションフラグを立たせない
 			if (m_groundpos_diff > 300) {
 				m_is_land = true;
-				m_groundpos_diff2 = m_groundpos_diff;
+				m_groundpos_diff2 = min(m_groundpos_diff, 1200);
 			}
 			//アニメーションの１枚目の時に高度測定
 			if (m_img.GetIndex() == 0) {
+				m_groundpos_diff2 = 0;
 				m_groundpos_old = m_groundpos;
 			}
 			//現在高度を測定
@@ -445,7 +447,6 @@ void Player::Move()
 				m_groundpos_diff2 -= 40;
 				if (m_groundpos_diff2 <= 0) {
 					m_is_land = false;
-					m_groundpos_diff2 = 0;
 				}
 			}
 		}
@@ -683,15 +684,19 @@ void Player::Update() {
 			Base::Add(new Menu());
 		}
 	}
+	else if (PUSH(CInput::eButton2) && m) {
+		m_menukill = true;
+	}
+	if (m_menukill && FREE(CInput::eButton2) && m) {
+		m->SetKill();
+		m_menukill = false;
+	}
 	if (b) {
 		if (m->UseItemflag()) {
 			//int item_num = m->UseItemNum();
 			if (GameData::s_itemlist[m->UseItemNum()] > 0) {
 				UseItem(m->UseItemNum());
 				GameData::s_itemlist[m->UseItemNum()] -= 1;
-			}
-			else {
-
 			}
 		}
 	}
@@ -842,16 +847,16 @@ void Player::Collision(Base* b)
 				}*/
 				m_pos.y = pos.y;
 				m_vec.y = 0;
-				
+
 				//m_is_land = false;
 				//m_airjump = false;
-				
+
 				//基準値+補正値
 				//m_scroll.x = m_pos.x - 1280 / 2 + sc_ver.x;
 				//m_scroll.y = m_pos.y - 500 + sc_ver.y;
-				
+
 			}//すり抜け床の判定
-			if (t == 3) {//ジャンプ中、下入力中はすり抜ける
+			else if (t == 3) {//ジャンプ中か、下入力中はすり抜ける
 				if (m_pos.y >= pos.y && m_vec.y >= 0 && l.y != 1) {
 					m_vec.y = 0;
 					m_is_ground = true;

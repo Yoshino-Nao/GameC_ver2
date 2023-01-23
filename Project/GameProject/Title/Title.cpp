@@ -4,6 +4,7 @@
 #include "../Map/Map.h"
 Title::Title() :Base(eType_Scene), m_title_text("C:\\Windows\\Fonts\\msgothic.ttc",64) {
 	m_img = COPY_RESOURCE("Title", CImage);
+	m_s = 0;
 }
 Title::~Title() {
 	//全てのオブジェクトを破棄
@@ -14,6 +15,7 @@ Title::~Title() {
 }
 void Title::Update(){
 	m_img.SetSize(CCamera::GetCurrent()->GetWhidth(), CCamera::GetCurrent()->GetHeight());
+	m_s += 0.05f;
 	//ボタン1でタイトル破棄
 	if (PUSH(CInput::eButton10)) {
 
@@ -23,8 +25,10 @@ void Title::Update(){
 void Title::Draw() {
 	m_img.Draw();
 	//文字表示
-	m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2 - 180, CCamera::GetCurrent()->GetHeight() / 2, 1, 1, 1, "Title");
-	m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2 - 180, CCamera::GetCurrent()->GetHeight() / 1.2, 1, 1, 1, "Push.Enter");
+	m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2 - 180, CCamera::GetCurrent()->GetHeight() / 2, 1, 1, 1, "Title");//, sinf(m_s), sinf(m_s), sinf(m_s)
+	m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2 - 180, CCamera::GetCurrent()->GetHeight() / 1.2, sinf(m_s), sinf(m_s), sinf(m_s), "Push.Enter");
+
+	
 }
 
 License::License():Base(eType_Scene)

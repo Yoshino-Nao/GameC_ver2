@@ -38,13 +38,13 @@ void Init(void)
 	CFPS::Init();
 	//ボタンの設定
 	CInput::Init();//1:攻撃 2:ジャンプ 3:決定 4:キャンセル 5:ミニマップ表示 :6銃 10:ゲームスタート
-	CInput::SetButton(0, CInput::eButton4, 'Z');
-	CInput::SetButton(0, CInput::eButton3, 'X');
-	CInput::SetButton(0, CInput::eButton2, 'C');
-	CInput::SetButton(0, CInput::eButton1, 'V');
+	CInput::SetButton(0, CInput::eButton1, 'Z');
+	CInput::SetButton(0, CInput::eButton2, 'X');
+	CInput::SetButton(0, CInput::eButton3, 'C');
+	CInput::SetButton(0, CInput::eButton4, 'V');
 	CInput::SetButton(0, CInput::eButton5, VK_SPACE);
-	CInput::SetButton(0, CInput::eButton7, 'A');
-	CInput::SetButton(0, CInput::eButton6, 'S');
+	CInput::SetButton(0, CInput::eButton6, 'A');
+	CInput::SetButton(0, CInput::eButton7, 'S');
 	CInput::SetButton(0, CInput::eButton8, 'D');
 	CInput::SetButton(0, CInput::eButton9, 'F');
 	CInput::SetButton(0, CInput::eButton10, VK_RETURN);
@@ -56,7 +56,10 @@ void Init(void)
 	CInput::SetButton(0, CInput::eMouseR, VK_RBUTTON);
 	CInput::SetButton(0, CInput::eMouseC, VK_MBUTTON);
 	DIJOYSTATE2* pad = CInput::GetPadData(0);
-
+	//学校パッド用
+	/*CInput::SetPadButton(0, CInput::eButton1, 3);
+	CInput::SetPadButton(0, CInput::eButton2, 2);
+	CInput::SetPadButton(0, CInput::eButton3, 1);*/
 	//	CInput::SetMouseInside(true);
 	//	CInput::ShowCursor(false);
 	CInput::Update();
@@ -80,12 +83,13 @@ void Init(void)
 	ADD_RESOURCE("Witch1", CImage::CreateImage("Image/Witch.png", enemy_witch_anim_data, 131,132));
 	ADD_RESOURCE("Witch2", CImage::CreateImage("Image/Witch2.png", enemy_witch_anim_data, 131, 132));
 	ADD_RESOURCE("Dragon1", CImage::CreateImage("Image/Dragon.png", enemy_Dragon_anim_data, 230, 150));
+	ADD_RESOURCE("Slo", CImage::CreateImage("Image/slo.png", enemy_slo_anim_data, 100, 100));
 	ADD_RESOURCE("Effect_Slash", CImage::CreateImage("Image/Effect_Slash.png", effect_slash_anim_data, 128, 128));
 	ADD_RESOURCE("Effect_Smoke", CImage::CreateImage("Image/Effect_Smoke.png", effect_smoke_anim_data, 128, 128));
 	ADD_RESOURCE("Effect_Blood", CImage::CreateImage("Image/Effect_Blood.png", effect_blood_anim_data, 128, 128));
 	ADD_RESOURCE("Effect_Flame", CImage::CreateImage("Image/Effect_Flame.png", effect_flame_anim_data, 1080, 320));
 	ADD_RESOURCE("Effect_Ring", CImage::CreateImage("Image/Effect_Ring.png", effect_ring_anim_data, 160, 720));
-	//ADD_RESOURCE("Effect_Ring_yoko", CImage::CreateImage("Image/Effect_Ring_yoko.png", effect_ring_anim_data, 720, 160));
+	ADD_RESOURCE("Effect_Ring_yoko", CImage::CreateImage("Image/Effect_Ring_yoko.png", effect_ring_anim_data, 720, 160));
 	ADD_RESOURCE("Effect_Ring2", CImage::CreateImage("Image/Effect_Ring_2.png", effect_ring_anim_data, 240, 720));
 	ADD_RESOURCE("Effect_Spiral", CImage::CreateImage("Image/Effect_Spiral.png", effect_ring_anim_data, 540, 720));
 	ADD_RESOURCE("coin", CImage::CreateImage("Image/coin.png", effect_coin_anim_data, 640, 1080));
@@ -109,6 +113,7 @@ void Init(void)
 	ADD_RESOURCE("bullet", CImage::CreateImage("Image/bullet.png"));
 	ADD_RESOURCE("Sword", CImage::CreateImage("Image/Sword.png"));
 	ADD_RESOURCE("Key", CImage::CreateImage("Image/Key.png"));
+	ADD_RESOURCE("LifeUp", CImage::CreateImage("Image/LifeUp.png"));
 	ADD_RESOURCE("Lattice", CImage::CreateImage("Image/a.png"));
 //ADD_RESOURCE("Item", CImage::CreateImage("Image/Item.png"));
 	/*//プレイヤーの生成

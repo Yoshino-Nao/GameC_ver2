@@ -24,6 +24,7 @@ enum {
 	eType_E_Witch1,
 	eType_E_Witch2,
 	eType_E_Dragon1,
+	eType_E_Slo,
 
 	eType_Item,
 	//アイテム区別用ID

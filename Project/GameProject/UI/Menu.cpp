@@ -58,7 +58,7 @@ void Menu::Update()
 			break;
 		}
 	}
-	if (PUSH(CInput::eButton4)) {
+	if (PUSH(CInput::eButton2)) {
 		switch (m_select)
 		{
 		case eItem:
@@ -103,7 +103,7 @@ void Menu::Draw()
 	for (int i = 0; i < 2; i++) {
 		//m_img
 		//FONT_T()->Draw(Itempos[i].x, Itempos[i].y, 1, 1, 1, text[i]);
-		FONT_T()->Draw(Itempos[i].x, Itempos[i].y+64, 1, 1, 1, "%d", GameData::s_itemlist[i]);
+		FONT_T()->Draw(Itempos[i].x, Itempos[i].y + 64, 1, 1, 1, "%d", GameData::s_itemlist[i]);
 	}
 	//ƒJ[ƒ\ƒ‹
 	FONT_T()->Draw(pos[m_select].x - 64, pos[m_select].y, 1, 1, 1, ">");

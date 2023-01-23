@@ -618,6 +618,54 @@ TexAnimData enemy_Dragon_anim_data[] = {
 	ANIMDATA(enemy_Dragon_attack),
 };
 
+static TexAnim enemy_slo_move[] = {
+	{ 0,8 } ,
+	{ 1,8 },
+	{ 2,8 },
+	{ 3,8 },
+	{ 4,8 },
+	{ 5,8 },
+};
+static TexAnim enemy_slo_stand[] = {
+	{ 10,8 },
+	{ 11,8 },
+	{ 12,8 },
+	{ 13,8 },
+	{ 14,8 },
+	{ 15,8 },
+	{ 16,8 },
+	{ 17,8 },
+	{ 18,8 },
+	{ 19,8 },
+	{ 20,8 },
+	{ 21,8 },
+	{ 22,8 },
+	{ 23,8 },
+};
+static TexAnim enemy_slo_damage[] = {
+	{ 30,8 },
+	{ 31,8 },
+	{ 32,8 },
+	{ 33,8 },
+	{ 34,8 },
+	{ 35,8 },
+	{ 36,8 },
+	{ 37,8 },
+	{ 38,8 },
+	{ 39,8 },
+	{ 40,8 },
+	{ 41,8 },
+	{ 42,8 },
+	{ 43,8 },
+	{ 44,8 },
+	{ 45,8 },
+};
+TexAnimData enemy_slo_anim_data[] = {
+	ANIMDATA(enemy_slo_move),
+	ANIMDATA(enemy_slo_stand),
+	ANIMDATA(enemy_slo_damage),
+};
+
 static TexAnim _effect_blood[] = {
 	{ 0,1 },
 	{ 1,1 },

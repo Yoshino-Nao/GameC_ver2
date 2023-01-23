@@ -7,6 +7,7 @@
 Item::Item(const CVector2D& pos, int item_id)
 	:Base(eType_Item)
 {
+
 	//‰æ‘œ·‚µ‘Ö‚¦—\’è
 	m_item_id = item_id;
 	m_cnt = 0;
@@ -14,7 +15,8 @@ Item::Item(const CVector2D& pos, int item_id)
 	m_pos_old = m_pos;
 	//m_rect = CRect(-24, -24, 24, 24);
 	//’†SˆÊ’uÝ’è
-	m_vec.y = -10;
+	m_pop = -10;
+	m_vec.y = m_pop;
 	m_is_ground = true;
 	switch (item_id)
 	{
@@ -26,10 +28,10 @@ Item::Item(const CVector2D& pos, int item_id)
 		m_img.ChangeAnimation(0);
 		break;
 	case eType_Item_LifeUp:
-		m_img = COPY_RESOURCE("coin", CImage);
-		m_img.SetCenter(24, 48);
+		m_img = COPY_RESOURCE("LifeUp", CImage);
+		m_img.SetCenter(40, 40);
 		m_rect = CRect(-24, -24, 24, 24);
-		m_img.SetSize(48, 96);
+		m_img.SetSize(80, 80);
 		m_img.ChangeAnimation(0);
 		m_img.SetColor(0, 1, 0, 1);
 		break;
@@ -70,6 +72,7 @@ Item::Item(const CVector2D& pos, int item_id)
 		m_img.SetColor(1.0f, 1.0f, 0.5f, 1);
 		break;
 	}
+
 }
 
 void Item::Draw()
@@ -93,7 +96,8 @@ void Item::Collision(Base* b)
 			t = m->CollisionMap(CVector2D(m_pos_old.x, m_pos.y), m_rect, &pos);
 			if (t != NULL_TIP) {
 				m_pos.y = pos.y;
-				m_vec.y = 0;
+				m_vec.y = m_pop;
+				m_pop *= 0.8f;
 				m_is_ground = true;
 			}
 		}
@@ -129,18 +133,20 @@ void Item::Collision(Base* b)
 
 void Item::Update()
 {
-	m_cnt--;
-	m_pos_old = m_pos;
-	m_img.UpdateAnimation();
-	if (m_is_ground && m_vec.y > GRAVITY * 4) {
-		m_is_ground = false;
+	if (!Base::FindObject(eType_Menu)) {
+		m_cnt--;
+		m_pos_old = m_pos;
+		m_img.UpdateAnimation();
+		if (m_is_ground && m_vec.y > GRAVITY * 4) {
+			m_is_ground = false;
+		}
+		if (m_item_id == eType_Item_AirJump && m_cnt <= 0) {
+			Base::Add(new Effect("Effect_Ring_yoko", CVector2D(m_pos.x, m_pos.y), true, 90, 30));
+			m_cnt = 60;
+		}
+		m_vec.y += GRAVITY;
+		m_pos.y += m_vec.y;
 	}
-	if (m_item_id == eType_Item_AirJump && m_cnt <= 0) {
-		Base::Add(new Effect("Effect_Ring_yoko", CVector2D(m_pos.x, m_pos.y), true, 90, 30));
-		m_cnt = 60;
-	}
-	m_vec.y += GRAVITY;
-	m_pos.y += m_vec.y;
 }
 
 int Item::GetItemId()

@@ -49,7 +49,7 @@ Game::~Game()
 {
 
 	//ミニマップ初期化
-	memset(MiniMap::MiniMapData, 0, sizeof(MiniMap::MiniMapData[0][0]) * 120 * 55);
+	memset(MiniMap::MiniMapData, 0, sizeof(MiniMap::MiniMapData[0][0]) * 120 * 100);
 	memset(MiniMap::MiniMapData1, 0, sizeof(MiniMap::MiniMapData[0][0]) * 18 * 18);
 	//全てのオブジェクトを破棄
 	//

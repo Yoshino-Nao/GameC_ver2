@@ -88,8 +88,6 @@ private:
 	bool m_getairjump;
 	//剣アイテム取得
 	bool m_getSword;
-	//汎用鍵
-	int key;
 
 #pragma endregion
 
@@ -97,9 +95,9 @@ private:
 	CVector2D r;
 	//左スティック
 	CVector2D l;
-	
 	//スクロール補間用
 	CVector2D sc_vec;
+	bool m_menukill;
 #pragma endregion
 
 	//各状態での挙動
