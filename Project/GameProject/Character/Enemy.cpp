@@ -364,7 +364,7 @@ void Enemy::Draw()
     //•`‰æ
     m_img.Draw();
 
-    DrawRect();
+    //DrawRect();
 }
 
 void Enemy::Collision(Base* b)
