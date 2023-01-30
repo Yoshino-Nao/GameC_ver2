@@ -25,8 +25,13 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		Base::Add(new MiniMap(nextArea));
 		//Base::Add(new MiniMapPlayer(nextArea)); 64 * 45, 64 * 10
 		
-		Base::Add(new Item(CVector2D(m_fmfHeader.byChipWidth * 50,
-			m_fmfHeader.byChipHeight * 10), eType_Item_LifeUp));
+
+		/*Base::Add(new Item(CVector2D(m_fmfHeader.byChipWidth * 50,
+			m_fmfHeader.byChipHeight * 10),eType_Item_Kay1));
+		Base::Add(new Item(CVector2D(m_fmfHeader.byChipWidth * 53,
+			m_fmfHeader.byChipHeight * 10), eType_Item_Kay2));
+		Base::Add(new Item(CVector2D(m_fmfHeader.byChipWidth * 56,
+			m_fmfHeader.byChipHeight * 10), eType_Item_Kay3));*/
 		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 26,
 			m_fmfHeader.byChipHeight * 45),
@@ -41,10 +46,13 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 			m_fmfHeader.byChipHeight * 45),
 			2));*/
 		Base::Add(new Door(CVector2D(
+			m_fmfHeader.byChipWidth * 108,
+			m_fmfHeader.byChipHeight * 53),
+			2));
+		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 98,
 			m_fmfHeader.byChipHeight * 21),
 			2));
-
 		Base::Add(new Door(CVector2D(
 			m_fmfHeader.byChipWidth * 108,
 			m_fmfHeader.byChipHeight * 11), 
@@ -67,7 +75,23 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		Base::Add(new Enemy(CVector2D(
 			m_fmfHeader.byChipWidth * 31,
 			m_fmfHeader.byChipHeight * 98), true, eType_E_Slime2));
-		
+
+		Base::Add(new Enemy(CVector2D(
+			m_fmfHeader.byChipWidth * 23,
+			m_fmfHeader.byChipHeight * 64), true, eType_E_Slo));
+		Base::Add(new Enemy(CVector2D(
+			m_fmfHeader.byChipWidth * 10,
+			m_fmfHeader.byChipHeight * 50), false, eType_E_Slo));
+		Base::Add(new Enemy(CVector2D(
+			m_fmfHeader.byChipWidth * 18,
+			m_fmfHeader.byChipHeight * 50), false, eType_E_Slo));
+		Base::Add(new Enemy(CVector2D(
+			m_fmfHeader.byChipWidth * 28,
+			m_fmfHeader.byChipHeight * 49), false, eType_E_Slo));
+		Base::Add(new Enemy(CVector2D(
+			m_fmfHeader.byChipWidth * 28,
+			m_fmfHeader.byChipHeight * 52), false, eType_E_Slo));
+
 		Base::Add(new Item(CVector2D(
 			m_fmfHeader.byChipWidth * 5 + 32,
 			m_fmfHeader.byChipHeight * 19), eType_Item_Kay1));
@@ -75,8 +99,11 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 			m_fmfHeader.byChipWidth * 28 + 32,
 			m_fmfHeader.byChipHeight * 38), eType_Item_Kay1));
 		Base::Add(new Item(CVector2D(
-			m_fmfHeader.byChipWidth * 99 + 32,
-			m_fmfHeader.byChipHeight * 23), eType_Item_Kay2));
+			m_fmfHeader.byChipWidth * 49 + 32,
+			m_fmfHeader.byChipHeight * 53), eType_Item_Kay2));
+		Base::Add(new Item(CVector2D(
+			m_fmfHeader.byChipWidth * 111 + 32,
+			m_fmfHeader.byChipHeight * 53), eType_Item_Kay2));
 		Base::Add(new Item(CVector2D(
 			m_fmfHeader.byChipWidth * 97 + 32,
 			m_fmfHeader.byChipHeight * 23), eType_Item_Kay3));
@@ -86,6 +113,9 @@ Map::Map(int nextArea,const CVector2D& nextplayerpos) : Base(eType_Field) {
 		Base::Add(new Item(CVector2D(
 			m_fmfHeader.byChipWidth * 55 + 32,
 			m_fmfHeader.byChipHeight * 45), eType_Item_Sword));
+		Base::Add(new Item(CVector2D(
+			m_fmfHeader.byChipWidth * 5 + 32,
+			m_fmfHeader.byChipHeight * 68), eType_Item_Gun));
 		Base::Add(new Event(0,
 			CRect(m_fmfHeader.byChipWidth * 55,
 				m_fmfHeader.byChipHeight * 45,

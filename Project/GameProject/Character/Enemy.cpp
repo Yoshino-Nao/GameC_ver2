@@ -16,9 +16,9 @@ void Enemy::StateIdle()
 {
     cnt = 30;
     //m_vec.x = -1;
-
+    
     //const float move_speed = 4;
-
+  
     //bool move_flag = false;
     m_img.ChangeAnimation(0);
     switch (EnemyType) {
@@ -31,9 +31,7 @@ void Enemy::StateIdle()
         if (dot > cosf(DtoR(45.0f)) && 900.0f > v.Length()) {
             m_is_find = true;
         }
-        else {
-            m_is_find = false;
-        }
+        //FONT_T()->Draw(100, 100, 1, 1, 1, "v.x:%f", v.x);
         if (m_is_find) {
             /*if (v.Length() <= 900) {
                 m_vec.x = -1;
@@ -45,10 +43,44 @@ void Enemy::StateIdle()
                 m_vec.x = 0;
             }*/
             m_flip ? m_vec.x = 1 : m_vec.x = -1;
+            if (v.x <= 0) {
+                m_vec.x = -1;
+            }
+            else if (v.x >= 0) {
+                m_vec.x = 1;
+            }
         }
         else {
             m_vec.x = 0;
         }
+        break;
+    case eType_E_Slo:
+        //m_flip ? Front = CVector2D::right : Front = CVector2D::left;
+        Front = CVector2D::down;
+       // DrawLine(m_pos, m_pos + Front * 500, 1, 0, 0);
+        dot = CVector2D::Dot(Front.GetNormalize(), v.GetNormalize());
+        if (dot > cosf(DtoR(90.0f)) && 500.0f > v.Length()) {
+            m_is_find = true;
+        }
+
+        if (m_is_find) {
+            /*if (v.Length() <= 900) {
+                m_vec.x = -1;
+            }
+            else if (v.x <= -900) {
+                m_vec.x = 1;
+            }
+            else {
+                m_vec.x = 0;
+            }*/
+            //m_flip ? m_vec.x = 1 : m_vec.x = -1;
+            m_state = eState_Attack;
+        }
+        else {
+            m_vec.x = 0;
+        }
+       
+        //FONT_T()->Draw(100, 100, 1, 1, 1, "v.x:%f", v.x);
         break;
     case eType_E_Witch1:
     case eType_E_Witch2:
@@ -68,6 +100,9 @@ void Enemy::StateIdle()
         }
         break;
     }
+    /*if(v.x <= 0) {
+        m_vec.x *= -1;
+    }*/
     if (m_vec.x < 0) {
         m_flip = false;
     }
@@ -78,6 +113,7 @@ void Enemy::StateIdle()
 #pragma region ダメージ
 void Enemy::StateDamage()
 {
+    m_is_find = true;
     m_img.SetColor(2, 2, 2, 2);
     m_img.ChangeAnimation(3, false);
     if (m_img.CheckAnimationEnd()) {
@@ -88,12 +124,14 @@ void Enemy::StateDamage()
 
 void Enemy::StateDown()
 {
+    m_rect = CRect(0, 0, 0, 0);
     m_img.ChangeAnimation(4, false);
     if (m_img.CheckAnimationEnd()) {
         Base::Add(new Effect("Effect_Smoke", m_pos + CVector2D(0, -128), m_flip, 128, 128));
         switch (EnemyType)
         {
         case eType_E_Slime1:
+        case eType_E_Slo:
             Base::Add(new Item(CVector2D(m_pos.x, m_pos.y - 40), eType_Item_LifeUp));
             break;
         case eType_E_Slime2:
@@ -111,12 +149,23 @@ void Enemy::StateDown()
 void Enemy::StateAttack()
 {
    
-    m_img.ChangeAnimation(2, false);
+   
     
     switch (EnemyType) {
         //int type, const CVector2D& pos, float ang, float speed
+    case eType_E_Slo:
+        m_img.ChangeAnimation(1);
+        m_vec = v.GetNormalize() * 3;
+        if (m_vec.x < 0) {
+            m_flip = false;
+        }
+        else if (m_vec.x > 0) {
+            m_flip = true;
+        }
+        break;
     case eType_E_Witch1:
     case eType_E_Witch2:
+        m_img.ChangeAnimation(2, false);
         Base* b = Base::FindObject(eType_Bullet);
         if (!b) {
             Base::Add(new EnemyBullet(eType_Bullet, m_pos, m_attack_no, 4, 1, 0.8f, 1));
@@ -142,7 +191,7 @@ void Enemy::StateWait()
 
 void Enemy::KnockBack(CVector2D m_epos, int pow)
 {
-    float ratio = ((float)pow / (float)m_hpmax) * 0.5f;
+    float ratio = ((float)pow / (float)m_hpmax) * 0.1f;
     CVector2D e_pos = (m_pos - m_epos) * ratio;
     stptime = 60 * ratio;;
     m_vec = e_pos;
@@ -197,6 +246,14 @@ Base(eType_Enemy) {
         m_rect = CRect(-98, -190, 188, 0);
         m_img.SetCenter(190, 238);
         m_hpmax = m_hp = 400;
+        break;
+    case eType_E_Slo:
+        m_img = COPY_RESOURCE("Slo", CImage);
+        m_img.SetSize(200, 200);
+        m_rect = CRect(-30, -50, 30, 0);
+        m_img.SetCenter(100, 170);
+        m_hpmax = m_hp = 50;
+        m_pow = 30;
         break;
     };
     //再生アニメーション設定
@@ -307,7 +364,7 @@ void Enemy::Draw()
     //描画
     m_img.Draw();
 
-    //DrawRect();
+    DrawRect();
 }
 
 void Enemy::Collision(Base* b)

@@ -50,6 +50,13 @@ Item::Item(const CVector2D& pos, int item_id)
 		m_img.SetSize(33 * 3, 6);
 		//m_img.SetColor(0, 0, 0, 0);
 		break;
+	case eType_Item_Gun:
+		m_img = COPY_RESOURCE("Gun", CImage);
+		m_img.SetCenter(16, 16);
+		m_rect = CRect(-16, -16, 16, 16);
+		m_img.SetSize(32, 32);
+		m_img.ChangeAnimation(0);
+		break;
 	case eType_Item_Kay1:
 		m_img = COPY_RESOURCE("Key", CImage);
 		m_img.SetCenter(24, 24);

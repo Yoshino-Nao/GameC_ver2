@@ -1,5 +1,6 @@
 #include "Title.h"
 #include"../Game/Game.h"
+#include"../Game/GameData.h"
 #include "../UI/Menu.h"
 #include "../Map/Map.h"
 Title::Title() :Base(eType_Scene), m_title_text("C:\\Windows\\Fonts\\msgothic.ttc",64) {
@@ -25,9 +26,12 @@ void Title::Update(){
 void Title::Draw() {
 	m_img.Draw();
 	//•¶Žš•\Ž¦
-	m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2 - 180, CCamera::GetCurrent()->GetHeight() / 2, 1, 1, 1, "Title");//, sinf(m_s), sinf(m_s), sinf(m_s)
-	m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2 - 180, CCamera::GetCurrent()->GetHeight() / 1.2, sinf(m_s), sinf(m_s), sinf(m_s), "Push.Enter");
-
+	//m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2, CCamera::GetCurrent()->GetHeight() / 2, 1, 1, 1, "E");
+	m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2 - 230, CCamera::GetCurrent()->GetHeight() / 2, 1, 1, 1, "Maze and Action");//, sinf(m_s), sinf(m_s), sinf(m_s)
+	m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2 - 230, CCamera::GetCurrent()->GetHeight() / 1.2, sinf(m_s), sinf(m_s), sinf(m_s), "Push to 10Button");
+	if (GameData::s_clear) {
+		m_title_text.Draw(CCamera::GetCurrent()->GetWhidth() / 2 - 230, CCamera::GetCurrent()->GetHeight() / 2.2, 1, 1, 1, "Game Clear!");
+	}
 	
 }
 

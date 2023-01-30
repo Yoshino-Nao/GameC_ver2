@@ -4,6 +4,7 @@
 int GameData::s_key = 0;
 int GameData::s_key2 = 0;
 int GameData::s_key3 = 0;
+bool GameData::s_clear = false;
 int GameData::s_time = 0;
 int GameData::s_itemlist[] = { 0 };
 

@@ -88,7 +88,8 @@ private:
 	bool m_getairjump;
 	//剣アイテム取得
 	bool m_getSword;
-
+	//銃取得
+	bool m_getGun;
 #pragma endregion
 
 	//右スティック

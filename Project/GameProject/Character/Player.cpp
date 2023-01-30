@@ -30,7 +30,7 @@ void Player::StateIdle()
 		m_attack_no++;
 		m_state = eState_Attack1;
 	}
-	if (PUSH(CInput::eButton6)) {
+	if (PUSH(CInput::eButton6) && m_getGun) {
 		m_state = eState_GunDraw;
 		m_attack_no++;
 	}
@@ -151,7 +151,7 @@ void Player::StateShooting()
 		m_img.ChangeAnimation(19, true);
 		if (rate <= 0) {
 			Base::Add(new Player_Bullet1(CVector2D(HandPos.x, HandPos.y)
-				, atan2f(r.y, r.x), m_flip, m_attack_no, m_attack_pow * 0.1f));
+				, atan2f(r.y, r.x), m_flip, m_attack_no, m_attack_pow * 0.5f));
 			
 			rate = 20;
 			m_attack_no++;
@@ -162,7 +162,7 @@ void Player::StateShooting()
 	}
 	if (rate <= 0 && dot > cosf(DtoR(70.0f))) {
 		Base::Add(new Player_Bullet1(HandPos
-			, atan2f(r.y, r.x), m_flip, m_attack_no, m_attack_pow * 0.1f));
+			, atan2f(r.y, r.x), m_flip, m_attack_no, m_attack_pow * 0.5f));
 		rate = 20;
 		m_attack_no++;
 	}
@@ -286,12 +286,14 @@ Player::Player(const CVector2D& p, bool flip) :
 	//最大HP   HP
 	m_hpmax = 120;
 	m_hp = 120;
-	//２段ジャンプアイテム取得
-	//剣アイテム取得
+	//２段ジャンプ取得
+	//剣取得
+	//銃取得
 	m_getairjump = false;
 	m_getSword = false;
+	m_getGun = false;
 	//デバッグ用
-	//m_getairjump = m_getSword = true;
+	//m_getairjump = m_getSword = m_getGun = true;
 #pragma endregion
 	//スティック
 	r = CVector2D(0, 0);
@@ -684,10 +686,10 @@ void Player::Update() {
 			Base::Add(new Menu());
 		}
 	}
-	else if (PUSH(CInput::eButton2) && m) {
+	else if (PUSH(CInput::eButton10) && m) {
 		m_menukill = true;
 	}
-	if (m_menukill && FREE(CInput::eButton2) && m) {
+	if (m_menukill && FREE(CInput::eButton10) && m) {
 		m->SetKill();
 		m_menukill = false;
 	}
@@ -744,6 +746,10 @@ void Player::Collision(Base* b)
 					break;
 				case eType_Item_Sword:
 					m_getSword = true;
+					b->SetKill();
+					break;
+				case eType_Item_Gun:
+					m_getGun = true;
 					b->SetKill();
 					break;
 				case eType_Item_Kay1:
@@ -831,6 +837,7 @@ void Player::Collision(Base* b)
 	case eType_Field:
 		if (Map* m = dynamic_cast<Map*>(b)) {
 			CVector2D pos;
+			
 			int t = m->CollisionMap(CVector2D(m_pos.x, m_pos_old.y), m_rect, &pos);
 			if (t == 1) {
 				m_pos.x = pos.x;
@@ -846,11 +853,12 @@ void Player::Collision(Base* b)
 					pos.y = m_pos.y;
 				}*/
 				m_pos.y = pos.y;
-				m_vec.y = 0;
-
+				m_vec.y = 0;/*
+				FONT_T()->Draw(100, 100, 1, 1, 1, "m_pos.y:%f", m_pos.y);
+				FONT_T()->Draw(100, 200, 1, 1, 1, "pos.y:%f", pos.y);*/
 				//m_is_land = false;
 				//m_airjump = false;
-
+				
 				//基準値+補正値
 				//m_scroll.x = m_pos.x - 1280 / 2 + sc_ver.x;
 				//m_scroll.y = m_pos.y - 500 + sc_ver.y;
@@ -858,6 +866,8 @@ void Player::Collision(Base* b)
 			}//すり抜け床の判定
 			else if (t == 3) {//ジャンプ中か、下入力中はすり抜ける
 				if (m_pos.y >= pos.y && m_vec.y >= 0 && l.y != 1) {
+					/*FONT_T()->Draw(100, 100, 1, 1, 1, "m_pos.y:%f", m_pos.y);
+					FONT_T()->Draw(100, 200, 1, 1, 1, "pos.y:%f", pos.y);*/
 					m_vec.y = 0;
 					m_is_ground = true;
 					m_pos.y = pos.y;

@@ -640,30 +640,38 @@ static TexAnim enemy_slo_stand[] = {
 	{ 20,8 },
 	{ 21,8 },
 	{ 22,8 },
-	{ 23,8 },
 };
 static TexAnim enemy_slo_damage[] = {
-	{ 30,8 },
-	{ 31,8 },
-	{ 32,8 },
-	{ 33,8 },
-	{ 34,8 },
-	{ 35,8 },
-	{ 36,8 },
-	{ 37,8 },
-	{ 38,8 },
-	{ 39,8 },
-	{ 40,8 },
-	{ 41,8 },
-	{ 42,8 },
-	{ 43,8 },
-	{ 44,8 },
-	{ 45,8 },
+	{ 30,4 },
+	{ 31,4 },
+	{ 32,4 },
+	{ 33,4 },
+};
+static TexAnim enemy_slo_dead[] = {
+	{ 30,4 },
+	{ 31,4 },
+	{ 32,4 },
+	{ 33,4 },
+	{ 34,4 },
+	{ 35,4 },
+	{ 36,4 },
+	{ 37,4 },
+	{ 38,4 },
+	{ 39,4 },
+	{ 40,4 },
+	{ 41,4 },
+	{ 42,4 },
+	{ 43,4 },
+	{ 44,4 },
+	{ 45,4 },
 };
 TexAnimData enemy_slo_anim_data[] = {
-	ANIMDATA(enemy_slo_move),
+
 	ANIMDATA(enemy_slo_stand),
+	ANIMDATA(enemy_slo_move),
+	ANIMDATA(enemy_slo_move),
 	ANIMDATA(enemy_slo_damage),
+	ANIMDATA(enemy_slo_dead),
 };
 
 static TexAnim _effect_blood[] = {

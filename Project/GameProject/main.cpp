@@ -57,9 +57,11 @@ void Init(void)
 	CInput::SetButton(0, CInput::eMouseC, VK_MBUTTON);
 	DIJOYSTATE2* pad = CInput::GetPadData(0);
 	//学校パッド用
-	/*CInput::SetPadButton(0, CInput::eButton1, 3);
+	CInput::SetPadButton(0, CInput::eButton1, 3);
 	CInput::SetPadButton(0, CInput::eButton2, 2);
-	CInput::SetPadButton(0, CInput::eButton3, 1);*/
+	CInput::SetPadButton(0, CInput::eButton3, 1);
+	CInput::SetPadButton(0, CInput::eButton6, 6);
+	CInput::SetPadButton(0, CInput::eButton5, 7);
 	//	CInput::SetMouseInside(true);
 	//	CInput::ShowCursor(false);
 	CInput::Update();
@@ -112,6 +114,7 @@ void Init(void)
 	ADD_RESOURCE("GaugeE", CImage::CreateImage("Image/-4.png"));
 	ADD_RESOURCE("bullet", CImage::CreateImage("Image/bullet.png"));
 	ADD_RESOURCE("Sword", CImage::CreateImage("Image/Sword.png"));
+	ADD_RESOURCE("Gun", CImage::CreateImage("Image/Gun.png"));
 	ADD_RESOURCE("Key", CImage::CreateImage("Image/Key.png"));
 	ADD_RESOURCE("LifeUp", CImage::CreateImage("Image/LifeUp.png"));
 	ADD_RESOURCE("Lattice", CImage::CreateImage("Image/a.png"));

@@ -17,9 +17,11 @@
 
 Game::Game() :Base(eType_Scene)
 {
-	//Base::Add(new Field());45,10
+	//Base::Add(new Field());45,10  52,71
 	Base::Add(new Map(1,CVector2D(32 * 90, 32 * 100)));
-	Base::Add(new Player(CVector2D(64 * 45, 64 * 10), false));
+	Base::Add(new Player(CVector2D(64 * 45, 64 * 10), false));//スタート
+	//Base::Add(new Player(CVector2D(64 * 52, 64 * 71), false));//中盤
+	//Base::Add(new Player(CVector2D(64 * 111, 64 * 10), false));//ゴール
 	//Base::Add(new Attack(CVector2D(1280, 560), false));
 	//Base::Add(new Enemy(CVector2D(1280 + 256 * 2, 540), true));
 	//Base::Add(new Enemy(CVector2D(1280 + 256 * 3, 540), true));
@@ -58,12 +60,14 @@ Game::~Game()
 void Game::Update()
 {
 	//std::cout << "game" << std::endl;
-	//ゴールがなければゲームシーン終了
+	//ゴールがあればゲームシーン終了
 	if (Base::FindObject(eType_Goal)) {
 		Base::KillAll();
 		//ゲームシーンへ
 		Base::Add(new Title());
 		Base::Add(new License());
+
+		GameData::s_clear = true;
 	}
 
 	//プレイヤー死亡　ボタン１でゲームシーン終了

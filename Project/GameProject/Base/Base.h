@@ -32,6 +32,7 @@ enum {
 	eType_Item_LifeUp,
 	eType_Item_AirJump,
 	eType_Item_Sword,
+	eType_Item_Gun,
 	eType_Item_Kay1,
 	eType_Item_Kay2,
 	eType_Item_Kay3,
